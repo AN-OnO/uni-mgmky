@@ -1,4 +1,5 @@
 import App from './App'
+import '@/common/intercept'
 import uvUI from '@/uni_modules/uv-ui-tools'
 
 // #ifndef VUE3
@@ -15,11 +16,15 @@ app.$mount()
 
 // #ifdef VUE3
 import { createSSRApp } from 'vue'
+import * as Pinia from 'pinia'
+
 export function createApp() {
   const app = createSSRApp(App)
+  app.use(Pinia.createPinia())
   app.use(uvUI);
   return {
-    app
+    app,
+	Pinia
   }
 }
 // #endif

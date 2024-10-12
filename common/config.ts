@@ -1,3 +1,3 @@
-const baseURL = "https://subapi.mgmky.com";
+const baseURL = "https://subapi-test.mgmky.com";
 
 export default { baseURL };

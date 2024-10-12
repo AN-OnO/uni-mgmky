@@ -16,7 +16,4 @@
 	@import "@/static/css/common.scss";
 	@import "@/uni_modules/uv-ui-tools/index.scss";
 	
-	page{
-		background-color: #F0F1F5;
-	}
 </style>
