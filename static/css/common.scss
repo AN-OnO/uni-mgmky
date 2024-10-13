@@ -390,7 +390,7 @@
     padding-top: 50rpx;
     padding-bottom: 50rpx;
 }
-
+// 可以直接用 uv-ui 框架中的 uv-line-x 样式，x 代表行数
 .two-row-hidden {
 	overflow: hidden;
 	text-overflow: ellipsis;

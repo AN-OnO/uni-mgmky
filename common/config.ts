@@ -1,3 +1,2 @@
-const baseURL = "https://subapi-test.mgmky.com";
-
+const baseURL = "http://api-mobile.deepmind.aiprinting.cn";
 export default { baseURL };

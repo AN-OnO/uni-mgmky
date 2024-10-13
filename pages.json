@@ -8,8 +8,7 @@
 	"pages": [{
 			"path": "pages/tabbar/home",
 			"style": {
-				"navigationBarTitleText": "首页",
-				"navigationBarBackgroundColor": "#fff"				 
+				"navigationStyle": "custom"
 			}
 		},
 		{

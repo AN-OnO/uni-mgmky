@@ -1,10 +1,28 @@
 import request from "@/utils/request";
 
 /**
- * 用户登录
+ * 用户账密登录
  * @param params 
  * @return 
  */
-export function AccountLogin(params) {
-	return request.post('/api/Member/Login', params);
+export function Login(params) {
+	return request.post('/api/UserMgr/Login', params);
+}
+
+/**
+ * 获取图片验证码
+ * @param params 
+ * @return 
+ */
+export function VCode(params) {
+	return request.post('/api/UserMgr/VCode', params);
+}
+
+/**
+ * 根据用户账号获取Token
+ * @param params 
+ * @return 
+ */
+export function GetToken(params) {
+	return request.post('/api/UserMgr/GetToken', params);
 }

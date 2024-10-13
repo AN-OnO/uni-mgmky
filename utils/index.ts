@@ -46,7 +46,7 @@ class Utils {
 			success
 		});
 	}
-	static navigateBack = (delta = 1, url = '/pages/home/home') => {
+	static navigateBack = (delta = 1, url = '/pages/tabbar/home') => {
 		const pages = getCurrentPages();
 		if (pages.length > 1) {
 			uni.navigateBack({

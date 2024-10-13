@@ -1,6 +1,10 @@
 import App from './App'
 import '@/common/intercept'
+import Utils from '@/utils/index'
 import uvUI from '@/uni_modules/uv-ui-tools'
+
+
+uni.$Utils = Utils
 
 // #ifndef VUE3
 import Vue from 'vue'
