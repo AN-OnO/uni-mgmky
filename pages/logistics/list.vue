@@ -1,4 +1,5 @@
 <template>
+	<view style="height: 100%;">
 	<view style="background-color: #333333; padding-bottom: 30rpx;">
 		<view class="title">
 			物流
@@ -14,15 +15,14 @@
 			</view>
 		</view>
 	</view>
-	<view style="background-color: #F0F1F5">
+	<view style="background-color: #F0F1F5; height: 100%;">
 		<view style="width: 92%; margin: auto; ">
 			<view class="flex-between">
 				<uv-tabs :list="list" lineColor='#333333' @click="click"></uv-tabs>
 				<uv-icon name="search" size="32"></uv-icon>
 			</view>
-			<uv-list v-for="(item, index) in [1,2,3]" :key="index" style="margin-top: 15rpx;">
-				<uv-list-item style="margin: 20rpx;
-					border-radius: 15rpx;">
+			<uv-list v-for="(item, index) in [1,2,3]" :key="index" style="margin-top: 15rpx;border-radius: 15rpx;">
+				<uv-list-item style="margin: 20rpx;">
 					<view class="flex-between">
 						<text style="font-weight: 500;font-size: 34rpx;">鹤壁市-黎阳快印</text>
 						<text style="color: #F6801E;">寄付</text>
@@ -45,9 +45,9 @@
 							 mode=""></image><text class="button-text">{{buttonText}}</text>
 					</button>
 				</uv-list-item>
-				<view class="divider-line"></view>
 			</uv-list>
 		</view>
+	</view>
 	</view>
 </template>
 
@@ -81,6 +81,9 @@
 </script>
 
 <style>
+	uni-page-body {
+		height: 100%;
+	}
 	.title {
 		font-size: 34rpx;
 		text-align: center;
@@ -134,8 +137,5 @@
 		color: rgba(255,255,255,0.9);
 		line-height: 42rpx;
 		vertical-align: super;
-	}
-	.divider-line {
-		height: 15rpx; background-color: #F0F1F5; width: 100%;
 	}
 </style>

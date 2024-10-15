@@ -1,6 +1,7 @@
 <template>
-	<view class="container-background">
+	<view class="container-background" style="height: 100%;">
 		<view class="container">
+			<view>
 			<view style="background: #333333;border-radius: 15rpx;">
 				<view class='flex-center'>
 					<image class="image" src="../../static/images/logistics/待配送.svg" mode=""></image>
@@ -65,7 +66,8 @@
 					</uv-form>
 				</view>
 			</view>
-			<view v-if="buttonText" style="margin-top: 52%; background: #FFFFFF; padding: 15rpx; ">
+			</view>
+			<view v-if="buttonText" style="background: #FFFFFF; padding: 15rpx; ">
 				<button class="button-operation">
 					<image
 						:src="buttonText === '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
@@ -88,13 +90,20 @@
 </script>
 
 <style>
+	uni-page-body {
+		height: 100%;
+	}
 	.container-background {
 		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
 	}
 
 	.container {
 		width: 92%;
+		height: 100%;
 		margin: auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
 	}
 
 	.image {
