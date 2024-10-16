@@ -2,12 +2,12 @@
 	<view style="height: 100%;">
 	<view style="background-color: #333333; padding-bottom: 30rpx;">
 		<view class="title">
-			物流
+			{{type === '物流' ? '物流':'配送'}}
 		</view>
 		<view style="display: flex; justify-content: space-around;">
 			<view>
 				<view class="amount">3</view>
-				<view class="today-info">今日取送(单)</view>
+				<view class="today-info">{{type === '物流' ?'今日配送(件)':'今日取送(单)'}}</view>
 			</view>
 			<view>
 				<view class="amount">2164.43</view>
@@ -25,7 +25,7 @@
 				<uv-list-item style="margin: 20rpx;">
 					<view class="flex-between">
 						<text style="font-weight: 500;font-size: 34rpx;">鹤壁市-黎阳快印</text>
-						<text style="color: #F6801E;">寄付</text>
+						<text :class="type === '物流' ? 'logistics-method' : 'time'">昨天 16:11</text>
 					</view>
 					<view style="display: flex; align-items: center;">
 						<image src="../../static/images/logistics/Local (已定位).svg"
@@ -38,12 +38,22 @@
 						height: 85rpx;
 						-webkit-line-clamp: 2;
 						color: #808080;">特价喷墨画册【喷墨画册】：260x185mm-封面260x185mm-封面：200g铜版纸特价喷墨画册【喷墨画册】：260x185mm-封面：200g铜版纸-单面彩色</text>
-					<button v-if="['开始取送','完成取送'].includes(buttonText)" class="list-button">
-						<image
-							:src="buttonText === '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
-							class="image"
-							 mode=""></image><text class="button-text">{{buttonText}}</text>
-					</button>
+						<view v-if="buttonText" style="display: flex;justify-content: end;">
+						<button v-if="type === '配送'" class="list-button white-button">
+							<image src="../../static/images/logistics/电话.svg" class="image" mode=""></image><text
+								class="button-text" style="color: #333333;">电话</text>
+						</button>
+						<button v-if="type === '配送'" class="list-button white-button">
+							<image src="../../static/images/logistics/导航.svg" class="image" mode=""></image><text
+								class="button-text" style="color: #333333;">导航</text>
+						</button>
+					    <button  class="list-button">
+					    	<image
+					    		:src="buttonText === '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+					    		class="image"
+					    		 mode=""></image><text class="button-text">{{buttonText}}</text>
+					    </button>
+						</view>
 				</uv-list-item>
 			</uv-list>
 		</view>
@@ -55,7 +65,8 @@
 	export default {
 		data() {
 			return {
-				buttonText: '开始取送',
+				type: '配送',
+				buttonText: this.type === '物流' ?'开始取送' : '开始配送',
 				list: [{
 					name: '待取送(5)',
 				}, {
@@ -69,9 +80,9 @@
 			click(item) {
 				console.log('item', item);
 				if (item.index === 0) {
-					this.buttonText = '开始取送'
+					this.buttonText = this.type === '物流' ?'开始取送' : '开始配送';
 				} else if (item.index === 1) {
-					this.buttonText = '完成取送'
+					this.buttonText = this.type === '物流' ?'完成取送' :'完成配送'
 				} else {
 					this.buttonText = ''
 				}
@@ -107,7 +118,19 @@
 		line-height: 38rpx;
 		text-align: center;
 	}
-
+	.logistics-method {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #F6801E;
+		line-height: 38rpx;
+	}
+	.time {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #808080;
+		line-height: 38rpx;
+	}
+	
 	.flex-between {
 		display: flex;
 		justify-content: space-between;
@@ -125,8 +148,13 @@
 	.list-button {
 		height: 69rpx;
 		margin-right: 0;
+		margin-left: 15rpx;
 		background: #333333;
 		border-radius: 191rpx
+	}
+	.white-button {
+		background: #FFFFFF;
+		border: 2rpx solid #D9D9D9;
 	}
 	.image {
 		max-width: 45.8rpx;max-height: 45.8rpx;
