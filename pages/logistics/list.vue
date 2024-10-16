@@ -1,9 +1,9 @@
 <template>
-	<view style="height: 100%;">
+	<view class="page-container" style="height: 100%;">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
-			<view class="title">
+			<!-- <view class="title">
 				{{type === '物流' ? '物流':'配送'}}
-			</view>
+			</view> -->
 			<view style="display: flex; justify-content: space-around;">
 				<view>
 					<view class="amount">3</view>
@@ -65,8 +65,8 @@
 	export default {
 		data() {
 			return {
-				type: '配送',
-				buttonText: this.type === '物流' ? '开始取送' : '开始配送',
+				type: this.$route.query.type,
+				buttonText: this.$route.query.type === '物流' ? '开始取送' : '开始配送',
 				list: [{
 					name: '待取送(5)',
 				}, {
@@ -75,6 +75,11 @@
 					name: '已完成(5)'
 				}, ]
 			}
+		},
+		onLoad() {
+			uni.setNavigationBarTitle({
+			      title: this.type
+			    });
 		},
 		methods: {
 			click(item) {

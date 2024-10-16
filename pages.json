@@ -36,7 +36,8 @@
 			"path": "pages/logistics/list",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor": "#333",
 			}
 		},
 		{

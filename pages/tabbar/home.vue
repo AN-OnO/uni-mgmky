@@ -51,11 +51,11 @@
 	}, {
 		icon: '/static/images/app/配送.png',
 		name: '配送',
-		event: ''
+		event: '/pages/logistics/list?type=配送'
 	}, {
 		icon: '/static/images/app/物流.png',
 		name: '物流',
-		event: ''
+		event: '/pages/logistics/list?type=物流'
 	}])
 
 	const handleToolEvent = (e) => {

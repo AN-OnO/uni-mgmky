@@ -1,6 +1,6 @@
 // 设置白名单，白名单中的路径不进行拦截
 const whitePage = ['/',
-	'/pages/index/login', '/pages/tabbar/home','/pages/productionReport/list'
+	'/pages/index/login', '/pages/tabbar/home', '/pages/productionReport/list', '/pages/logistics/list'
 ]
 
 // 检查白名单
@@ -15,7 +15,7 @@ let arr = ["navigateTo", "switchTab", "redirectTo", "reLaunch"];
 arr.forEach(value => {
 	uni.addInterceptor(value, {
 		invoke(e) {
-			const isLogin = false//校验登录凭证
+			const isLogin = false //校验登录凭证
 			if (checkWhite(e.url) || isLogin) {
 				return true
 			} else {
