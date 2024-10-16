@@ -17,7 +17,7 @@
 					<div class="address">
 						河南省郑州市中原区伏牛南路209-1金帝大厦南门美</div>
 				</view>
-				<view style="background: #FFFFFF; margin-top: 15rpx; padding: 30rpx;">
+				<view class="container-content">
 					<view style="display: flex;">
 						<uv-image src="" width="152.67rpx" height="152.67rpx"></uv-image>
 						<view style="padding-left: 30rpx;">
@@ -26,7 +26,7 @@
 							<text>X4</text>
 						</view>
 					</view>
-					<view style="margin: 30rpx 0; border: 2rpx solid #D9D9D9;"></view>
+					<view class="info-divider"></view>
 					<view>
 						<text class="order-info">订单信息</text>
 						<uv-form class="font-style">
@@ -34,27 +34,41 @@
 								<text style="margin-right: 15rpx;">240820000041478</text>
 								<button class="button-copy"><text class="text-copy">复制</text></button>
 							</uv-form-item>
-							<uv-form-item label="订购内容:" labelWidth='250rpx'>
-								<text>特价喷墨画册260x185mm-广告制作尺寸1.2进口机特价喷墨画册260x185mm-广告制作尺寸1.2进口机制作尺寸</text>
+							<uv-form-item  label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
+								<template v-slot:right>
+									<view style="max-width: 380rpx;">特价喷墨画册260x185mm-广告制作尺寸1.2进口机特价喷墨画册260x185mm-广告制作尺寸1.2进口机制作尺寸</view>
+								</template>
 							</uv-form-item>
-							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
-								<text>4</text>
+							<uv-form-item class="align-right "  label="订购数量:" labelWidth='250rpx'>
+								<template v-slot:right>
+							    	<text>4</text>
+							    </template>
 							</uv-form-item>
-							<uv-form-item class="align-right " label="下单时间:" labelWidth='250rpx'>
-								<text>2024-08-02 12:49:40</text>
+							<uv-form-item class="align-right "  label="下单时间:" labelWidth='250rpx'>
+								<template v-slot:right>
+									<text>2024-08-02 12:49:40</text>
+								</template>
 							</uv-form-item>
 							<uv-form-item v-if="type === '物流'" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
-								<text>寄付</text>
+								<template v-slot:right>
+									<text>寄付</text>
+								</template>
 							</uv-form-item>
-							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'>
-								<text>-</text>
+							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx' customStyle='align-items: flex-start'>
+								<template v-slot:right>
+									<view style="max-width: 380rpx;">-</view>
+								</template>
 							</uv-form-item>
 							<uv-form-item v-if="!buttonText" class="align-right " label="完成时间:" labelWidth='250rpx'>
-								<text>2024-08-02 12:49:40</text>
+								<template v-slot:right>
+									<text>2024-08-02 12:49:40</text>
+								</template>
 							</uv-form-item>
 							<uv-form-item v-if="type === '物流' && !buttonText" class="align-right " label="寄件单号:"
 								labelWidth='250rpx'>
-								<text>SF240820000041478</text>
+								<template v-slot:right>
+									<text>SF240820000041478</text>
+								</template>
 							</uv-form-item>
 							<uv-form-item v-if="type === '物流' && !buttonText" class="align-right " label="寄件图片:"
 								labelWidth='250rpx' labelPosition='top'>
@@ -66,8 +80,7 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="buttonText"
-				class="bottom-container">
+			<view v-if="buttonText" class="bottom-container">
 				<button class="button-operation white-button">
 					<image src="../../static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
@@ -116,10 +129,21 @@
 		justify-content: space-between;
 	}
 
+	.container-content {
+		background: #FFFFFF;
+		margin-top: 15rpx;
+		padding: 30rpx;
+	}
+
 	.image {
 		max-width: 45.8rpx;
 		max-height: 45.8rpx;
 		margin: 20rpx;
+	}
+
+	.info-divider {
+		margin: 30rpx 0;
+		border: 2rpx solid #D9D9D9;
 	}
 
 	.flex-center {
@@ -148,9 +172,14 @@
 		margin-left: 85.8rpx;
 		padding-bottom: 30rpx;
 	}
-.order-info {
-	font-weight: bold;font-size: 34rpx;color: #333333;line-height: 53rpx;
-}
+
+	.order-info {
+		font-weight: bold;
+		font-size: 34rpx;
+		color: #333333;
+		line-height: 53rpx;
+	}
+
 	.line-clamp-3 {
 		font-size: 27rpx;
 		color: #333333;
@@ -176,23 +205,20 @@
 		vertical-align: top;
 	}
 
-	.font-style .uv-form-item {
+	.uv-form.font-style .uv-form-item {
 		font-size: 27rpx;
 		color: #808080;
 		line-height: 42rpx;
 	}
 
-	.font-style .uv-form-item__body__left {
-		margin-bottom: auto !important;
+	.bottom-container {
+		background: #FFFFFF;
+		height: 167rpx;
+		padding: 15rpx;
+		display: flex;
+		justify-content: end;
 	}
 
-	.uv-form-item.align-right .uv-form-item__body .uv-form-item__body__right {
-		flex: none;
-		margin-left: auto;
-	}
-	.bottom-container {
-		background: #FFFFFF; height: 167rpx; padding: 15rpx; display: flex; justify-content: end; 
-	}
 	.button-operation {
 		height: 69rpx;
 		background: #333333;
