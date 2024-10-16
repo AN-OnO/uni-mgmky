@@ -2,26 +2,26 @@
 	<view style="padding: 32rpx;">
 		<view class="upload-title">{{type === '物流' ? '请上传寄件信息' : '请上传配送信息'}}</view>
 		<uv-form>
-			<uv-form-item v-if="type === '物流'" label="快递单号" labelPosition='top' labelWidth="200rpx">
+			<uv-form-item v-if="type === '物流'" label="快递单号" labelPosition='top' labelWidth="200rpx" leftIcon='/static/images/logistics/1.svg'>
 				<uv-input placeholder="请输入快递单号" suffix-icon="scan" style="margin-top: 15rpx;" />
 			</uv-form-item>
-			<uv-form-item v-if="type === '物流'" label="快递公司" labelPosition='top' labelWidth="200rpx">
+			<uv-form-item v-if="type === '物流'" label="快递公司" labelPosition='top' labelWidth="200rpx" leftIcon='/static/images/logistics/2.svg'>
 				<uv-input placeholder="请选择快递公司" style="margin-top: 15rpx;" />
 			</uv-form-item>
-			<uv-form-item label="数量(件)" labelPosition='top' labelWidth="200rpx">
+			<uv-form-item label="数量(件)" labelPosition='top' labelWidth="200rpx" :leftIcon="type === '物流'? '/static/images/logistics/3.svg' : '/static/images/logistics/1.svg'">
 				<uv-number-box style="margin-top: 15rpx;" bgColor="#ffffff"
 					iconStyle='background-color:#F5F6F7;width: 60rpx;height: 60rpx;justify-content: center'></uv-number-box>
 			</uv-form-item>
-			<uv-form-item label="重量(kg)" labelPosition='top' labelWidth="200rpx">
+			<uv-form-item label="重量(kg)" labelPosition='top' labelWidth="200rpx" :leftIcon="type === '物流'? '/static/images/logistics/4.svg' : '/static/images/logistics/2.svg'">
 				<uv-number-box style="margin-top: 15rpx;" bgColor="#ffffff"
 					iconStyle='background-color:#F5F6F7;width: 60rpx;height: 60rpx;justify-content: center'></uv-number-box>
 			</uv-form-item>
-			<uv-form-item label="请上传快递图片(至少一张)" labelPosition='top' labelWidth="500rpx">
+			<uv-form-item label="请上传快递图片(至少一张)" labelPosition='top' labelWidth="500rpx" :leftIcon="type === '物流'? '/static/images/logistics/5.svg' : '/static/images/logistics/3.svg'">
 				<uv-upload name="1" multiple :maxCount="10" style="margin-top: 15rpx;">
 					<image src="../../static/images/logistics/Group 427319118.svg" class="upload-image"></image>
 				</uv-upload>
 			</uv-form-item>
-			<uv-form-item v-if="type !== '物流'" label="备注(选填)" labelPosition='top' labelWidth="500rpx">
+			<uv-form-item v-if="type !== '物流'" label="备注(选填)" labelPosition='top' labelWidth="500rpx" leftIcon='/static/images/logistics/4.svg'>
 				<uv-textarea placeholder="备注内容" style="margin-top: 15rpx;"></uv-textarea>
 			</uv-form-item>
 			<button class="upload-button" @click="submit"><text class="text-upload">确认提交</text></button>
@@ -34,7 +34,7 @@
 	export default {
 		data() {
 			return {
-				type: '配送'
+				type: '物流'
 			}
 		},
 		methods: {
