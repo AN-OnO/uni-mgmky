@@ -1,5 +1,5 @@
 <template>
-	<view class="container-background" style="height: 100%;">
+	<view class="container-background" style="height: 100%;overflow: scroll;">
 		<view class="container">
 			<view>
 				<view style="background: #333333;border-radius: 15rpx;">
@@ -81,11 +81,11 @@
 				</view>
 			</view>
 			<view v-if="buttonText" class="bottom-container">
-				<button class="button-operation white-button">
+				<button v-if="type === '配送'" class="button-operation white-button">
 					<image src="../../static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
-				<button class="button-operation white-button">
+				<button v-if="type === '配送'" class="button-operation white-button">
 					<image src="../../static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
@@ -104,8 +104,8 @@
 	export default {
 		data() {
 			return {
-				type: '物流',
-				buttonText: '开始取送',
+				type: this.$route.query.type,
+				buttonText: this.$route.query.buttonText
 			}
 		},
 	}
@@ -113,9 +113,8 @@
 
 <style>
 	uni-page-body {
-		height: 100%;
+			height: 100%;
 	}
-
 	.container-background {
 		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
 	}

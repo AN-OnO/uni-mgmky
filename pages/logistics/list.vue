@@ -1,9 +1,6 @@
 <template>
 	<view class="page-container" style="height: 100%;">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
-			<!-- <view class="title">
-				{{type === '物流' ? '物流':'配送'}}
-			</view> -->
 			<view style="display: flex; justify-content: space-around;">
 				<view>
 					<view class="amount">3</view>
@@ -22,7 +19,7 @@
 					<uv-tabs :list="list" lineColor='#333333' @click="click"></uv-tabs>
 					<uv-icon name="search" size="32"></uv-icon>
 				</view>
-				<uv-list v-for="(item, index) in [1,2,3]" :key="index" style="margin-top: 15rpx;border-radius: 15rpx;">
+				<uv-list v-for="(item, index) in [1,2,3]" :key="index" style="margin-top: 15rpx;border-radius: 15rpx;" @click="jumpToInfo(item)">
 					<uv-list-item style="margin: 20rpx;">
 						<view class="flex-between">
 							<text style="font-weight: 500;font-size: 34rpx;">鹤壁市-黎阳快印</text>
@@ -48,7 +45,7 @@
 								<image src="../../static/images/logistics/导航.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">导航</text>
 							</button>
-							<button class="list-button">
+							<button class="list-button" @click.stop="openModal">
 								<image
 									:src="buttonText === '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 									class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
@@ -56,13 +53,20 @@
 						</view>
 					</uv-list-item>
 				</uv-list>
+				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+					<UploadVue :uploadType="type" :closeModal="closeModal" />
+				</uv-modal>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import UploadVue from './upload.vue';
 	export default {
+		components: {
+			UploadVue
+		},
 		data() {
 			return {
 				type: this.$route.query.type,
@@ -78,8 +82,8 @@
 		},
 		onLoad() {
 			uni.setNavigationBarTitle({
-			      title: this.type
-			    });
+				title: this.type
+			});
 		},
 		methods: {
 			click(item) {
@@ -91,6 +95,19 @@
 				} else {
 					this.buttonText = ''
 				}
+			},
+			jumpToInfo(data) {
+				uni.navigateTo({
+					url: `/pages/logistics/info?type=${this.type}&buttonText=${this.buttonText}`
+				})
+			},
+			openModal() {
+				if (this.buttonText.includes('完成')) {
+					this.$refs.modal.open();
+				}
+			},
+			closeModal() {
+				this.$refs.modal.close();
 			}
 		}
 	}
@@ -101,13 +118,6 @@
 		height: 100%;
 	}
 
-	.title {
-		font-size: 34rpx;
-		text-align: center;
-		font-weight: 500;
-		color: rgba(255, 255, 255, 0.9);
-		line-height: 53rpx;
-	}
 
 	.amount {
 		font-weight: 500;

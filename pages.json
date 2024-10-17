@@ -37,14 +37,15 @@
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#333",
+				"navigationBarBackgroundColor": "#333"
 			}
 		},
 		{
 			"path": "pages/logistics/info",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
+				"navigationBarTitleText": "订单详情",
+				"navigationBarTextStyle": "white",
+				"navigationBarBackgroundColor": "rgba(89,87,230,0.6)"
 			}
 		},
 		{
@@ -55,10 +56,9 @@
 			}
 		},
 		{
-			"path" : "pages/productionReport/list",
-			"style" : 
-			{
-				"navigationBarTitleText" : "报工",
+			"path": "pages/productionReport/list",
+			"style": {
+				"navigationBarTitleText": "报工",
 				"navigationBarTextStyle": "white",
 				"navigationBarBackgroundColor": "#333",
 				"backgroundColor": "#F0F1F5"
@@ -83,7 +83,7 @@
 				"text": "首页",
 				"iconPath": "/static/images/tabbar/home.png",
 				"selectedIconPath": "/static/images/tabbar/home_active.png"
-			},			 
+			},
 			{
 				"pagePath": "pages/tabbar/user",
 				"text": "我的",
