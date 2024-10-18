@@ -4,7 +4,7 @@
 			<view style="display: flex; justify-content: space-around;">
 				<view>
 					<view class="amount">{{amount}}</view>
-					<view class="today-info">{{type === '物流' ?'今日取送(单)':'今日配送(件)'}}</view>
+					<view class="today-info">{{deliveryMethod === 4 ?'今日取送(单)':'今日配送(件)'}}</view>
 				</view>
 				<view class="list-divider"></view>
 				<view>
@@ -24,7 +24,7 @@
 					<uv-list-item style="margin: 20rpx;">
 						<view class="flex-between">
 							<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-							<text :class="type === '物流' ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
+							<text :class="deliveryMethod === 4 ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
 						</view>
 						<view style="display: flex; align-items: center;">
 							<image src="../../static/images/logistics/Local (已定位).svg"
@@ -37,11 +37,11 @@
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
 						<view v-if="buttonText" style="display: flex;justify-content: end;">
-							<button v-if="type === '配送'" class="list-button white-button">
+							<button v-if="deliveryMethod === 3" class="list-button white-button">
 								<image src="../../static/images/logistics/电话.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">电话</text>
 							</button>
-							<button v-if="type === '配送'" class="list-button white-button">
+							<button v-if="deliveryMethod === 3" class="list-button white-button">
 								<image src="../../static/images/logistics/导航.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">导航</text>
 							</button>
@@ -55,7 +55,7 @@
 				</uv-list>
 				<uv-load-more :status="status" @loadmore='loadMore'/>
 				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-					<UploadVue :uploadType="type" :closeModal="closeModal" />
+					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
 				</uv-modal>
 			</view>
 		</view>
@@ -73,8 +73,8 @@
 		},
 		data() {
 			return {
-				type: this.$route.query.type,
-				buttonText: this.$route.query.type === '物流' ? '开始取送' : '开始配送',
+				deliveryMethod: 3,
+				buttonText: '开始取送' ,
 				list: [{
 					name: '待取送',
 				}, {
@@ -90,9 +90,11 @@
 				count: 0
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.deliveryMethod = options.deliveryMethod;
+			this.buttonText = options.deliveryMethod === 3 ? '开始配送' : '开始取送';
 			uni.setNavigationBarTitle({
-				title: this.type
+				title: this.deliveryMethod === 3 ? '配送' : '物流'
 			});
 			this.getList();
 		},
@@ -111,11 +113,11 @@
 				this.listData = [];
 				this.status = 'loadmore';
 				if (item.index === 0) {
-					this.buttonText = this.type === '物流' ? '开始取送' : '开始配送';
+					this.buttonText = this.deliveryMethod === 4 ? '开始取送' : '开始配送';
 					this.searchType = 1;
 					this.getList()
 				} else if (item.index === 1) {
-					this.buttonText = this.type === '物流' ? '完成取送' : '完成配送';
+					this.buttonText = this.deliveryMethod === 4 ? '完成取送' : '完成配送';
 					this.searchType = 2;
 					this.getList()
 				} else {
@@ -126,12 +128,12 @@
 			},
 			goSearch() {
 				uni.navigateTo({
-					url: '/pages/logistics/search'
+					url: '/pages/logistics/search?deliveryMethod=${this.deliveryMethod}'
 				})
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
-					url: `/pages/logistics/info?type=${this.type}&buttonText=${this.buttonText}&data=${JSON.stringify(data)}`
+					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&buttonText=${this.buttonText}&data=${JSON.stringify(data)}`
 				})
 			},
 			openModal() {
@@ -148,16 +150,16 @@
 					pageIndex: this.pageIndex,
 					keywords: "",
 					searchType: this.searchType,
-					deliveryMethod: this.type === '物流' ? 4 : 3,
+					deliveryMethod: this.deliveryMethod,
 				}).then((res) => {
 					const {
 						deliveryStat,
 						pageEntities,
 						count
 					} = res.data;
-					this.list[0].name = this.type === '物流' ? `待取送(${deliveryStat.waitNum})` :
+					this.list[0].name = this.deliveryMethod === 4 ? `待取送(${deliveryStat.waitNum})` :
 						`待配送(${deliveryStat.waitNum})`;
-					this.list[1].name = this.type === '物流' ? `取送中(${deliveryStat.myWaitNum})` :
+					this.list[1].name = this.deliveryMethod === 4 ? `取送中(${deliveryStat.myWaitNum})` :
 						`配送中(${deliveryStat.myWaitNum})`;
 					this.list[2].name = `已完成(${deliveryStat.finishedNum})`;
 					this.amount = deliveryStat.todayFinishedNum;
