@@ -13,7 +13,7 @@
 				</view>
 			</view>
 		</view>
-		<view >
+		<view>
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
@@ -182,6 +182,10 @@
 </script>
 
 <style scoped>
+	uni-page-body {
+		background-color: #F0F1F5;
+		height: 100%;
+	}
 	.amount {
 		font-weight: 500;
 		font-size: 46rpx;
