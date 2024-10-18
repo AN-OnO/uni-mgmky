@@ -70,6 +70,13 @@
 				"navigationBarBackgroundColor": "#333",
 				"backgroundColor": "#F0F1F5"
 			}
+		},
+		{
+			"path" : "pages/statisticalForm/index",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
 		}
 	],
 	"globalStyle": {

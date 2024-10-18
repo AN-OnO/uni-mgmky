@@ -43,7 +43,7 @@
 	}, {
 		icon: '/static/images/app/统计报表.png',
 		name: '统计报表',
-		event: ''
+		event: '/pages/statisticalForm/index'
 	}, {
 		icon: '/static/images/app/报工.png',
 		name: '报工',
