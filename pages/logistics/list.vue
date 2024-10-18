@@ -1,10 +1,10 @@
 <template>
-	<view class="page-container" style="height: 100%;">
+	<view class="page-container" style="height: 100%; ">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
-					<view class="amount">3</view>
-					<view class="today-info">{{type === '物流' ?'今日配送(件)':'今日取送(单)'}}</view>
+					<view class="amount">{{amount}}</view>
+					<view class="today-info">{{type === '物流' ?'今日取送(单)':'今日配送(件)'}}</view>
 				</view>
 				<view class="list-divider"></view>
 				<view>
@@ -13,29 +13,29 @@
 				</view>
 			</view>
 		</view>
-		<view style="background-color: #F0F1F5; height: 100%;">
+		<view style="background-color: #F0F1F5; height: 100%; overflow: scroll;">
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
-					<uv-tabs :list="list" lineColor='#333333' @click="click"></uv-tabs>
-					<uv-icon name="search" size="32"></uv-icon>
+					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
+					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
-				<uv-list v-for="(item, index) in [1,2,3]" :key="index" style="margin-top: 15rpx;border-radius: 15rpx;" @click="jumpToInfo(item)">
+				<uv-list v-for="(item, index) in listData" :key="index" @click="jumpToInfo(item)"
+					style="margin-top: 15rpx;border-radius: 15rpx;">
 					<uv-list-item style="margin: 20rpx;">
 						<view class="flex-between">
-							<text style="font-weight: 500;font-size: 34rpx;">鹤壁市-黎阳快印</text>
-							<text :class="type === '物流' ? 'logistics-method' : 'time'">昨天 16:11</text>
+							<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
+							<text :class="type === '物流' ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
 						</view>
 						<view style="display: flex; align-items: center;">
 							<image src="../../static/images/logistics/Local (已定位).svg"
 								style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
-							<text class="line-clamp">河南省河南省 郑州市金水区河南省/郑州市/金水区/新河南省河南省
-								郑州市金水区河南省/郑州市/金水郑州市金水区河南省/郑州市/金水</text>
+							<text class="line-clamp">{{item.address}}</text>
 						</view>
 						<text class="line-clamp" style="
-						margin-bottom: 15rpx;
-						height: 85rpx;
-						-webkit-line-clamp: 2;
-						color: #808080;">特价喷墨画册【喷墨画册】：260x185mm-封面260x185mm-封面：200g铜版纸特价喷墨画册【喷墨画册】：260x185mm-封面：200g铜版纸-单面彩色</text>
+ 						margin-bottom: 15rpx;
+ 						height: 85rpx;
+ 						-webkit-line-clamp: 2;
+ 						color: #808080;">{{item.productName}}</text>
 						<view v-if="buttonText" style="display: flex;justify-content: end;">
 							<button v-if="type === '配送'" class="list-button white-button">
 								<image src="../../static/images/logistics/电话.svg" class="list-image" mode=""></image>
@@ -53,6 +53,7 @@
 						</view>
 					</uv-list-item>
 				</uv-list>
+				<uv-load-more :status="status" @loadmore='loadMore'/>
 				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
 					<UploadVue :uploadType="type" :closeModal="closeModal" />
 				</uv-modal>
@@ -62,43 +63,75 @@
 </template>
 
 <script>
+	import {
+		GetList
+	} from '../../apis/member';
 	import UploadVue from './upload.vue';
 	export default {
 		components: {
-			UploadVue
+			UploadVue,
 		},
 		data() {
 			return {
 				type: this.$route.query.type,
 				buttonText: this.$route.query.type === '物流' ? '开始取送' : '开始配送',
 				list: [{
-					name: '待取送(5)',
+					name: '待取送',
 				}, {
-					name: '取送中(8)',
+					name: '取送中',
 				}, {
-					name: '已完成(5)'
-				}, ]
+					name: '已完成'
+				}, ],
+				listData: [],
+				amount: 0,
+				pageIndex: 1,
+				searchType: 1,
+				status: 'loadmore',
+				count: 0
 			}
 		},
 		onLoad() {
 			uni.setNavigationBarTitle({
 				title: this.type
 			});
+			this.getList();
+		},
+		onPullDownRefresh() {
+				console.log('refresh');
+				this.getList();
+				uni.stopPullDownRefresh();
+		},
+		onReachBottom() {
+			if (this.listData.length >= this.count ) return;
+			this.loadMore()
 		},
 		methods: {
-			click(item) {
+			changeTab(item) {
 				console.log('item', item);
+				this.listData = [];
+				this.status = 'loadmore';
 				if (item.index === 0) {
 					this.buttonText = this.type === '物流' ? '开始取送' : '开始配送';
+					this.searchType = 1;
+					this.getList()
 				} else if (item.index === 1) {
-					this.buttonText = this.type === '物流' ? '完成取送' : '完成配送'
+					this.buttonText = this.type === '物流' ? '完成取送' : '完成配送';
+					this.searchType = 2;
+					this.getList()
 				} else {
-					this.buttonText = ''
+					this.buttonText = '';
+					this.searchType = 3;
+					this.getList()
 				}
+			},
+			goSearch() {
+				uni.navigateTo({
+					url: '/pages/logistics/search'
+				})
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
-					url: `/pages/logistics/info?type=${this.type}&buttonText=${this.buttonText}`
+					url: `/pages/logistics/info?type=${this.type}&buttonText=${this.buttonText}&data=${JSON.stringify(data)}`
 				})
 			},
 			openModal() {
@@ -108,7 +141,40 @@
 			},
 			closeModal() {
 				this.$refs.modal.close();
-			}
+			},
+			getList() {
+				GetList({
+					pageSize: 10,
+					pageIndex: this.pageIndex,
+					keywords: "",
+					searchType: this.searchType,
+					deliveryMethod: this.type === '物流' ? 4 : 3,
+				}).then((res) => {
+					const {
+						deliveryStat,
+						pageEntities,
+						count
+					} = res.data;
+					this.list[0].name = this.type === '物流' ? `待取送(${deliveryStat.waitNum})` :
+						`待配送(${deliveryStat.waitNum})`;
+					this.list[1].name = this.type === '物流' ? `取送中(${deliveryStat.myWaitNum})` :
+						`配送中(${deliveryStat.myWaitNum})`;
+					this.list[2].name = `已完成(${deliveryStat.finishedNum})`;
+					this.amount = deliveryStat.todayFinishedNum;
+					this.listData = this.listData.concat(pageEntities);
+					this.count = count;
+					if (this.listData.length >= this.count ) {
+						this.status = 'nomore';
+					} else {
+						this.status = 'loadmore';
+					}
+				})
+			},
+			loadMore() {
+				this.status = 'loading';
+				this.pageIndex = this.pageIndex + 1;
+				this.getList();
+			},
 		}
 	}
 </script>
@@ -116,8 +182,8 @@
 <style scoped>
 	uni-page-body {
 		height: 100%;
+		overflow: scroll;
 	}
-
 
 	.amount {
 		font-weight: 500;

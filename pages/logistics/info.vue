@@ -7,22 +7,19 @@
 						<image class="image"
 							:src="buttonText.includes('完成')? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
 							mode=""></image>
-						<text class="order-status">订单待取送</text>
+						<text class="order-status">{{buttonText.includes('取送')? '订单待取送' : '订单待配送'}}</text>
 					</view>
 					<view class='flex-center'>
 						<image class="image" src="../../static/images/logistics/infoLocal (已定位).svg" mode=""></image>
-						<text class="local-text">汝河路-永昌广告印务
-							13923274241</text>
+						<text class="local-text">{{`${data.companyName} ${data.mobile}`}}</text>
 					</view>
-					<div class="address">
-						河南省郑州市中原区伏牛南路209-1金帝大厦南门美</div>
+					<div class="address">{{data.address}}</div>
 				</view>
 				<view class="container-content">
 					<view style="display: flex;">
 						<uv-image src="" width="152.67rpx" height="152.67rpx"></uv-image>
 						<view style="padding-left: 30rpx;">
-							<view class="line-clamp-3">特价喷墨画册260x185mm-广告制作尺寸1.2进口机特价喷墨画册260x185mm-广告制作尺寸1.2进口机1354534
-							</view>
+							<view class="line-clamp-3">{{data.productName}}</view>
 							<text>X4</text>
 						</view>
 					</view>
@@ -31,12 +28,16 @@
 						<text class="order-info">订单信息</text>
 						<uv-form class="font-style">
 							<uv-form-item class="align-right " label="订单编号:" labelWidth='250rpx'>
-								<text style="margin-right: 15rpx;">240820000041478</text>
+								<template v-slot:right>
+								<view style="display: flex;">
+								<text style="margin-right: 15rpx;">{{data.orderItemNo}}</text>
 								<button class="button-copy"><text class="text-copy">复制</text></button>
+								</view>
+								</template>
 							</uv-form-item>
 							<uv-form-item  label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view style="max-width: 380rpx;">特价喷墨画册260x185mm-广告制作尺寸1.2进口机特价喷墨画册260x185mm-广告制作尺寸1.2进口机制作尺寸</view>
+									<view style="max-width: 380rpx;">{{data.productName}}</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right "  label="订购数量:" labelWidth='250rpx'>
@@ -51,7 +52,7 @@
 							</uv-form-item>
 							<uv-form-item v-if="type === '物流'" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>寄付</text>
+									<text>{{data.tags[0]}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx' customStyle='align-items: flex-start'>
@@ -105,9 +106,17 @@
 		data() {
 			return {
 				type: this.$route.query.type,
+				data: {},
 				buttonText: this.$route.query.buttonText
 			}
 		},
+		onLoad(options) {
+		    try {
+		      this.data = JSON.parse(options.data);
+		    } catch (error) {
+		      console.error('解析参数失败', error);
+		    }
+		  }
 	}
 </script>
 

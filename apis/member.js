@@ -26,3 +26,12 @@ export function VCode(params) {
 export function GetToken(params) {
 	return request.post('/api/UserMgr/GetToken', params);
 }
+
+/**
+ * 获取物流、配送列表
+ * @param params 
+ * @return 
+ */
+export function GetList(params) {
+	return request.post('/api/Production/ListDeliveryByPSP', params)
+}
