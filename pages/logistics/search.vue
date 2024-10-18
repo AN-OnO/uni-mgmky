@@ -113,18 +113,8 @@
 					})
 				},
 				jumpToInfo(data) {
-					const buttonText = ({
-		              3: {
-		              	1: '开始配送',
-		              	2: '完成配送'
-		              },
-		              4: {
-		              	1: '开始取送',
-		              	2: '完成取送'
-		              }
-	                })[data.deliveryMethod][data.delivryStatus];
 					uni.navigateTo({
-						url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&buttonText=${buttonText}&data=${JSON.stringify(data)}`
+						url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&data=${JSON.stringify(data)}`
 					})
 				},
 				openModal(delivryStatus) {

@@ -5,9 +5,22 @@
 				<view style="background: #333333;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
-							:src="buttonText.includes('完成')? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
+							:src="searchType === 2? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
 							mode=""></image>
-						<text class="order-status">{{buttonText.includes('取送')? '订单待取送' : '订单待配送'}}</text>
+						<text class="order-status">{{
+							({
+								3: {
+									1: '订单待配送',
+									2: '订单配送中',
+									3: '订单已完成'
+								},
+								4: {
+									1: '订单待取送',
+									2: '订单取送中',
+									3: '订单已完成'
+								}
+							})[deliveryMethod][searchType]
+							}}</text>
 					</view>
 					<view class='flex-center'>
 						<image class="image" src="../../static/images/logistics/infoLocal (已定位).svg" mode=""></image>
@@ -60,18 +73,18 @@
 									<view style="max-width: 380rpx;">-</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="!buttonText" class="align-right " label="完成时间:" labelWidth='250rpx'>
+							<uv-form-item v-if="searchType === 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>2024-08-02 12:49:40</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod === 4 && !buttonText" class="align-right " label="寄件单号:"
+							<uv-form-item v-if="deliveryMethod === 4 && searchType === 3" class="align-right " label="寄件单号:"
 								labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>SF240820000041478</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod === 4 && !buttonText" class="align-right " label="寄件图片:"
+							<uv-form-item v-if="deliveryMethod === 4 && searchType === 3" class="align-right " label="寄件图片:"
 								labelWidth='250rpx' labelPosition='top'>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
@@ -81,7 +94,7 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="buttonText" class="bottom-container">
+			<view v-if="searchType !== 3" class="bottom-container">
 				<button v-if="deliveryMethod === 3" class="button-operation white-button">
 					<image src="../../static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
@@ -92,9 +105,19 @@
 				</button>
 				<button class="button-operation">
 					<image
-						:src="buttonText === '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+						:src="searchType === 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
-					<text class="text-operation">{{buttonText}}</text>
+					<text class="text-operation">{{({
+								3: {
+									1: '开始配送',
+									2: '完成配送',
+								},
+								4: {
+									1: '开始取送',
+									2: '完成取送',
+								}
+							})[deliveryMethod][searchType]
+							}}</text>
 				</button>
 			</view>
 		</view>
@@ -107,12 +130,12 @@
 			return {
 				deliveryMethod: 3,
 				data: {},
-				buttonText: '开始取送'
+				searchType: 1
 			}
 		},
 		onLoad(options) {
 			this.deliveryMethod = options.deliveryMethod;
-			this.buttonText = options.buttonText
+			this.searchType = options.searchType;
 		    try {
 		      this.data = JSON.parse(options.data);
 		    } catch (error) {

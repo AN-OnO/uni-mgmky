@@ -133,7 +133,7 @@
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
-					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&buttonText=${this.buttonText}&data=${JSON.stringify(data)}`
+					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${this.searchType}&data=${JSON.stringify(data)}`
 				})
 			},
 			openModal() {
