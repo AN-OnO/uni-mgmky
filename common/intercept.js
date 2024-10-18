@@ -1,6 +1,6 @@
 // 设置白名单，白名单中的路径不进行拦截
 const whitePage = ['/',
-	'/pages/index/login', '/pages/tabbar/home', '/pages/productionReport/list', '/pages/logistics/list','/pages/logistics/info'
+	'/pages/index/login', '/pages/tabbar/home', '/pages/productionReport/list', '/pages/logistics/list','/pages/logistics/info','/pages/logistics/search'
 ]
 
 // 检查白名单
