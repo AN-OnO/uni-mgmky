@@ -5,7 +5,7 @@
 				<view style="background: #333333;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
-							:src="searchType === 2? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
+							:src="searchType == 2? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
 							mode=""></image>
 						<text class="order-status">{{
 							({
@@ -63,7 +63,7 @@
 									<text>2024-08-02 12:49:40</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod === 4" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
+							<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.tags[0]}}</text>
 								</template>
@@ -73,18 +73,18 @@
 									<view style="max-width: 380rpx;">-</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="searchType === 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
+							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>2024-08-02 12:49:40</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod === 4 && searchType === 3" class="align-right " label="寄件单号:"
+							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right " label="寄件单号:"
 								labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>SF240820000041478</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod === 4 && searchType === 3" class="align-right " label="寄件图片:"
+							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right " label="寄件图片:"
 								labelWidth='250rpx' labelPosition='top'>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
@@ -94,18 +94,18 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="searchType !== 3" class="bottom-container">
-				<button v-if="deliveryMethod === 3" class="button-operation white-button">
+			<view v-if="searchType != 3" class="bottom-container">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button">
 					<image src="../../static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
-				<button v-if="deliveryMethod === 3" class="button-operation white-button">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button">
 					<image src="../../static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
-				<button class="button-operation">
+				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
 					<image
-						:src="searchType === 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+						:src="searchType == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
 					<text class="text-operation">{{({
 								3: {
@@ -120,12 +120,20 @@
 							}}</text>
 				</button>
 			</view>
+			<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
+			</uv-modal>
 		</view>
 	</view>
 </template>
 
 <script>
+import { ConfirmDelivery, DeliveryFinished } from '../../apis/member';
+import UploadVue from './upload.vue';
 	export default {
+		components: {
+			UploadVue,
+		},
 		data() {
 			return {
 				deliveryMethod: 3,
@@ -141,7 +149,20 @@
 		    } catch (error) {
 		      console.error('解析参数失败', error);
 		    }
-		  }
+		},
+		methods: {
+			confirm(orderItemNo) {
+				if (this.searchType == 2) {
+					this.$refs.modal.open();
+					DeliveryFinished({orderItemNo: orderItemNo})
+				} else {
+					ConfirmDelivery({orderItemNo: orderItemNo})
+				}
+			},
+			closeModal() {
+				this.$refs.modal.close();
+			},
+		}
 	}
 </script>
 

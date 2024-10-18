@@ -10,7 +10,7 @@
 			<uv-list-item style="margin: 20rpx;">
 				<view class="flex-between">
 					<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-					<text :class="item.deliveryMethod === 4 ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
+					<text :class="item.deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
 				</view>
 				<view style="display: flex; align-items: center;">
 					<image src="../../static/images/logistics/Local (已定位).svg"
@@ -22,19 +22,19 @@
 				height: 85rpx;
 				-webkit-line-clamp: 2;
 				color: #808080;">{{item.productName}}</text>
-				<view v-if="item.delivryStatus === 3" class="finish-text">已完成</view>
+				<view v-if="item.delivryStatus == 3" class="finish-text">已完成</view>
 				<view v-else style="display: flex;justify-content: end;">
-					<button v-if="deliveryMethod === 3" class="list-button white-button">
+					<button v-if="deliveryMethod == 3" class="list-button white-button">
 						<image src="../../static/images/logistics/电话.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">电话</text>
 					</button>
-					<button v-if="deliveryMethod === 3" class="list-button white-button">
+					<button v-if="deliveryMethod == 3" class="list-button white-button">
 						<image src="../../static/images/logistics/导航.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">导航</text>
 					</button>
 					<button class="list-button" @click.stop="openModal(item.delivryStatus)">
 						<image
-							:src="item.delivryStatus === 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+							:src="item.delivryStatus == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 							class="list-image" mode=""></image><text class="button-text">{{
 								({
 		                          3: {
@@ -122,7 +122,7 @@
 				})
 			},
 			openModal(delivryStatus) {
-				if (delivryStatus === 2) {
+				if (delivryStatus == 2) {
 					this.$refs.modal.open();
 				}
 			},

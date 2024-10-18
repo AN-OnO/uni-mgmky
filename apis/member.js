@@ -35,3 +35,21 @@ export function GetToken(params) {
 export function GetList(params) {
 	return request.post('/api/Production/ListDeliveryByPSP', params)
 }
+
+/**
+ * 确认配送
+ * @param params 
+ * @return 
+ */
+export function ConfirmDelivery(params) {
+	return request.post('/api/Production/ConfirmDeliveryByPSP', params)
+}
+
+/**
+ * 完成配送
+ * @param params 
+ * @return 
+ */
+export function DeliveryFinished(params) {
+	return request.post('/api/Production/DeliveryByPSPFinished', params)
+}
