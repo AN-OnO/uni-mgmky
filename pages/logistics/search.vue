@@ -22,7 +22,8 @@
 				height: 85rpx;
 				-webkit-line-clamp: 2;
 				color: #808080;">{{item.productName}}</text>
-				<view v-if="item.delivryStatus !== 3" style="display: flex;justify-content: end;">
+				<view v-if="item.delivryStatus === 3" class="finish-text">已完成</view>
+				<view v-else style="display: flex;justify-content: end;">
 					<button v-if="deliveryMethod === 3" class="list-button white-button">
 						<image src="../../static/images/logistics/电话.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">电话</text>
@@ -50,7 +51,7 @@
 				</view>
 			</uv-list-item>
 		</uv-list>
-		<uv-load-more  :status="status" @loadmore='loadMore'/>
+		<uv-load-more :status="status" @loadmore='loadMore' />
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
 			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
 		</uv-modal>
@@ -62,76 +63,79 @@
 	import {
 		GetList
 	} from '../../apis/member'
-		export default {
-			components: {
-				UploadVue
+	export default {
+		components: {
+			UploadVue
+		},
+		data() {
+			return {
+				listData: [],
+				deliveryMethod: 3,
+				status: 'nomore',
+				count: 0,
+				pageIndex: 1,
+				keywords: ''
+			}
+		},
+		onLoad(options) {
+			this.deliveryMethod = options.deliveryMethod;
+		},
+		onReachBottom() {
+			if (this.listData.length >= this.count) return;
+			this.loadMore()
+		},
+		methods: {
+			goback() {
+				uni.navigateBack({
+					delta: 1
+				});
 			},
-			data() {
-				return {
-					listData: [],
-					deliveryMethod: 3,
-					status: 'nomore',
-				    count: 0,
-					pageIndex: 1,
-					keywords: ''
+			search(keywords) {
+				if (keywords !== 'loadMore') {
+					this.listData = [];
+					this.status = 'nomore';
+					this.count = 0;
+					this.pageIndex = 1
+				}
+				GetList({
+					pageSize: 10,
+					pageIndex: this.pageIndex,
+					deliveryMethod: this.deliveryMethod,
+					keywords: this.keywords,
+				}).then((res) => {
+					const {
+						pageEntities,
+						count
+					} = res.data;
+					this.listData = this.listData.concat(pageEntities);
+					this.count = count;
+					if (this.listData.length >= this.count) {
+						this.status = 'nomore';
+					} else {
+						this.status = 'loadmore';
+					}
+				})
+			},
+			jumpToInfo(data) {
+				uni.navigateTo({
+					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&data=${JSON.stringify(data)}`
+				})
+			},
+			openModal(delivryStatus) {
+				if (delivryStatus === 2) {
+					this.$refs.modal.open();
 				}
 			},
-			onLoad(options) {
-				this.deliveryMethod = options.deliveryMethod;
+			closeModal() {
+				this.$refs.modal.close();
 			},
-			onReachBottom() {
-				if (this.listData.length >= this.count ) return;
-				this.loadMore()
+			loadMore() {
+				this.status = 'loading';
+				this.pageIndex = this.pageIndex + 1;
+				this.search('loadMore');
 			},
-			methods: {
-				goback() {
-					uni.navigateBack({
-						delta: 1
-					});
-				},
-				search(keywords) {
-					if (keywords !== 'loadMore') {
-						this.listData = [];
-						this.status = 'nomore';
-						this.count = 0;
-						this.pageIndex = 1
-					}
-					GetList({
-						pageSize: 10,
-						pageIndex: this.pageIndex,
-						deliveryMethod: this.deliveryMethod,
-						keywords: this.keywords,
-					}).then((res) => {
-						const {pageEntities, count} = res.data;
-						this.listData = this.listData.concat(pageEntities);
-						this.count = count;
-						if (this.listData.length >= this.count ) {
-							this.status = 'nomore';
-						} else {
-							this.status = 'loadmore';
-						}
-					})
-				},
-				jumpToInfo(data) {
-					uni.navigateTo({
-						url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&data=${JSON.stringify(data)}`
-					})
-				},
-				openModal(delivryStatus) {
-					if (delivryStatus === 2) {
-						this.$refs.modal.open();
-					}
-				},
-				closeModal() {
-					this.$refs.modal.close();
-				},
-				loadMore() {
-					this.status = 'loading';
-					this.pageIndex = this.pageIndex + 1;
-					this.search('loadMore');
-				},
-			}
 		}
+	}
 </script>
 
 <style>
@@ -189,5 +193,13 @@
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;
+	}
+
+	.finish-text {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #808080;
+		line-height: 42rpx;
+		text-align: right;
 	}
 </style>

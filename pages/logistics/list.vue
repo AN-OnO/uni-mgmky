@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container" style="background-color: #F0F1F5;" >
+	<view class="page-container" style="background-color: #F0F1F5;">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
@@ -51,9 +51,10 @@
 									class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
 							</button>
 						</view>
+						<view v-else class="finish-text">已完成</view>
 					</uv-list-item>
 				</uv-list>
-				<uv-load-more :status="status" @loadmore='loadMore'/>
+				<uv-load-more :status="status" @loadmore='loadMore' />
 				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
 					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
 				</uv-modal>
@@ -74,7 +75,7 @@
 		data() {
 			return {
 				deliveryMethod: 3,
-				buttonText: '开始取送' ,
+				buttonText: '开始取送',
 				list: [{
 					name: '待取送',
 				}, {
@@ -99,12 +100,12 @@
 			this.getList();
 		},
 		onPullDownRefresh() {
-				console.log('refresh');
-				this.getList();
-				uni.stopPullDownRefresh();
+			console.log('refresh');
+			this.getList();
+			uni.stopPullDownRefresh();
 		},
 		onReachBottom() {
-			if (this.listData.length >= this.count ) return;
+			if (this.listData.length >= this.count) return;
 			this.loadMore()
 		},
 		methods: {
@@ -165,7 +166,7 @@
 					this.amount = deliveryStat.todayFinishedNum;
 					this.listData = this.listData.concat(pageEntities);
 					this.count = count;
-					if (this.listData.length >= this.count ) {
+					if (this.listData.length >= this.count) {
 						this.status = 'nomore';
 					} else {
 						this.status = 'loadmore';
@@ -186,6 +187,7 @@
 		background-color: #F0F1F5;
 		height: 100%;
 	}
+
 	.amount {
 		font-weight: 500;
 		font-size: 46rpx;
@@ -261,5 +263,12 @@
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;
+	}
+	.finish-text {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #808080;
+		line-height: 42rpx;
+		text-align: right;
 	}
 </style>
