@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container" style="height: 100%; ">
+	<view class="page-container" style="background-color: #F0F1F5;" >
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
@@ -13,7 +13,7 @@
 				</view>
 			</view>
 		</view>
-		<view style="background-color: #F0F1F5; height: 100%; overflow: scroll;">
+		<view >
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
@@ -128,7 +128,7 @@
 			},
 			goSearch() {
 				uni.navigateTo({
-					url: '/pages/logistics/search?deliveryMethod=${this.deliveryMethod}'
+					url: `/pages/logistics/search?deliveryMethod=${this.deliveryMethod}`
 				})
 			},
 			jumpToInfo(data) {
@@ -182,11 +182,6 @@
 </script>
 
 <style scoped>
-	uni-page-body {
-		height: 100%;
-		overflow: scroll;
-	}
-
 	.amount {
 		font-weight: 500;
 		font-size: 46rpx;

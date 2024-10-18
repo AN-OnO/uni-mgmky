@@ -45,8 +45,8 @@
 				default: () => {}
 			},
 			uploadType: {
-				type: String,
-				default: ''
+				type: Number,
+				default: 3
 			}
 		},
 		data() {
