@@ -44,8 +44,7 @@
 			"path": "pages/logistics/info",
 			"style": {
 				"navigationBarTitleText": "订单详情",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "rgba(89,87,230,0.6)"
+				"navigationBarTextStyle": "white"
 			}
 		},
 		{
@@ -75,7 +74,8 @@
 			"path" : "pages/statisticalForm/index",
 			"style" : 
 			{
-				"navigationBarTitleText" : ""
+				"navigationBarTitleText" : "",
+				"navigationBarBackgroundColor": "#FFFFFF"
 			}
 		}
 	],

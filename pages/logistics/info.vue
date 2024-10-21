@@ -154,6 +154,9 @@
 			} catch (error) {
 				console.error('解析参数失败', error);
 			}
+			uni.setNavigationBarColor({
+			    backgroundColor: 'rgba(89,87,230,0.6)' 
+			  });
 		},
 		methods: {
 			confirm(orderItemNo) {
@@ -196,7 +199,6 @@
 	uni-page-body {
 		height: 100%;
 	}
-
 	.container-background {
 		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
 	}
