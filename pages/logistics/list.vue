@@ -115,6 +115,7 @@
 				console.log('item', item);
 				this.listData = [];
 				this.status = 'loadmore';
+				this.pageIndex = 1;
 				if (item.index == 0) {
 					this.buttonText = this.deliveryMethod == 4 ? '开始取送' : '开始配送';
 					this.searchType = 1;
