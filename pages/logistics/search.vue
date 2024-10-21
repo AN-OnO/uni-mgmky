@@ -10,7 +10,7 @@
 			<uv-list-item style="margin: 20rpx;">
 				<view class="flex-between">
 					<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-					<text :class="item.deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags[0]}}</text>
+					<text :class="item.deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0]}}</text>
 				</view>
 				<view style="display: flex; align-items: center;">
 					<image src="../../static/images/logistics/Local (已定位).svg"
@@ -32,7 +32,7 @@
 						<image src="../../static/images/logistics/导航.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">导航</text>
 					</button>
-					<button class="list-button" @click.stop="openModal(item.delivryStatus)">
+					<button class="list-button" @click.stop="openModal(item.delivryStatus, item.orderItemNo)">
 						<image
 							:src="item.delivryStatus == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 							class="list-image" mode=""></image><text class="button-text">{{
@@ -61,6 +61,8 @@
 <script>
 	import UploadVue from './upload.vue';
 	import {
+		ConfirmDelivery,
+		DeliveryFinished,
 		GetList
 	} from '../../apis/member'
 	export default {
@@ -83,6 +85,9 @@
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
 			this.loadMore()
+		},
+		onShow() {
+			this.search()
 		},
 		methods: {
 			goback() {
@@ -121,10 +126,18 @@
 					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&data=${JSON.stringify(data)}`
 				})
 			},
-			openModal(delivryStatus) {
+			openModal(delivryStatus, orderItemNo) {
 				if (delivryStatus == 2) {
-					this.$refs.modal.open();
+					// this.$refs.modal.open();
+					DeliveryFinished({
+						orderItemNo: orderItemNo
+					})
+				} else {
+					ConfirmDelivery({
+						orderItemNo: orderItemNo
+					});
 				}
+				this.search()
 			},
 			closeModal() {
 				this.$refs.modal.close();

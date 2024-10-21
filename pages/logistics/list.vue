@@ -8,7 +8,7 @@
 				</view>
 				<view class="list-divider"></view>
 				<view>
-					<view class="amount">2164.43</view>
+					<view class="amount">0</view>
 					<view class="today-info">今日收益(元)</view>
 				</view>
 			</view>
@@ -24,7 +24,8 @@
 					<uv-list-item style="margin: 20rpx;">
 						<view class="flex-between">
 							<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-							<text :class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
+							<text
+								:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
 						</view>
 						<view style="display: flex; align-items: center;">
 							<image src="../../static/images/logistics/Local (已定位).svg"
@@ -101,6 +102,10 @@
 			});
 			this.getList();
 		},
+		onShow() {
+		    // 每次显示页面时重新获取数据
+		    this.reFresh()
+		  },
 		onPullDownRefresh() {
 			console.log('refresh');
 			this.getList();
@@ -113,22 +118,18 @@
 		methods: {
 			changeTab(item) {
 				console.log('item', item);
-				this.listData = [];
 				this.status = 'loadmore';
-				this.pageIndex = 1;
 				if (item.index == 0) {
 					this.buttonText = this.deliveryMethod == 4 ? '开始取送' : '开始配送';
 					this.searchType = 1;
-					this.getList()
 				} else if (item.index == 1) {
 					this.buttonText = this.deliveryMethod == 4 ? '完成取送' : '完成配送';
 					this.searchType = 2;
-					this.getList()
 				} else {
 					this.buttonText = '';
 					this.searchType = 3;
-					this.getList()
 				}
+				this.reFresh()
 			},
 			goSearch() {
 				uni.navigateTo({
@@ -142,11 +143,16 @@
 			},
 			confirm(orderItemNo) {
 				if (this.buttonText.includes('完成')) {
-					this.$refs.modal.open();
-					DeliveryFinished({orderItemNo: orderItemNo})
+					// this.$refs.modal.open();
+					DeliveryFinished({
+						orderItemNo: orderItemNo
+					})
 				} else {
-					ConfirmDelivery({orderItemNo: orderItemNo})
+					ConfirmDelivery({
+						orderItemNo: orderItemNo
+					});
 				}
+				this.reFresh()
 			},
 			closeModal() {
 				this.$refs.modal.close();
@@ -178,6 +184,11 @@
 						this.status = 'loadmore';
 					}
 				})
+			},
+			reFresh() {
+				this.pageIndex = 1;
+				this.listData = [];
+				this.getList()
 			},
 			loadMore() {
 				this.status = 'loading';
@@ -270,6 +281,7 @@
 		line-height: 42rpx;
 		vertical-align: super;
 	}
+
 	.finish-text {
 		font-weight: 500;
 		font-size: 27rpx;
