@@ -10,14 +10,14 @@
 						<text class="order-status">{{
 							({
 								3: {
-									1: '订单待配送',
-									2: '订单配送中',
-									3: '订单已完成'
+									1: '待配送',
+									2: '配送中',
+									3: '已完成'
 								},
 								4: {
-									1: '订单待取送',
-									2: '订单取送中',
-									3: '订单已完成'
+									1: '待取送',
+									2: '取送中',
+									3: '已完成'
 								}
 							})[deliveryMethod][searchType]
 							}}</text>
@@ -42,33 +42,36 @@
 						<uv-form class="font-style">
 							<uv-form-item class="align-right " label="订单编号:" labelWidth='250rpx'>
 								<template v-slot:right>
-								<view style="display: flex;">
-								<text style="margin-right: 15rpx;">{{data.orderItemNo}}</text>
-								<button class="button-copy"><text class="text-copy">复制</text></button>
-								</view>
+									<view style="display: flex;">
+										<text style="margin-right: 15rpx;">{{data.orderItemNo}}</text>
+										<button class="button-copy" @click="copyText(data.orderItemNo)"><text
+												class="text-copy">复制</text></button>
+									</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item  label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
+							<uv-form-item label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
 									<view style="max-width: 380rpx;">{{data.productName}}</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item class="align-right "  label="订购数量:" labelWidth='250rpx'>
+							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
 								<template v-slot:right>
-							    	<text>4</text>
-							    </template>
+									<text>4</text>
+								</template>
 							</uv-form-item>
-							<uv-form-item class="align-right "  label="下单时间:" labelWidth='250rpx'>
+							<uv-form-item class="align-right " label="下单时间:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>2024-08-02 12:49:40</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
+							<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:"
+								labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.tags[0]}}</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx' customStyle='align-items: flex-start'>
+							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
+								customStyle='align-items: flex-start'>
 								<template v-slot:right>
 									<view style="max-width: 380rpx;">-</view>
 								</template>
@@ -78,14 +81,14 @@
 									<text>2024-08-02 12:49:40</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right " label="寄件单号:"
-								labelWidth='250rpx'>
+							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+								label="寄件单号:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>SF240820000041478</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right " label="寄件图片:"
-								labelWidth='250rpx' labelPosition='top'>
+							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+								label="寄件图片:" labelWidth='250rpx' labelPosition='top'>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
@@ -104,8 +107,7 @@
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
 				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
-					<image
-						:src="searchType == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+					<image :src="searchType == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
 					<text class="text-operation">{{({
 								3: {
@@ -128,8 +130,11 @@
 </template>
 
 <script>
-import { ConfirmDelivery, DeliveryFinished } from '../../apis/member';
-import UploadVue from './upload.vue';
+	import {
+		ConfirmDelivery,
+		DeliveryFinished
+	} from '../../apis/member';
+	import UploadVue from './upload.vue';
 	export default {
 		components: {
 			UploadVue,
@@ -144,32 +149,54 @@ import UploadVue from './upload.vue';
 		onLoad(options) {
 			this.deliveryMethod = options.deliveryMethod;
 			this.searchType = options.searchType;
-		    try {
-		      this.data = JSON.parse(options.data);
-		    } catch (error) {
-		      console.error('解析参数失败', error);
-		    }
+			try {
+				this.data = JSON.parse(options.data);
+			} catch (error) {
+				console.error('解析参数失败', error);
+			}
 		},
 		methods: {
 			confirm(orderItemNo) {
 				if (this.searchType == 2) {
-					this.$refs.modal.open();
-					DeliveryFinished({orderItemNo: orderItemNo})
+					// this.$refs.modal.open();
+					DeliveryFinished({
+						orderItemNo: orderItemNo
+					})
 				} else {
-					ConfirmDelivery({orderItemNo: orderItemNo})
+					ConfirmDelivery({
+						orderItemNo: orderItemNo
+					})
 				}
+				uni.navigateBack({
+					delta: 1
+				});
 			},
 			closeModal() {
 				this.$refs.modal.close();
 			},
+			copyText(text) {
+				// 调用小程序 API 复制文字到剪贴板
+				wx.setClipboardData({
+					data: text,
+					success: function() {
+						// 复制成功的回调
+						wx.showToast({
+							title: '复制成功',
+							icon: 'success',
+							duration: 2000
+						});
+					},
+				})
+			}
 		}
 	}
 </script>
 
 <style>
 	uni-page-body {
-			height: 100%;
+		height: 100%;
 	}
+
 	.container-background {
 		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
 	}
