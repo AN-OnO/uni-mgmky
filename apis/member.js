@@ -53,3 +53,12 @@ export function ConfirmDelivery(params) {
 export function DeliveryFinished(params) {
 	return request.post('/api/Production/DeliveryByPSPFinished', params)
 }
+
+/**
+ * 统计报表数量、金额统计
+ * @param params 
+ * @return 
+ */
+export function GetOrderStat(params) {
+	return request.post('/api/DashboardStat/GetOrderStat', params)
+}
