@@ -1,14 +1,14 @@
 <template>
 	<view>
-		<view class="title-time">
+		<view class="flex-between">
 			<view @click="open" class="mode-title">
 				{{modeTitle}}<uv-icon name="arrow-down-fill" size="16"></uv-icon>
 			</view>
 			<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 				@confirm="confirm"></uv-datetime-picker>
 			<!-- <uv-calendars ref="calendars" @confirm="confirm" mode="range" allowSameDay /> -->
-			<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="list" :current="current"
-					@change="change"></uv-subsection></view>
+			<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
+					:current="current" @change="change"></uv-subsection></view>
 		</view>
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
@@ -28,6 +28,14 @@
 				<view class="bottom-line"></view>
 			</view>
 		</view>
+		<view>
+			<view class="flex-between" style="padding: 30rpx;">
+				<text class="section-title">订单金额占比</text>
+				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
+						:current="currentSource" @change="changeSource"></uv-subsection></view>
+			</view>
+			<div id="main" style="width: 600rpx;height:305rpx;"></div>
+		</view>
 	</view>
 </template>
 
@@ -40,14 +48,15 @@
 	} from '../../store/user';
 	import dayjs from 'dayjs';
 	import Big from 'big.js';
+	import * as echarts from 'echarts';
 	export default {
 		data() {
 			return {
 				value: Number(new Date()),
-				list: ['日', '月', '年'],
 				mode: 'date',
 				modeTitle: `${dayjs().format('YYYY-MM-DD')}`,
 				current: 0,
+				currentSource: 0,
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -94,6 +103,9 @@
 		onLoad() {
 			this.change(0)
 		},
+		onReady() {
+			this.getEcharts()
+		},
 		methods: {
 			change(index) {
 				if (index == 0) {
@@ -114,6 +126,9 @@
 				}
 				this.current = index;
 				this.value = Number(new Date())
+			},
+			changeSource() {
+
 			},
 			open() {
 				// if (this.mode == 'date') {
@@ -207,13 +222,57 @@
 				const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+			},
+			getEcharts() {
+				const myChart = echarts.init(document.getElementById('main'));
+				const content = this.dataList[1].content;
+				const data = [
+				        { value: content[1].number, name: '内部下单',itemStyle: {color: '#3CC3DF'} },
+				        { value: content[2].number, name: '微信订单',itemStyle: {color: '#6FD195'} },
+				        { value: content[3].number, name: '网站下单',itemStyle: {color: '#F5C461'} },
+				]
+				const total = content.reduce((prev, cur) => new Big(prev).plus(cur.number).toString(), 0)
+				const option = {
+				  tooltip: {
+				    trigger: 'item'
+				  },
+				  legend: {
+					orient: 'vertical',
+					icon: 'circle',
+				    top: 'bottom',
+				    left: '210rpx',
+					formatter: function (name) {
+					    return `${name}${content.find(item => item.title == name).number / total || 0}%`;
+					}
+				  },
+				  series: [
+				    {
+				      name: '订单金额占比',
+				      type: 'pie',
+				      radius: ['40%', '70%'],
+				      label: {
+				        show: false,
+				        position: 'center'
+				      },
+				      emphasis: {
+				        label: {
+				          show: true,
+				          fontSize: 40,
+				          fontWeight: 'bold'
+				        }
+				      },
+				      data
+				    }
+				  ]
+				};
+				myChart.setOption(option);
 			}
 		}
 	}
 </script>
 
 <style>
-	.title-time {
+	.flex-between {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
