@@ -123,7 +123,7 @@
 				</button>
 			</view>
 			<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
+				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo"/>
 			</uv-modal>
 		</view>
 	</view>
@@ -132,7 +132,6 @@
 <script>
 	import {
 		ConfirmDelivery,
-		DeliveryFinished
 	} from '../../apis/member';
 	import UploadVue from './upload.vue';
 	export default {
@@ -143,7 +142,8 @@
 			return {
 				deliveryMethod: 3,
 				data: {},
-				searchType: 1
+				searchType: 1,
+				
 			}
 		},
 		onLoad(options) {
@@ -161,21 +161,21 @@
 		methods: {
 			confirm(orderItemNo) {
 				if (this.searchType == 2) {
-					// this.$refs.modal.open();
-					DeliveryFinished({
-						orderItemNo: orderItemNo
-					})
+					this.$refs.modal.open();
 				} else {
 					ConfirmDelivery({
 						orderItemNo: orderItemNo
 					})
+					uni.navigateBack({
+						delta: 1
+					});
 				}
-				uni.navigateBack({
-					delta: 1
-				});
 			},
 			closeModal() {
 				this.$refs.modal.close();
+				uni.navigateBack({
+					delta: 1
+				});
 			},
 			copyText(text) {
 				// 调用小程序 API 复制文字到剪贴板

@@ -55,9 +55,12 @@
 						<view v-else class="finish-text">已完成</view>
 					</uv-list-item>
 				</uv-list>
+				<view class="scan-wrap" @click="onScanTap">
+					<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
+				</view>
 				<uv-load-more :status="status" @loadmore='loadMore' />
 				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
+					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo'/>
 				</uv-modal>
 			</view>
 		</view>
@@ -67,7 +70,6 @@
 <script>
 	import {
 		ConfirmDelivery,
-		DeliveryFinished,
 		GetList
 	} from '../../apis/member';
 	import UploadVue from './upload.vue';
@@ -91,7 +93,8 @@
 				pageIndex: 1,
 				searchType: 1,
 				status: 'loadmore',
-				count: 0
+				count: 0,
+				orderItemNo: ''
 			}
 		},
 		onLoad(options) {
@@ -100,16 +103,10 @@
 			uni.setNavigationBarTitle({
 				title: this.deliveryMethod == 3 ? '配送' : '物流'
 			});
-			this.getList();
 		},
 		onShow() {
-		    // 每次显示页面时重新获取数据
-		    this.reFresh()
-		  },
-		onPullDownRefresh() {
-			console.log('refresh');
-			this.getList();
-			uni.stopPullDownRefresh();
+			// 每次显示页面时重新获取数据
+			this.reFresh()
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
@@ -141,27 +138,29 @@
 					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${this.searchType}&data=${JSON.stringify(data)}`
 				})
 			},
-			confirm(orderItemNo) {
+			async confirm(orderItemNo) {
 				if (this.buttonText.includes('完成')) {
-					// this.$refs.modal.open();
-					DeliveryFinished({
-						orderItemNo: orderItemNo
-					})
+					this.orderItemNo = orderItemNo;
+					this.$refs.modal.open();
 				} else {
-					ConfirmDelivery({
+					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					});
+					this.reFresh()
 				}
-				this.reFresh()
 			},
 			closeModal() {
 				this.$refs.modal.close();
+				this.reFresh()
 			},
-			getList() {
+			getList(keywords) {
+				if (keywords) {
+					this.pageIndex = 1
+				}
 				GetList({
 					pageSize: 10,
 					pageIndex: this.pageIndex,
-					keywords: "",
+					keywords: keywords || '',
 					searchType: this.searchType,
 					deliveryMethod: this.deliveryMethod,
 				}).then((res) => {
@@ -195,6 +194,15 @@
 				this.pageIndex = this.pageIndex + 1;
 				this.getList();
 			},
+			onScanTap() {
+				// 调用小程序的扫码 API
+				uni.scanCode({
+					success: (res) => {
+						console.log('扫码结果：', res);
+						this.getList(res.result)
+					}
+				});
+			}
 		}
 	}
 </script>
@@ -288,5 +296,28 @@
 		color: #808080;
 		line-height: 42rpx;
 		text-align: right;
+	}
+
+	.scan-wrap {
+		width: 122rpx;
+		height: 122rpx;
+		background: #333333;
+		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
+		border-radius: 31rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		/* 固定定位 */
+		right: 20rpx;
+		/* 距离右边的距离 */
+		bottom: 70rpx;
+		/* 距离底部的距离 */
+		z-index: 999
+	}
+
+	.scan-img {
+		max-width: 73rpx;
+		max-height: 73rpx;
 	}
 </style>

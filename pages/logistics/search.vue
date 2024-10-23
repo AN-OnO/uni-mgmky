@@ -54,7 +54,7 @@
 		</uv-list>
 		<uv-load-more :status="status" @loadmore='loadMore' />
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" />
+			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo'/>
 		</uv-modal>
 	</view>
 </template>
@@ -63,7 +63,6 @@
 	import UploadVue from './upload.vue';
 	import {
 		ConfirmDelivery,
-		DeliveryFinished,
 		GetList
 	} from '../../apis/member'
 	export default {
@@ -77,7 +76,8 @@
 				status: 'nomore',
 				count: 0,
 				pageIndex: 1,
-				keywords: ''
+				keywords: '',
+				orderItemNo: '',
 			}
 		},
 		onLoad(options) {
@@ -88,7 +88,9 @@
 			this.loadMore()
 		},
 		onShow() {
-			this.search()
+			if (this.keywords) {
+				this.search()
+			}
 		},
 		methods: {
 			goback() {
@@ -129,19 +131,19 @@
 			},
 			openModal(delivryStatus, orderItemNo) {
 				if (delivryStatus == 2) {
-					// this.$refs.modal.open();
-					DeliveryFinished({
-						orderItemNo: orderItemNo
-					})
+					this.orderItemNo = orderItemNo
+					this.$refs.modal.open();
 				} else {
 					ConfirmDelivery({
 						orderItemNo: orderItemNo
 					});
+					this.search()
 				}
-				this.search()
+				
 			},
 			closeModal() {
 				this.$refs.modal.close();
+				this.search()
 			},
 			loadMore() {
 				this.status = 'loading';
