@@ -62,3 +62,12 @@ export function DeliveryFinished(params) {
 export function GetOrderStat(params) {
 	return request.post('/api/DashboardStat/GetOrderStat', params)
 }
+
+/**
+ * 获取配送单详情
+ * @param params 
+ * @return 
+ */
+export function GetDeliveryDetail(params) {
+	return request.post('/api/Production/GetDeliveryDetail', params)
+}

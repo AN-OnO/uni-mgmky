@@ -54,7 +54,7 @@
 		</uv-list>
 		<uv-load-more :status="status" @loadmore='loadMore' />
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo'/>
+			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo' />
 		</uv-modal>
 	</view>
 </template>
@@ -126,7 +126,7 @@
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
-					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&data=${JSON.stringify(data)}`
+					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${data.delivryStatus}&orderItemNo=${data.orderItemNo}`
 				})
 			},
 			openModal(delivryStatus, orderItemNo) {
@@ -139,7 +139,7 @@
 					});
 					this.search()
 				}
-				
+
 			},
 			closeModal() {
 				this.$refs.modal.close();

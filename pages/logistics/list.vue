@@ -60,7 +60,7 @@
 				</view>
 				<uv-load-more :status="status" @loadmore='loadMore' />
 				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo'/>
+					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo' />
 				</uv-modal>
 			</view>
 		</view>
@@ -135,7 +135,7 @@
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
-					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${this.searchType}&data=${JSON.stringify(data)}`
+					url: `/pages/logistics/info?deliveryMethod=${this.deliveryMethod}&searchType=${this.searchType}&orderItemNo=${data.orderItemNo}`
 				})
 			},
 			async confirm(orderItemNo) {

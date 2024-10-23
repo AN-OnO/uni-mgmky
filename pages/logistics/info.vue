@@ -24,16 +24,16 @@
 					</view>
 					<view class='flex-center'>
 						<image class="image" src="../../static/images/logistics/infoLocal (已定位).svg" mode=""></image>
-						<text class="local-text">{{`${data.companyName} ${data.mobile}`}}</text>
+						<text class="local-text">{{`${data.linkMan } ${data.contactMobile }`}}</text>
 					</view>
 					<div class="address">{{data.address}}</div>
 				</view>
 				<view class="container-content">
 					<view style="display: flex;">
-						<uv-image src="" width="152.67rpx" height="152.67rpx"></uv-image>
+						<uv-image :src='data.productImage' width="152.67rpx" height="152.67rpx"></uv-image>
 						<view style="padding-left: 30rpx;">
 							<view class="line-clamp-3">{{data.productName}}</view>
-							<text>X4</text>
+							<text>{{data.orderCount}}</text>
 						</view>
 					</view>
 					<view class="info-divider"></view>
@@ -56,42 +56,40 @@
 							</uv-form-item>
 							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>4</text>
+									<text>{{data.orderCount}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="下单时间:" labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>2024-08-02 12:49:40</text>
+									<text>{{data.orderTime}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:"
 								labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>{{data.tags[0]}}</text>
+									<text>{{data.deliveryType}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
 								customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view style="max-width: 380rpx;">-</view>
+									<view style="max-width: 380rpx;">{{data.orderRemark}}</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>2024-08-02 12:49:40</text>
+									<text>{{data.finishTime}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
 								label="寄件单号:" labelWidth='250rpx'>
 								<template v-slot:right>
-									<text>SF240820000041478</text>
+									<text>{{data.express_fee}}</text>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
 								label="寄件图片:" labelWidth='250rpx' labelPosition='top'>
-								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
-								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
-								<uv-image src="" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
+								<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 							</uv-form-item>
 						</uv-form>
 					</view>
@@ -123,7 +121,7 @@
 				</button>
 			</view>
 			<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo"/>
+				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo" />
 			</uv-modal>
 		</view>
 	</view>
@@ -132,6 +130,7 @@
 <script>
 	import {
 		ConfirmDelivery,
+		GetDeliveryDetail,
 	} from '../../apis/member';
 	import UploadVue from './upload.vue';
 	export default {
@@ -143,20 +142,21 @@
 				deliveryMethod: 3,
 				data: {},
 				searchType: 1,
-				
+				orderItemNo: '',
 			}
 		},
 		onLoad(options) {
 			this.deliveryMethod = options.deliveryMethod;
 			this.searchType = options.searchType;
-			try {
-				this.data = JSON.parse(options.data);
-			} catch (error) {
-				console.error('解析参数失败', error);
-			}
+			this.orderItemNo = options.orderItemNo;
 			uni.setNavigationBarColor({
-			    backgroundColor: 'rgba(89,87,230,0.6)' 
-			  });
+				backgroundColor: 'rgba(89,87,230,0.6)'
+			});
+			GetDeliveryDetail({
+				orderItemNo: this.orderItemNo
+			}).then(res => {
+				this.data = res.data
+			})
 		},
 		methods: {
 			confirm(orderItemNo) {
@@ -199,6 +199,7 @@
 	uni-page-body {
 		height: 100%;
 	}
+
 	.container-background {
 		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
 	}

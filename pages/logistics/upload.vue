@@ -61,8 +61,8 @@ import config from "@/common/config";
 			}
 		},
 		methods: {
-			submit() {
-				DeliveryFinished({
+			async submit() {
+				await DeliveryFinished({
 					orderItemNo: this.orderItemNo,
 					attachmentInfos: this.fileList,
 					remark: this.formValue.remark,
