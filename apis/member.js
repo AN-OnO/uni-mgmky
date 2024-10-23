@@ -71,3 +71,12 @@ export function GetOrderStat(params) {
 export function GetDeliveryDetail(params) {
 	return request.post('/api/Production/GetDeliveryDetail', params)
 }
+
+/**
+ * 订单品类统计
+ * @param params 
+ * @return 
+ */
+export function GetOrderProductStat(params) {
+	return request.post('/api/DashboardStat/GetOrderProductStat', params)
+}

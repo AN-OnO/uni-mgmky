@@ -34,13 +34,21 @@
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
-			<div id="main" style="width: 600rpx;height:305rpx;"></div>
+			<div id="pie" style="width: 100%;height:305rpx;"></div>
+			<view class="bottom-line"></view>
+		</view>
+		<view>
+			<view style="padding: 30rpx;">
+				<text class="section-title">品类变化趋势</text>
+			</view>
+			<div id="line" style="width: 100%;height:374rpx;"></div>
 		</view>
 	</view>
 </template>
 
 <script>
 	import {
+		GetOrderProductStat,
 		GetOrderStat
 	} from '../../apis/member';
 	import {
@@ -49,6 +57,7 @@
 	import dayjs from 'dayjs';
 	import Big from 'big.js';
 	import * as echarts from 'echarts';
+	const userData = useUserStore().userData;
 	export default {
 		data() {
 			return {
@@ -62,19 +71,19 @@
 						content: [{
 							title: '所有订单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '内部下单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '微信订单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '网站下单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}]
 					},
 					{
@@ -82,29 +91,31 @@
 						content: [{
 							title: '所有订单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '内部下单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '微信订单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}, {
 							title: '网站下单',
 							increase: 0,
-							number: 0
+							number: '0'
 						}]
 					}
-				]
+				],
+				productData: []
 			}
 		},
 		onLoad() {
 			this.change(0)
 		},
 		onReady() {
-			this.getEcharts()
+			this.getPieEcharts()
+			this.getLineEcharts()
 		},
 		methods: {
 			change(index) {
@@ -113,22 +124,27 @@
 					const date = dayjs().format('YYYY-MM-DD');
 					this.modeTitle = date;
 					this.getOrderStat(date, date)
+					this.getOrderProductStat(date, date)
 				} else if (index == 1) {
 					this.mode = 'year-month';
 					this.modeTitle = dayjs().format('YYYY-MM')
 					this.getOrderStat(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
+						'YYYY-MM-DD'))
+					this.getOrderProductStat(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
 						'YYYY-MM-DD'))
 				} else {
 					this.mode = 'year';
 					this.modeTitle = dayjs().format('YYYY')
 					const year = dayjs().year()
 					this.getOrderStat(`${year}-01-01`, `${year}-12-31`)
+					this.getOrderProductStat(`${year}-01-01`, `${year}-12-31`)
 				}
 				this.current = index;
 				this.value = Number(new Date())
 			},
-			changeSource() {
-
+			changeSource(index) {
+				this.currentSource = index;
+				this.getPieEcharts()
 			},
 			open() {
 				// if (this.mode == 'date') {
@@ -142,6 +158,7 @@
 					// 选择日期范围
 					// this.modeTitle = `${startTime}/${endTime}`
 					this.getOrderStat(e.range.before, e.range.after)
+					this.getOrderProductStat(e.range.before, e.range.after)
 					return
 				}
 				const year = dayjs(e.value).year();
@@ -149,19 +166,23 @@
 				if (e.mode == 'year') {
 					this.modeTitle = year
 					this.getOrderStat(`${year}-01-01`, `${year}-12-31`)
+					this.getOrderProductStat(`${year}-01-01`, `${year}-12-31`)
 				} else if (e.mode == 'year-month') {
 					const month = dayjs(e.value).month() + 1;
 					this.modeTitle = `${year}-${month}`
 					this.getOrderStat(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
 						.format('YYYY-MM-DD'))
+					this.getOrderProductStat(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf(
+							'month')
+						.format('YYYY-MM-DD'))
 				} else {
 					const date = dayjs(e.value).format('YYYY-MM-DD');
 					this.modeTitle = date
 					this.getOrderStat(date, date)
+					this.getOrderProductStat(date, date)
 				}
 			},
 			getOrderStat(beginDate, endDate) {
-				const userData = useUserStore().userData;
 				GetOrderStat({
 					beginDate,
 					endDate,
@@ -208,9 +229,21 @@
 						this.dataList[1].content[3].increase = this.formatNumber(new Big(res.data.curPeriodAmount
 							.shoppingOrderAmount).minus(res
 							.data.prevPeriodAmount.shoppingOrderAmount).toString())
+
+						this.getPieEcharts()
 					} else {
 						uni.$Utils.showToast(res.message)
 					}
+				})
+			},
+			getOrderProductStat(beginDate, endDate) {
+				GetOrderProductStat({
+					beginDate,
+					endDate,
+					mercantileAgents: userData.mercantileAgents.map(item => item.mercantileAgentId)
+				}).then(res => {
+					this.productData = res.data
+					this.getPieEcharts()
 				})
 			},
 			formatNumber(num) {
@@ -223,47 +256,160 @@
 
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
-			getEcharts() {
-				const myChart = echarts.init(document.getElementById('main'));
-				const content = this.dataList[1].content;
-				const data = [
-				        { value: content[1].number, name: '内部下单',itemStyle: {color: '#3CC3DF'} },
-				        { value: content[2].number, name: '微信订单',itemStyle: {color: '#6FD195'} },
-				        { value: content[3].number, name: '网站下单',itemStyle: {color: '#F5C461'} },
-				]
-				const total = content.reduce((prev, cur) => new Big(prev).plus(cur.number).toString(), 0)
+			getPieEcharts() {
+				let myChart = echarts.getInstanceByDom(document.getElementById('pie'));
+				if (myChart != null) {
+					myChart.dispose();
+				}
+				myChart = echarts.init(document.getElementById('pie'));
+
+				let sourceData = [];
+				let data = [];
+
+				if (this.currentSource == 1) {
+					const total = this.productData.reduce((prev, cur) => new Big(prev).plus(new Big(cur.orderAmountStat)),
+						'0').toString()
+					sourceData = [{
+						number: total
+					}, ...this.productData.map(item => ({
+						number: item.orderAmountStat,
+						title: item.productCategoryName
+					}))]
+					data = this.productData.map(item => ({
+						value: item.orderAmountStat,
+						name: item.productCategoryName
+					}))
+				} else {
+					sourceData = this.dataList[1].content.map(item => ({
+						...item,
+						number: item.number.replace(/,/g, '')
+					}));
+					data = [{
+							value: sourceData[1].number,
+							name: '内部下单',
+							itemStyle: {
+								color: '#3CC3DF'
+							}
+						},
+						{
+							value: sourceData[2].number,
+							name: '微信订单',
+							itemStyle: {
+								color: '#6FD195'
+							}
+						},
+						{
+							value: sourceData[3].number,
+							name: '网站下单',
+							itemStyle: {
+								color: '#F5C461'
+							}
+						},
+					]
+				}
+
 				const option = {
-				  tooltip: {
-				    trigger: 'item'
-				  },
-				  legend: {
-					orient: 'vertical',
-					icon: 'circle',
-				    top: 'bottom',
-				    left: '210rpx',
-					formatter: function (name) {
-					    return `${name}${content.find(item => item.title == name).number / total || 0}%`;
-					}
-				  },
-				  series: [
-				    {
-				      name: '订单金额占比',
-				      type: 'pie',
-				      radius: ['40%', '70%'],
-				      label: {
-				        show: false,
-				        position: 'center'
-				      },
-				      emphasis: {
-				        label: {
-				          show: true,
-				          fontSize: 40,
-				          fontWeight: 'bold'
-				        }
-				      },
-				      data
-				    }
-				  ]
+					tooltip: {
+						trigger: 'item'
+					},
+					legend: {
+						orient: 'vertical',
+						icon: 'circle',
+						top: 'center',
+						left: '35%',
+						formatter: function(name) {
+							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(2)}%`;
+						}
+					},
+					series: [{
+						name: '订单金额',
+						type: 'pie',
+						center: ['20%', '50%'],
+						radius: ['40%', '70%'],
+						label: {
+							show: false,
+							position: 'center'
+						},
+						emphasis: {
+							label: {
+								show: true,
+								fontSize: 40,
+								fontWeight: 'bold'
+							}
+						},
+						data
+					}]
+				};
+				myChart.setOption(option);
+			},
+			getLineEcharts() {
+				let myChart = echarts.getInstanceByDom(document.getElementById('line'));
+				if (myChart != null) {
+					myChart.dispose();
+				}
+				myChart = echarts.init(document.getElementById('line'), );
+				const option = {
+					tooltip: {
+						trigger: 'axis'
+					},
+					legend: {
+						icon: 'circle',
+						selectedMode: false,
+					},
+					xAxis: {
+						type: 'category',
+						boundaryGap: false,
+						data: ['09/01', '09/02', '09/03', '09/4', '09/05', '09/06', '09/07']
+					},
+					yAxis: {
+						type: 'value',
+						axisLabel: {
+							formatter: function(value) {
+								return `${value/100}万`
+							}
+						}
+					},
+					series: [{
+							name: '单页',
+							type: 'line',
+							itemStyle: {
+								color: '#8979FF'
+							},
+							data: [120, 132, 101, 134, 90, 230, 210]
+						},
+						{
+							name: '不干胶',
+							type: 'line',
+							itemStyle: {
+								color: '#6CD2E7'
+							},
+							data: [220, 182, 191, 234, 290, 330, 310]
+						},
+						{
+							name: '样本画册',
+							type: 'line',
+							itemStyle: {
+								color: '#6FD195'
+							},
+							data: [150, 232, 201, 154, 190, 330, 410]
+						},
+						{
+							name: '数码单页',
+							type: 'line',
+							itemStyle: {
+								color: '#FF928A'
+							},
+							data: [320, 332, 301, 334, 390, 330, 320]
+						},
+						{
+							name: '数码画册',
+							type: 'line',
+							itemStyle: {
+								color: '#F5C461'
+							},
+							data: [820, 932, 901, 934, 1290, 1330, 1320]
+						}
+					]
 				};
 				myChart.setOption(option);
 			}
