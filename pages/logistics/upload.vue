@@ -4,31 +4,25 @@
 		<uv-form>
 			<uv-form-item v-if="deliveryMethod == 4" label="快递单号" labelPosition='top' labelWidth="200rpx"
 				leftIcon='/static/images/logistics/1.svg'>
-				<uv-input placeholder="请输入快递单号" v-model="formValue.number" suffix-icon="scan"
-					style="margin-top: 15rpx;" />
+				<uv-input placeholder="请输入快递单号" v-model="formValue.number" style="margin-top: 15rpx;">
+					<template v-slot:suffix>
+						<uv-icon name="scan" @click="onScanTap"></uv-icon>
+					</template>
+				</uv-input>
 			</uv-form-item>
 			<uv-form-item v-if="deliveryMethod == 4" label="快递公司" labelPosition='top' labelWidth="200rpx"
 				leftIcon='/static/images/logistics/2.svg'>
 				<uv-input placeholder="请选择快递公司" v-model="formValue.company" style="margin-top: 15rpx;" />
 			</uv-form-item>
-			<uv-form-item label="数量(件)" labelPosition='top' labelWidth="200rpx"
-				:leftIcon="deliveryMethod == 4? '/static/images/logistics/3.svg' : '/static/images/logistics/1.svg'">
-				<uv-number-box v-model="formValue.amount" style="margin-top: 15rpx;" bgColor="#ffffff"
-					iconStyle='background-color:#F5F6F7;width: 60rpx;height: 60rpx;justify-content: center'></uv-number-box>
-			</uv-form-item>
-			<uv-form-item label="重量(kg)" labelPosition='top' labelWidth="200rpx"
-				:leftIcon="deliveryMethod == 4? '/static/images/logistics/4.svg' : '/static/images/logistics/2.svg'">
-				<uv-number-box v-model="formValue.weight" style="margin-top: 15rpx;" bgColor="#ffffff"
-					iconStyle='background-color:#F5F6F7;width: 60rpx;height: 60rpx;justify-content: center'></uv-number-box>
-			</uv-form-item>
 			<uv-form-item label="请上传快递图片(至少一张)" labelPosition='top' labelWidth="500rpx"
-				:leftIcon="deliveryMethod == 4? '/static/images/logistics/5.svg' : '/static/images/logistics/3.svg'">
-				<uv-upload name="1" multiple :maxCount="10" style="margin-top: 15rpx;">
+				:leftIcon="deliveryMethod == 4? '/static/images/logistics/3.svg' : '/static/images/logistics/1.svg'">
+				<uv-upload :fileList="fileList" @afterRead="afterRead" @delete="deletePic" name="1" multiple
+					:maxCount="10" style="margin-top: 15rpx;">
 					<image src="../../static/images/logistics/Group 427319118.svg" class="upload-image"></image>
 				</uv-upload>
 			</uv-form-item>
 			<uv-form-item v-if="deliveryMethod !== 4" label="备注(选填)" labelPosition='top' labelWidth="500rpx"
-				leftIcon='/static/images/logistics/4.svg'>
+				leftIcon='/static/images/logistics/2.svg'>
 				<uv-textarea v-model="formValue.remark" placeholder="备注内容" style="margin-top: 15rpx;"></uv-textarea>
 			</uv-form-item>
 			<button class="upload-button" @click="submit"><text class="text-upload">确认提交</text></button>
@@ -38,6 +32,8 @@
 </template>
 
 <script>
+	import { DeliveryFinished } from "../../apis/member";
+import config from "@/common/config";
 	export default {
 		props: {
 			closeModal: {
@@ -45,25 +41,85 @@
 				default: () => {}
 			},
 			uploadType: {
-				type: Number,
-				default: 3
-			}
+				type: String,
+				default: '3'
+			},
+			orderItemNo: {
+				type: String,
+				default: ''
+			},
 		},
 		data() {
 			return {
+				fileList: [],
 				deliveryMethod: this.uploadType,
 				formValue: {
 					number: '',
 					company: '',
-					amount: 1,
-					weight: 1,
 					remark: ''
 				},
 			}
 		},
 		methods: {
 			submit() {
+				DeliveryFinished({
+					orderItemNo: this.orderItemNo,
+					attachmentInfos: this.fileList,
+					remark: this.formValue.remark,
+					express_no: this.formValue.number,
+					express_company: this.formValue.company
+				})
 				this.closeModal()
+			},
+			onScanTap() {
+				// 调用小程序的扫码 API
+				uni.scanCode({
+					success: (res) => {
+						console.log('扫码结果：', res);
+						this.formValue.number = res.result
+					}
+				});
+			},
+			async afterRead(event) {
+				let lists = event.file
+				let fileListLen = this.fileList.length
+				lists.forEach((item) => {
+					this.fileList.push({
+						...item,
+						status: 'uploading',
+						message: '上传中'
+					})
+				})
+				for (let i = 0; i < lists.length; i++) {
+					const result = await this.uploadFilePromise(lists[i].url)
+					let item = this.fileList[fileListLen]
+					this.fileList.splice(fileListLen, 1, Object.assign(item, {
+						...result.data[0],
+						status: 'success',
+						message: '',
+					}))
+					fileListLen++
+				}
+			},
+			uploadFilePromise(url) {
+				return new Promise((resolve, reject) => {
+					uni.uploadFile({
+						url: config.baseURL + '/api/FileUpload/UploadFile', // 开发者服务器的上传接口地址
+						filePath: url, // 要上传的文件资源路径
+						name: 'file', // 必填，后台用来解析的文件名
+						formData: {
+							'user': 'test' // 额外的formdata
+						},
+						success: function(res) {
+							console.log('上传成功', JSON.parse(res.data));
+							resolve(JSON.parse(res.data))
+						},
+					});
+				})
+
+			},
+			deletePic(event) {
+				this.fileList.splice(event.index, 1)
 			},
 		}
 	}
