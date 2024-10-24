@@ -32,8 +32,8 @@
 					<view style="display: flex;">
 						<uv-image :src='data.productImage' width="152.67rpx" height="152.67rpx"></uv-image>
 						<view style="padding-left: 30rpx;">
-							<view class="line-clamp-3">{{data.productName}}</view>
-							<text>{{data.orderCount}}</text>
+							<view class="line-clamp-3 info-productName">{{data.productName}}</view>
+							<text class="orderCount">X{{data.orderCount}}</text>
 						</view>
 					</view>
 					<view class="info-divider"></view>
@@ -51,7 +51,7 @@
 							</uv-form-item>
 							<uv-form-item label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view style="max-width: 380rpx;">{{data.productName}}</view>
+									<view class="line-clamp-3" style="max-width: 380rpx; height: 120rpx;">{{data.productName}}</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
@@ -73,7 +73,7 @@
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
 								customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view style="max-width: 380rpx;">{{data.orderRemark}}</view>
+									<view class="line-clamp-3" style="max-width: 380rpx;-webkit-line-clamp: 1; height: 50rpx;">{{data.orderRemark}}</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
@@ -263,17 +263,20 @@
 		color: #333333;
 		line-height: 53rpx;
 	}
-
+	
 	.line-clamp-3 {
-		font-size: 27rpx;
-		color: #333333;
-		line-height: 38rpx;
-		display: -webkit-box;
 		height: 110rpx;
+		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
+	}
+	
+	.info-productName {
+		font-size: 27rpx;
+		color: #333333;
+		line-height: 38rpx;
 	}
 
 	.button-copy {
@@ -327,5 +330,11 @@
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;
+	}
+	.orderCount {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #333333;
+		line-height: 42rpx;
 	}
 </style>

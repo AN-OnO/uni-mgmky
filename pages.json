@@ -43,7 +43,7 @@
 		{
 			"path": "pages/logistics/info",
 			"style": {
-				"navigationBarTitleText": "订单详情",
+				"navigationBarTitleText": "详情",
 				"navigationBarTextStyle": "white"
 			}
 		},
@@ -76,6 +76,13 @@
 			{
 				"navigationBarTitleText" : "",
 				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
+			"path" : "pages/statisticalForm/components/rankTable",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
 			}
 		}
 	],
