@@ -18,7 +18,7 @@
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
 						<view class="ele-title">{{item.title}}<text
-								:class="`${Number(item.increase) > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{Number(item.increase) > 0 ? `+${item.increase}` : item.increase }}</text>
+								:class="`${Number(item.increase.replace(/,/g, '')) > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{Number(item.increase.replace(/,/g, '')) > 0 ? `+${item.increase}` : item.increase }}</text>
 						</view>
 						<view class="ele-value">
 							{{item.number}}
@@ -41,7 +41,60 @@
 			<view style="padding: 30rpx;">
 				<text class="section-title">品类变化趋势</text>
 			</view>
-			<div id="line" style="width: 100%;height:374rpx;"></div>
+			<div id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></div>
+			<view class="bottom-line"></view>
+		</view>
+		<view>
+			<view style="padding: 30rpx;">
+				<text class="section-title">订单金额排名(产品类)</text>
+			</view>
+			<view style="padding: 0rpx 30rpx;">
+				<uni-table emptyText="暂无更多数据">
+					<!-- 表头行 -->
+					<uni-tr>
+						<uni-th width="50" align="left">排名</uni-th>
+						<uni-th width="80" align="left">产品</uni-th>
+						<uni-th width="90" align="right"><text class="quantity">数量</text></uni-th>
+						<uni-th align="right"><text class="amount">金额</text></uni-th>
+					</uni-tr>
+					<!-- 表格数据行 -->
+					<uni-tr v-for="(item, index) in orderRank" :key="index">
+						<uni-td>
+							<image
+								:src="index == 0 ? '../../static/images/statisticalForm/gold.svg' : index == 1 ? '../../static/images/statisticalForm/silver.svg': '../../static/images/statisticalForm/bronze.svg'"
+								class='medal-img'></image>
+						</uni-td>
+						<uni-td>{{item.productCategoryName}}</uni-td>
+						<uni-td align="right">{{formatNumber(item.orderCountStat)}}</uni-td>
+						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
+					</uni-tr>
+					<uni-tr>
+						<uni-td><text class="total-text">合计</text></uni-td>
+						<uni-td></uni-td>
+						<uni-td align="right"><text class="total-text">{{formatNumber(orderRankCount)}}</text></uni-td>
+						<uni-td align="right"><text class="total-text">{{formatNumber(orderRankAmount)}}</text></uni-td>
+					</uni-tr>
+				</uni-table>
+			</view>
+			<view class="bottom-line"></view>
+		</view>
+		<view>
+			<view style="padding: 30rpx;">
+				<text class="section-title">印刷在产统计(件)</text>
+			</view>
+			<view style="margin: 0 30rpx 61rpx;padding: 20rpx;background: #FAFAFA;border-radius: 15rpx">
+				<text style="font-weight: bold;
+				font-size: 31rpx;color: #333333;line-height: 42rpx;">总印数2231195，总套数1715</text>
+				<view style="border: 2rpx solid  #F0F0F0;margin: 30rpx 0;"></view>
+				<view style="display: flex;flex-wrap: wrap;">
+					<view v-for="(item, index) in printedStat" :key="index" style="width: 215rpx;margin-bottom: 38rpx;">
+						<view class="ele-title">{{item.name}}<text class="ele-basis negative">{{item.amount}}</text>
+						</view>
+						<view class="ele-value">{{item.pages}}</view>
+					</view>
+				</view>
+			</view>
+			<view class="bottom-line"></view>
 		</view>
 	</view>
 </template>
@@ -70,19 +123,19 @@
 						name: '订单数量统计(单)',
 						content: [{
 							title: '所有订单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '内部下单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '微信订单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '网站下单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}]
 					},
@@ -90,24 +143,59 @@
 						name: '订单金额统计(元)',
 						content: [{
 							title: '所有订单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '内部下单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '微信订单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}, {
 							title: '网站下单',
-							increase: 0,
+							increase: '0',
 							number: '0'
 						}]
 					}
 				],
-				productData: []
+				productData: [],
+				orderRank: [],
+				printedStat: [{
+						name: '单面',
+						amount: '0',
+						pages: '0'
+					},
+					{
+						name: '单面版',
+						amount: '0',
+						pages: '0'
+					},
+					{
+						name: '双面',
+						amount: '0',
+						pages: '0'
+					},
+					{
+						name: '正面版',
+						amount: '0',
+						pages: '0'
+					},
+					{
+						name: '左右翻',
+						amount: '0',
+						pages: '0'
+					}
+				]
+			}
+		},
+		computed: {
+			orderRankAmount() {
+				return this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat), '0').toString()
+			},
+			orderRankCount() {
+				return this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat), '0').toString()
 			}
 		},
 		onLoad() {
@@ -243,6 +331,7 @@
 					mercantileAgents: userData.mercantileAgents.map(item => item.mercantileAgentId)
 				}).then(res => {
 					this.productData = res.data
+					this.orderRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
 					this.getPieEcharts()
 				})
 			},
@@ -267,7 +356,7 @@
 				let data = [];
 
 				if (this.currentSource == 1) {
-					const total = this.productData.reduce((prev, cur) => new Big(prev).plus(new Big(cur.orderAmountStat)),
+					const total = this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat),
 						'0').toString()
 					sourceData = [{
 						number: total
@@ -511,5 +600,31 @@
 		width: 100%;
 		background: #F0F0F0;
 		height: 15rpx;
+	}
+
+	.medal-img {
+		max-width: 45.8rpx;
+		max-height: 45.8rpx;
+	}
+
+	.quantity {
+		font-weight: bold;
+		font-size: 27rpx;
+		color: #6FD195;
+		line-height: 34rpx;
+	}
+
+	.amount {
+		font-weight: bold;
+		font-size: 27rpx;
+		color: #FF928A;
+		line-height: 34rpx
+	}
+
+	.total-text {
+		font-weight: bold;
+		font-size: 27rpx;
+		color: #333333;
+		line-height: 34rpx;
 	}
 </style>
