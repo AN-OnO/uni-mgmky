@@ -34,14 +34,14 @@
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
-			<div id="pie" style="width: 100%;height:305rpx;"></div>
+			<view id="pie" style="width: 100%;height:305rpx;"></view>
 			<view class="bottom-line"></view>
 		</view>
 		<view>
 			<view class="padding-30">
 				<text class="section-title">品类变化趋势</text>
 			</view>
-			<div id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></div>
+			<view id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></view>
 			<view class="bottom-line"></view>
 		</view>
 		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatOrderRank' :orderRankCount='orderRankCount'
@@ -105,7 +105,7 @@
 			<view class="padding-30">
 				<text class="section-title">设备产量</text>
 			</view>
-			<div id="bar" style="height:458rpx;padding: 0 30rpx;"></div>
+			<view id="bar" style="height:458rpx;padding: 0 30rpx;"></view>
 			<view class="bottom-line"></view>
 		</view>
 	</view>
@@ -324,7 +324,7 @@
 				GetOrderStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents.map(item => item.mercantileAgentId)
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
 				}).then(res => {
 					if (res.code !== 0) {
 						uni.$Utils.showToast(res.message)
@@ -380,7 +380,7 @@
 				GetOrderProductStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents.map(item => item.mercantileAgentId)
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
 				}).then(res => {
 					this.productData = res.data
 					this.orderRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
