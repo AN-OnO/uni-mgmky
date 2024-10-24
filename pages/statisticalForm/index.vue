@@ -12,7 +12,7 @@
 		</view>
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
-				<view style="padding: 30rpx;">
+				<view class="padding-30">
 					<text class="section-title">{{ele.name}}</text>
 				</view>
 				<view class="section-content">
@@ -29,7 +29,7 @@
 			</view>
 		</view>
 		<view>
-			<view class="flex-between" style="padding: 30rpx;">
+			<view class="flex-between padding-30">
 				<text class="section-title">订单金额占比</text>
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
@@ -38,14 +38,14 @@
 			<view class="bottom-line"></view>
 		</view>
 		<view>
-			<view style="padding: 30rpx;">
+			<view class="padding-30">
 				<text class="section-title">品类变化趋势</text>
 			</view>
 			<div id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></div>
 			<view class="bottom-line"></view>
 		</view>
 		<view>
-			<view style="padding: 30rpx;">
+			<view class="padding-30">
 				<text class="section-title">订单金额排名(产品类)</text>
 			</view>
 			<view style="padding: 0rpx 30rpx;">
@@ -79,14 +79,13 @@
 			<view class="bottom-line"></view>
 		</view>
 		<view>
-			<view style="padding: 30rpx;">
+			<view class="padding-30">
 				<text class="section-title">印刷在产统计(件)</text>
 			</view>
-			<view style="margin: 0 30rpx 61rpx;padding: 20rpx;background: #FAFAFA;border-radius: 15rpx">
-				<text style="font-weight: bold;
-				font-size: 31rpx;color: #333333;line-height: 42rpx;">总印数2231195，总套数1715</text>
-				<view style="border: 2rpx solid  #F0F0F0;margin: 30rpx 0;"></view>
-				<view style="display: flex;flex-wrap: wrap;">
+			<view class="printedStat-content">
+				<text class="printedStat-total">总印数2231195，总套数1715</text>
+				<view class="printedStat-line"></view>
+				<view class="flex-wrap">
 					<view v-for="(item, index) in printedStat" :key="index" style="width: 215rpx;margin-bottom: 38rpx;">
 						<view class="ele-title">{{item.name}}<text class="ele-basis negative">{{item.amount}}</text>
 						</view>
@@ -94,6 +93,13 @@
 					</view>
 				</view>
 			</view>
+			<view class="bottom-line"></view>
+		</view>
+		<view>
+			<view class="padding-30">
+				<text class="section-title">设备产量</text>
+			</view>
+			<div id="bar" style="height:458rpx;padding: 0 30rpx;"></div>
 			<view class="bottom-line"></view>
 		</view>
 	</view>
@@ -204,6 +210,7 @@
 		onReady() {
 			this.getPieEcharts()
 			this.getLineEcharts()
+			this.getBarEcharts()
 		},
 		methods: {
 			change(index) {
@@ -436,7 +443,7 @@
 				if (myChart != null) {
 					myChart.dispose();
 				}
-				myChart = echarts.init(document.getElementById('line'), );
+				myChart = echarts.init(document.getElementById('line'));
 				const option = {
 					tooltip: {
 						trigger: 'axis'
@@ -497,6 +504,68 @@
 								color: '#F5C461'
 							},
 							data: [820, 932, 901, 934, 1290, 1330, 1320]
+						}
+					]
+				};
+				myChart.setOption(option);
+			},
+			getBarEcharts() {
+				let myChart = echarts.getInstanceByDom(document.getElementById('bar'));
+				if (myChart != null) {
+					myChart.dispose();
+				}
+				myChart = echarts.init(document.getElementById('bar'));
+				const option = {
+					tooltip: {
+						trigger: 'axis'
+					},
+					legend: {
+						icon: 'circle',
+						top: '75%',
+					},
+					grid: {
+						top: '15%', // 顶部距离
+						left: '15%'
+					},
+					xAxis: {
+						type: 'value',
+						position: 'top', // 设置X轴在顶部
+
+					},
+					yAxis: {
+						type: 'category',
+						data: ['5号轮转', '6号理光彩印机'],
+						axisTick: {
+							show: false // 不显示刻度线
+						},
+						axisLabel: {
+							width: 50,
+							overflow: 'break'
+						},
+					},
+					series: [{
+							name: '印工',
+							type: 'bar',
+							itemStyle: {
+								color: '#6FD195'
+							},
+							data: [1820, 2348],
+							label: {
+								show: true, // 在柱状图上显示数据
+								position: 'right' // 数据位置
+							}
+						},
+						{
+							name: '版工',
+							type: 'bar',
+							itemStyle: {
+								color: '#3CC3DF'
+							},
+							data: [1932, 2343],
+							label: {
+								show: true, // 在柱状图上显示数据
+								position: 'right' // 数据位置
+							}
 						}
 					]
 				};
@@ -626,5 +695,33 @@
 		font-size: 27rpx;
 		color: #333333;
 		line-height: 34rpx;
+	}
+
+	.flex-wrap {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.printedStat-line {
+		border: 2rpx solid #F0F0F0;
+		margin: 30rpx 0;
+	}
+
+	.printedStat-total {
+		font-weight: bold;
+		font-size: 31rpx;
+		color: #333333;
+		line-height: 42rpx;
+	}
+
+	.printedStat-content {
+		margin: 0 30rpx 61rpx;
+		padding: 20rpx;
+		background: #FAFAFA;
+		border-radius: 15rpx
+	}
+
+	.padding-30 {
+		padding: 30rpx;
 	}
 </style>
