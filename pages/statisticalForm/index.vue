@@ -54,17 +54,19 @@
 			<view class="padding-30">
 				<text class="section-title">订单收款、应收款</text>
 			</view>
+			<view style="padding: 0rpx 30rpx 30rpx"> <uv-subsection style="border-radius: 15rpx;" :list="['下单人', '归属人', '设计人']"
+					:current="currentPerson" @change="changePerson"></uv-subsection></view>
 			<view style="padding: 0rpx 30rpx; margin-bottom: 61rpx;">
 				<uni-table>
 					<!-- 表头行 -->
 					<uni-tr style="background: #FAFAFA;">
-						<uni-th width="70" align="left">下单人</uni-th>
+						<uni-th width="70" align="left">{{currentPersonName}}</uni-th>
 						<uni-th width="90" align="right"><text class="quantity">应收</text></uni-th>
 						<uni-th width="90" align="right"><text class="quantity">已收</text></uni-th>
 						<uni-th width="90" align="right"><text class="amount">未收</text></uni-th>
 					</uni-tr>
 					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in [1,2,3,4,5]" :key="index">
+					<uni-tr v-for="(item, index) in personData" :key="index">
 						<uni-td >
 							<text class="index-text">石秋梅</text>
 						</uni-td>
@@ -133,6 +135,8 @@
 				modeTitle: `${dayjs().format('YYYY-MM-DD')}`,
 				current: 0,
 				currentSource: 0,
+				currentPerson: 0,
+				currentPersonName: '下单人',
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -176,6 +180,7 @@
 				],
 				productData: [],
 				orderRank: [],
+				personData: [1,2,3,4,5],
 				printedStat: [{
 						name: '单面',
 						amount: '0',
@@ -270,6 +275,14 @@
 			changeSource(index) {
 				this.currentSource = index;
 				this.getPieEcharts()
+			},
+			changePerson(index) {
+				this.currentPerson = index;
+				this.currentPersonName = {
+					0: '下单人',
+					1: '归属人',
+					2: '设计人'
+				}[index]
 			},
 			open() {
 				// if (this.mode == 'date') {
@@ -462,11 +475,7 @@
 							position: 'center'
 						},
 						emphasis: {
-							label: {
-								show: true,
-								fontSize: 40,
-								fontWeight: 'bold'
-							}
+							disabled: true
 						},
 						data
 					}]
