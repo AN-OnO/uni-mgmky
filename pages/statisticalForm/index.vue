@@ -44,35 +44,39 @@
 			<div id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></div>
 			<view class="bottom-line"></view>
 		</view>
+		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatOrderRank' :orderRankCount='orderRankCount'
+			:orderRankAmount='orderRankAmount' />
+		<RankTable title='订单金额排名(客户)' name='客户' :orderRank='formatProductData' :orderRankCount='productDataCount'
+			:orderRankAmount='productDataAmount' />
+		<RankTable title='订单金额排名(下单人)' name='下单人' :orderRank='formatProductData' :orderRankCount='productDataCount'
+			:orderRankAmount='productDataAmount' />
 		<view>
 			<view class="padding-30">
-				<text class="section-title">订单金额排名(产品类)</text>
+				<text class="section-title">订单收款、应收款</text>
 			</view>
-			<view style="padding: 0rpx 30rpx;">
-				<uni-table emptyText="暂无更多数据">
+			<view style="padding: 0rpx 30rpx; margin-bottom: 61rpx;">
+				<uni-table>
 					<!-- 表头行 -->
-					<uni-tr>
-						<uni-th width="50" align="left">排名</uni-th>
-						<uni-th width="80" align="left">产品</uni-th>
-						<uni-th width="90" align="right"><text class="quantity">数量</text></uni-th>
-						<uni-th align="right"><text class="amount">金额</text></uni-th>
+					<uni-tr style="background: #FAFAFA;">
+						<uni-th width="70" align="left">下单人</uni-th>
+						<uni-th width="90" align="right"><text class="quantity">应收</text></uni-th>
+						<uni-th width="90" align="right"><text class="quantity">已收</text></uni-th>
+						<uni-th width="90" align="right"><text class="amount">未收</text></uni-th>
 					</uni-tr>
 					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in orderRank" :key="index">
-						<uni-td>
-							<image
-								:src="index == 0 ? '../../static/images/statisticalForm/gold.svg' : index == 1 ? '../../static/images/statisticalForm/silver.svg': '../../static/images/statisticalForm/bronze.svg'"
-								class='medal-img'></image>
+					<uni-tr v-for="(item, index) in [1,2,3,4,5]" :key="index">
+						<uni-td >
+							<text class="index-text">石秋梅</text>
 						</uni-td>
-						<uni-td>{{item.productCategoryName}}</uni-td>
-						<uni-td align="right">{{formatNumber(item.orderCountStat)}}</uni-td>
-						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
+						<uni-td align="right">53,646</uni-td>
+						<uni-td align="right">1,197</uni-td>
+						<uni-td align="right">42,300</uni-td>
 					</uni-tr>
-					<uni-tr>
+					<uni-tr style="background: #FAFAFA;">
 						<uni-td><text class="total-text">合计</text></uni-td>
-						<uni-td></uni-td>
-						<uni-td align="right"><text class="total-text">{{formatNumber(orderRankCount)}}</text></uni-td>
-						<uni-td align="right"><text class="total-text">{{formatNumber(orderRankAmount)}}</text></uni-td>
+						<uni-td align="right"><text class="total-text">5,391</text></uni-td>
+						<uni-td align="right"><text class="total-text">3,246</text></uni-td>
+						<uni-td align="right"><text class="total-text">2,202,815</text></uni-td>
 					</uni-tr>
 				</uni-table>
 			</view>
@@ -86,7 +90,7 @@
 				<text class="printedStat-total">总印数2231195，总套数1715</text>
 				<view class="printedStat-line"></view>
 				<view class="flex-wrap">
-					<view v-for="(item, index) in printedStat" :key="index" style="width: 215rpx;margin-bottom: 38rpx;">
+					<view v-for="(item, index) in printedStat" :key="index" class="printed-content">
 						<view class="ele-title">{{item.name}}<text class="ele-basis negative">{{item.amount}}</text>
 						</view>
 						<view class="ele-value">{{item.pages}}</view>
@@ -116,8 +120,12 @@
 	import dayjs from 'dayjs';
 	import Big from 'big.js';
 	import * as echarts from 'echarts';
+	import RankTable from './components/rankTable.vue';
 	const userData = useUserStore().userData;
 	export default {
+		components: {
+			RankTable,
+		},
 		data() {
 			return {
 				value: Number(new Date()),
@@ -197,19 +205,41 @@
 			}
 		},
 		computed: {
+			formatOrderRank() {
+				return this.orderRank.map(item => ({
+					...item,
+					orderCountStat: this.formatNumber(item.orderCountStat),
+					orderAmountStat: this.formatNumber(item.orderAmountStat)
+				}))
+			},
 			orderRankAmount() {
-				return this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat), '0').toString()
+				return this.formatNumber(this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat), '0')
+					.toString())
 			},
 			orderRankCount() {
-				return this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat), '0').toString()
+				return this.formatNumber(this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat), '0')
+					.toString())
+			},
+			formatProductData() {
+				return this.productData.map(item => ({
+					...item,
+					orderCountStat: this.formatNumber(item.orderCountStat),
+					orderAmountStat: this.formatNumber(item.orderAmountStat)
+				}))
+			},
+			productDataAmount() {
+				return this.formatNumber(this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat),
+					'0').toString())
+			},
+			productDataCount() {
+				return this.formatNumber(this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat),
+					'0').toString())
 			}
 		},
 		onLoad() {
 			this.change(0)
 		},
 		onReady() {
-			this.getPieEcharts()
-			this.getLineEcharts()
 			this.getBarEcharts()
 		},
 		methods: {
@@ -283,51 +313,53 @@
 					endDate,
 					mercantileAgents: userData.mercantileAgents.map(item => item.mercantileAgentId)
 				}).then(res => {
-					if (res.code === 0) {
-						this.dataList[0].content[0].number = this.formatNumber(res.data.curPeriodCount.orderCount)
-						this.dataList[0].content[1].number = this.formatNumber(res.data.curPeriodCount
-							.innerOrderCount)
-						this.dataList[0].content[2].number = this.formatNumber(res.data.curPeriodCount
-							.weChatOrderCount)
-						this.dataList[0].content[3].number = this.formatNumber(res.data.curPeriodCount
-							.shoppingOrderCount)
-						this.dataList[0].content[0].increase = this.formatNumber(res.data.curPeriodCount
-							.orderCount - res.data
-							.prevPeriodCount.orderCount)
-						this.dataList[0].content[1].increase = this.formatNumber(res.data.curPeriodCount
-							.innerOrderCount - res.data
-							.prevPeriodCount.innerOrderCount)
-						this.dataList[0].content[2].increase = this.formatNumber(res.data.curPeriodCount
-							.weChatOrderCount - res.data
-							.prevPeriodCount.weChatOrderCount)
-						this.dataList[0].content[3].increase = this.formatNumber(res.data.curPeriodCount
-							.shoppingOrderCount - res
-							.data.prevPeriodCount.shoppingOrderCount)
-
-						this.dataList[1].content[0].number = this.formatNumber(res.data.curPeriodAmount
-							.orderAmount)
-						this.dataList[1].content[1].number = this.formatNumber(res.data.curPeriodAmount
-							.innerOrderAmount)
-						this.dataList[1].content[2].number = this.formatNumber(res.data.curPeriodAmount
-							.weChatOrderAmount)
-						this.dataList[1].content[3].number = this.formatNumber(res.data.curPeriodAmount
-							.shoppingOrderAmount)
-						this.dataList[1].content[0].increase = this.formatNumber(new Big(res.data.curPeriodAmount
-							.orderAmount).minus(res.data
-							.prevPeriodAmount.orderAmount).toString())
-						this.dataList[1].content[1].increase = this.formatNumber(new Big(res.data.curPeriodAmount
-							.innerOrderAmount).minus(res.data
-							.prevPeriodAmount.innerOrderAmount).toString())
-						this.dataList[1].content[2].increase = this.formatNumber(new Big(res.data.curPeriodAmount
-							.weChatOrderAmount).minus(res
-							.data.prevPeriodAmount.weChatOrderAmount).toString())
-						this.dataList[1].content[3].increase = this.formatNumber(new Big(res.data.curPeriodAmount
-							.shoppingOrderAmount).minus(res
-							.data.prevPeriodAmount.shoppingOrderAmount).toString())
-
-						this.getPieEcharts()
-					} else {
+					if (res.code !== 0) {
 						uni.$Utils.showToast(res.message)
+						return
+					}
+					this.dataList[0].content[0].number = this.formatNumber(res.data.curPeriodCount.orderCount)
+					this.dataList[0].content[1].number = this.formatNumber(res.data.curPeriodCount
+						.innerOrderCount)
+					this.dataList[0].content[2].number = this.formatNumber(res.data.curPeriodCount
+						.weChatOrderCount)
+					this.dataList[0].content[3].number = this.formatNumber(res.data.curPeriodCount
+						.shoppingOrderCount)
+					this.dataList[0].content[0].increase = this.formatNumber(res.data.curPeriodCount
+						.orderCount - res.data
+						.prevPeriodCount.orderCount)
+					this.dataList[0].content[1].increase = this.formatNumber(res.data.curPeriodCount
+						.innerOrderCount - res.data
+						.prevPeriodCount.innerOrderCount)
+					this.dataList[0].content[2].increase = this.formatNumber(res.data.curPeriodCount
+						.weChatOrderCount - res.data
+						.prevPeriodCount.weChatOrderCount)
+					this.dataList[0].content[3].increase = this.formatNumber(res.data.curPeriodCount
+						.shoppingOrderCount - res
+						.data.prevPeriodCount.shoppingOrderCount)
+
+					this.dataList[1].content[0].number = this.formatNumber(res.data.curPeriodAmount
+						.orderAmount)
+					this.dataList[1].content[1].number = this.formatNumber(res.data.curPeriodAmount
+						.innerOrderAmount)
+					this.dataList[1].content[2].number = this.formatNumber(res.data.curPeriodAmount
+						.weChatOrderAmount)
+					this.dataList[1].content[3].number = this.formatNumber(res.data.curPeriodAmount
+						.shoppingOrderAmount)
+					this.dataList[1].content[0].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.orderAmount).minus(res.data
+						.prevPeriodAmount.orderAmount).toString())
+					this.dataList[1].content[1].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.innerOrderAmount).minus(res.data
+						.prevPeriodAmount.innerOrderAmount).toString())
+					this.dataList[1].content[2].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.weChatOrderAmount).minus(res
+						.data.prevPeriodAmount.weChatOrderAmount).toString())
+					this.dataList[1].content[3].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.shoppingOrderAmount).minus(res
+						.data.prevPeriodAmount.shoppingOrderAmount).toString())
+
+					if (this.currentSource == 0) {
+						this.getPieEcharts()
 					}
 				})
 			},
@@ -339,7 +371,10 @@
 				}).then(res => {
 					this.productData = res.data
 					this.orderRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
-					this.getPieEcharts()
+					if (this.currentSource == 1) {
+						this.getPieEcharts()
+					}
+					this.getLineEcharts()
 				})
 			},
 			formatNumber(num) {
@@ -671,11 +706,6 @@
 		height: 15rpx;
 	}
 
-	.medal-img {
-		max-width: 45.8rpx;
-		max-height: 45.8rpx;
-	}
-
 	.quantity {
 		font-weight: bold;
 		font-size: 27rpx;
@@ -694,6 +724,13 @@
 		font-weight: bold;
 		font-size: 27rpx;
 		color: #333333;
+		line-height: 34rpx;
+	}
+
+	.index-text {
+		font-weight: bold;
+		font-size: 23rpx;
+		color: #808080;
 		line-height: 34rpx;
 	}
 
@@ -719,6 +756,16 @@
 		padding: 20rpx;
 		background: #FAFAFA;
 		border-radius: 15rpx
+	}
+
+	.printed-content {
+		width: 190rpx;
+		margin-bottom: 38rpx;
+		padding: 8rpx
+	}
+
+	.printed-content:not(:nth-child(3)):not(:nth-child(5)) {
+		border-right: 2rpx solid #F0F0F0;
 	}
 
 	.padding-30 {
