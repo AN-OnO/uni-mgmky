@@ -69,7 +69,7 @@ export function GetOrderStat(params) {
  * @return 
  */
 export function GetDeliveryDetail(params) {
-	return request.post('/api/Production/GetDeliveryDetail', params)
+	return request.get('/api/Production/GetDeliveryDetail', {params})
 }
 
 /**
