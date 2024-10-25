@@ -80,15 +80,15 @@
 						<uni-td>
 							<text class="index-text line-clamp-name">{{item.employeeName}}</text>
 						</uni-td>
-						<uni-td align="right">53,646</uni-td>
-						<uni-td align="right">1,197</uni-td>
-						<uni-td align="right">42,300</uni-td>
+						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
+						<uni-td align="right">{{formatNumber(item.orderPaiedAmt)}}</uni-td>
+						<uni-td align="right">{{formatNumber(item.orderUnpaiedAmt)}}</uni-td>
 					</uni-tr>
 					<uni-tr style="background: #FAFAFA;">
 						<uni-td><text class="total-text">合计</text></uni-td>
-						<uni-td align="right"><text class="total-text">0</text></uni-td>
-						<uni-td align="right"><text class="total-text">0</text></uni-td>
-						<uni-td align="right"><text class="total-text">0</text></uni-td>
+						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderAmountStat')}}</text></uni-td>
+						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderPaiedAmt')}}</text></uni-td>
+						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderUnpaiedAmt')}}</text></uni-td>
 					</uni-tr>
 				</uni-table>
 			</view>
@@ -383,9 +383,11 @@
 						this.companyRank = res.data.slice(0, 10)
 					} else {
 						this.personRank = res.data.slice(0, 5)
-						this.personData = res.data.slice(0, 10)
+						this.personData = res.data.slice(0, 10).map(item => ({
+							...item,
+							orderUnpaiedAmt: new Big(item.orderAmountStat).minus(item.orderPaiedAmt).toString() 
+						}))
 					}
-
 				})
 			},
 			formatRank(data) {
@@ -775,7 +777,6 @@
 	}
 
 	.line-clamp-name {
-		width: 120rpx;
 		height: 40rpx;
 		display: -webkit-box;
 		overflow: hidden;
