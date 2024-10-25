@@ -41,8 +41,8 @@ import config from "@/common/config";
 				default: () => {}
 			},
 			uploadType: {
-				type: String,
-				default: '3'
+				type: Number,
+				default: 3
 			},
 			orderItemNo: {
 				type: String,

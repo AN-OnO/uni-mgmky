@@ -146,8 +146,8 @@
 			}
 		},
 		onLoad(options) {
-			this.deliveryMethod = options.deliveryMethod;
-			this.searchType = options.searchType;
+			this.deliveryMethod = parseInt(options.deliveryMethod);
+			this.searchType = parseInt(options.searchType);
 			this.orderItemNo = options.orderItemNo;
 			uni.setNavigationBarColor({
 				backgroundColor: 'rgba(89,87,230,0.6)'

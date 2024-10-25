@@ -98,7 +98,7 @@
 			}
 		},
 		onLoad(options) {
-			this.deliveryMethod = options.deliveryMethod;
+			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.buttonText = options.deliveryMethod == 3 ? '开始配送' : '开始取送';
 			uni.setNavigationBarTitle({
 				title: this.deliveryMethod == 3 ? '配送' : '物流'
@@ -114,7 +114,6 @@
 		},
 		methods: {
 			changeTab(item) {
-				console.log('item', item);
 				this.status = 'loadmore';
 				if (item.index == 0) {
 					this.buttonText = this.deliveryMethod == 4 ? '开始取送' : '开始配送';

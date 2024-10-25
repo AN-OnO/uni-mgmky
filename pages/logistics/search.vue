@@ -81,7 +81,7 @@
 			}
 		},
 		onLoad(options) {
-			this.deliveryMethod = options.deliveryMethod;
+			this.deliveryMethod = parseInt(options.deliveryMethod);
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
