@@ -76,9 +76,9 @@
 					</uni-tr>
 					<uni-tr style="background: #FAFAFA;">
 						<uni-td><text class="total-text">合计</text></uni-td>
-						<uni-td align="right"><text class="total-text">5,391</text></uni-td>
-						<uni-td align="right"><text class="total-text">3,246</text></uni-td>
-						<uni-td align="right"><text class="total-text">2,202,815</text></uni-td>
+						<uni-td align="right"><text class="total-text">0</text></uni-td>
+						<uni-td align="right"><text class="total-text">0</text></uni-td>
+						<uni-td align="right"><text class="total-text">0</text></uni-td>
 					</uni-tr>
 				</uni-table>
 			</view>
@@ -89,7 +89,7 @@
 				<text class="section-title">印刷在产统计(件)</text>
 			</view>
 			<view class="printedStat-content">
-				<text class="printedStat-total">总印数2231195，总套数1715</text>
+				<text class="printedStat-total">总印数0，总套数0</text>
 				<view class="printedStat-line"></view>
 				<view class="flex-wrap">
 					<view v-for="(item, index) in printedStat" :key="index" class="printed-content">
@@ -180,7 +180,7 @@
 				],
 				productData: [],
 				orderRank: [],
-				personData: [1,2,3,4,5],
+				personData: [],
 				printedStat: [{
 						name: '单面',
 						amount: '0',
@@ -515,7 +515,7 @@
 							itemStyle: {
 								color: '#8979FF'
 							},
-							data: [120, 132, 101, 134, 90, 230, 210]
+							data: []
 						},
 						{
 							name: '不干胶',
@@ -523,7 +523,7 @@
 							itemStyle: {
 								color: '#6CD2E7'
 							},
-							data: [220, 182, 191, 234, 290, 330, 310]
+							data: []
 						},
 						{
 							name: '样本画册',
@@ -531,7 +531,7 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: [150, 232, 201, 154, 190, 330, 410]
+							data: []
 						},
 						{
 							name: '数码单页',
@@ -539,7 +539,7 @@
 							itemStyle: {
 								color: '#FF928A'
 							},
-							data: [320, 332, 301, 334, 390, 330, 320]
+							data: []
 						},
 						{
 							name: '数码画册',
@@ -547,7 +547,7 @@
 							itemStyle: {
 								color: '#F5C461'
 							},
-							data: [820, 932, 901, 934, 1290, 1330, 1320]
+							data: []
 						}
 					]
 				};
@@ -593,7 +593,7 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: [1820, 2348],
+							data: [],
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -605,7 +605,7 @@
 							itemStyle: {
 								color: '#3CC3DF'
 							},
-							data: [1932, 2343],
+							data: [],
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
