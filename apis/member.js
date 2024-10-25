@@ -33,7 +33,7 @@ export function GetToken(params) {
  * @return 
  */
 export function GetList(params) {
-	return request.post('/api/Production/ListDeliveryByPSP', params)
+	return request.post('/api/Delivery/ListDeliveryByPSP', params)
 }
 
 /**
@@ -42,7 +42,7 @@ export function GetList(params) {
  * @return 
  */
 export function ConfirmDelivery(params) {
-	return request.post('/api/Production/ConfirmDeliveryByPSP', params)
+	return request.post('/api/Delivery/ConfirmDeliveryByPSP', params)
 }
 
 /**
@@ -51,7 +51,7 @@ export function ConfirmDelivery(params) {
  * @return 
  */
 export function DeliveryFinished(params) {
-	return request.post('/api/Production/DeliveryByPSPFinished', params)
+	return request.post('/api/Delivery/DeliveryByPSPFinished', params)
 }
 
 /**
@@ -69,7 +69,7 @@ export function GetOrderStat(params) {
  * @return 
  */
 export function GetDeliveryDetail(params) {
-	return request.get('/api/Production/GetDeliveryDetail', {params})
+	return request.get('/api/Delivery/GetDeliveryDetail', {params})
 }
 
 /**
@@ -79,4 +79,13 @@ export function GetDeliveryDetail(params) {
  */
 export function GetOrderProductStat(params) {
 	return request.post('/api/DashboardStat/GetOrderProductStat', params)
+}
+
+/**
+ * 订单金额排名
+ * @param params 
+ * @return 
+ */
+export function GetOrderProductTopStat(params) {
+	return request.post('/api/DashboardStat/GetOrderProductTopStat', params)
 }

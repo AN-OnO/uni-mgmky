@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uv-sticky offset-top="0" bgColor='#FFFFFF'>
+		<uv-sticky bgColor='#FFFFFF'>
 			<view class="flex-between">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}<uv-icon name="arrow-down-fill" size="16"></uv-icon>
@@ -20,10 +20,10 @@
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
 						<view class="ele-title">{{item.title}}<text
-								:class="`${Number(item.increase.replace(/,/g, '')) > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{Number(item.increase.replace(/,/g, '')) > 0 ? `+${item.increase}` : item.increase }}</text>
+								:class="`${+item.increase > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{formatNumber(+item.increase > 0 ? `+${item.increase}` : item.increase)}}</text>
 						</view>
 						<view class="ele-value">
-							{{item.number}}
+							{{formatNumber(item.number)}}
 						</view>
 					</view>
 				</view>
@@ -50,12 +50,15 @@
 			</view>
 			<view class="bottom-line"></view>
 		</view>
-		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatOrderRank' :orderRankCount='orderRankCount'
-			:orderRankAmount='orderRankAmount' />
-		<RankTable title='订单金额排名(客户)' name='客户' :orderRank='formatProductData' :orderRankCount='productDataCount'
-			:orderRankAmount='productDataAmount' />
-		<RankTable title='订单金额排名(下单人)' name='下单人' :orderRank='formatProductData' :orderRankCount='productDataCount'
-			:orderRankAmount='productDataAmount' />
+		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatRank(productRank)'
+			:orderRankCount="rankTotal(productRank, 'orderCountStat')"
+			:orderRankAmount="rankTotal(productRank, 'orderAmountStat')" />
+		<RankTable title='订单金额排名(客户)' name='客户' :orderRank='formatRank(companyRank)'
+			:orderRankCount="rankTotal(companyRank, 'orderCountStat')"
+			:orderRankAmount="rankTotal(companyRank, 'orderAmountStat')" />
+		<RankTable title='订单金额排名(下单人)' name='下单人' :orderRank='formatRank(personRank)'
+			:orderRankCount="rankTotal(personRank, 'orderCountStat')"
+			:orderRankAmount="rankTotal(personRank, 'orderAmountStat')" />
 		<view>
 			<view class="padding-30">
 				<text class="section-title">订单收款、应收款</text>
@@ -75,7 +78,7 @@
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in personData" :key="index">
 						<uni-td>
-							<text class="index-text">石秋梅</text>
+							<text class="index-text line-clamp-name">{{item.employeeName}}</text>
 						</uni-td>
 						<uni-td align="right">53,646</uni-td>
 						<uni-td align="right">1,197</uni-td>
@@ -123,6 +126,7 @@
 <script>
 	import {
 		GetOrderProductStat,
+		GetOrderProductTopStat,
 		GetOrderStat
 	} from '../../apis/member';
 	import {
@@ -188,7 +192,9 @@
 					}
 				],
 				productData: [],
-				orderRank: [],
+				productRank: [],
+				companyRank: [],
+				personRank: [],
 				personData: [],
 				printedStat: [{
 						name: '单面',
@@ -218,38 +224,6 @@
 				]
 			}
 		},
-		computed: {
-			formatOrderRank() {
-				return this.orderRank.map(item => ({
-					...item,
-					orderCountStat: this.formatNumber(item.orderCountStat),
-					orderAmountStat: this.formatNumber(item.orderAmountStat)
-				}))
-			},
-			orderRankAmount() {
-				return this.formatNumber(this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat), '0')
-					.toString())
-			},
-			orderRankCount() {
-				return this.formatNumber(this.orderRank.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat), '0')
-					.toString())
-			},
-			formatProductData() {
-				return this.productData.map(item => ({
-					...item,
-					orderCountStat: this.formatNumber(item.orderCountStat),
-					orderAmountStat: this.formatNumber(item.orderAmountStat)
-				}))
-			},
-			productDataAmount() {
-				return this.formatNumber(this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat),
-					'0').toString())
-			},
-			productDataCount() {
-				return this.formatNumber(this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderCountStat),
-					'0').toString())
-			}
-		},
 		onLoad() {
 			this.change(0)
 		},
@@ -262,21 +236,16 @@
 					this.mode = 'date';
 					const date = dayjs().format('YYYY-MM-DD');
 					this.modeTitle = date;
-					this.getOrderStat(date, date)
-					this.getOrderProductStat(date, date)
+					this.updateData(date, date)
 				} else if (index == 1) {
 					this.mode = 'year-month';
 					this.modeTitle = dayjs().format('YYYY-MM')
-					this.getOrderStat(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
-						'YYYY-MM-DD'))
-					this.getOrderProductStat(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
-						'YYYY-MM-DD'))
+					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format('YYYY-MM-DD'))
 				} else {
 					this.mode = 'year';
 					this.modeTitle = dayjs().format('YYYY')
 					const year = dayjs().year()
-					this.getOrderStat(`${year}-01-01`, `${year}-12-31`)
-					this.getOrderProductStat(`${year}-01-01`, `${year}-12-31`)
+					this.updateData(`${year}-01-01`, `${year}-12-31`)
 				}
 				this.current = index;
 				this.value = Number(new Date())
@@ -304,30 +273,29 @@
 				if (e.range) {
 					// 选择日期范围
 					// this.modeTitle = `${startTime}/${endTime}`
-					this.getOrderStat(e.range.before, e.range.after)
-					this.getOrderProductStat(e.range.before, e.range.after)
+					this.updateData(e.range.before, e.range.after)
 					return
 				}
 				const year = dayjs(e.value).year();
 
 				if (e.mode == 'year') {
 					this.modeTitle = year
-					this.getOrderStat(`${year}-01-01`, `${year}-12-31`)
-					this.getOrderProductStat(`${year}-01-01`, `${year}-12-31`)
+					this.updateData(`${year}-01-01`, `${year}-12-31`)
 				} else if (e.mode == 'year-month') {
 					const month = dayjs(e.value).month() + 1;
 					this.modeTitle = `${year}-${month}`
-					this.getOrderStat(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
-						.format('YYYY-MM-DD'))
-					this.getOrderProductStat(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf(
-							'month')
-						.format('YYYY-MM-DD'))
+					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month').format('YYYY-MM-DD'))
 				} else {
 					const date = dayjs(e.value).format('YYYY-MM-DD');
 					this.modeTitle = date
-					this.getOrderStat(date, date)
-					this.getOrderProductStat(date, date)
+					this.updateData(date, date)
 				}
+			},
+			updateData(beginDate, endDate) {
+				this.getOrderStat(beginDate, endDate)
+				this.getOrderProductStat(beginDate, endDate)
+				this.getOrderProductTopStat(beginDate, endDate, 2)
+				this.getOrderProductTopStat(beginDate, endDate, 3)
 			},
 			getOrderStat(beginDate, endDate) {
 				GetOrderStat({
@@ -339,46 +307,46 @@
 						uni.$Utils.showToast(res.message)
 						return
 					}
-					this.dataList[0].content[0].number = this.formatNumber(res.data.curPeriodCount.orderCount)
-					this.dataList[0].content[1].number = this.formatNumber(res.data.curPeriodCount
-						.innerOrderCount)
-					this.dataList[0].content[2].number = this.formatNumber(res.data.curPeriodCount
-						.weChatOrderCount)
-					this.dataList[0].content[3].number = this.formatNumber(res.data.curPeriodCount
-						.shoppingOrderCount)
-					this.dataList[0].content[0].increase = this.formatNumber(res.data.curPeriodCount
+					this.dataList[0].content[0].number = res.data.curPeriodCount.orderCount
+					this.dataList[0].content[1].number = res.data.curPeriodCount
+						.innerOrderCount
+					this.dataList[0].content[2].number = res.data.curPeriodCount
+						.weChatOrderCount
+					this.dataList[0].content[3].number = res.data.curPeriodCount
+						.shoppingOrderCount
+					this.dataList[0].content[0].increase = res.data.curPeriodCount
 						.orderCount - res.data
-						.prevPeriodCount.orderCount)
-					this.dataList[0].content[1].increase = this.formatNumber(res.data.curPeriodCount
+						.prevPeriodCount.orderCount
+					this.dataList[0].content[1].increase = res.data.curPeriodCount
 						.innerOrderCount - res.data
-						.prevPeriodCount.innerOrderCount)
-					this.dataList[0].content[2].increase = this.formatNumber(res.data.curPeriodCount
+						.prevPeriodCount.innerOrderCount
+					this.dataList[0].content[2].increase = res.data.curPeriodCount
 						.weChatOrderCount - res.data
-						.prevPeriodCount.weChatOrderCount)
-					this.dataList[0].content[3].increase = this.formatNumber(res.data.curPeriodCount
+						.prevPeriodCount.weChatOrderCount
+					this.dataList[0].content[3].increase = res.data.curPeriodCount
 						.shoppingOrderCount - res
-						.data.prevPeriodCount.shoppingOrderCount)
+						.data.prevPeriodCount.shoppingOrderCount
 
-					this.dataList[1].content[0].number = this.formatNumber(res.data.curPeriodAmount
-						.orderAmount)
-					this.dataList[1].content[1].number = this.formatNumber(res.data.curPeriodAmount
-						.innerOrderAmount)
-					this.dataList[1].content[2].number = this.formatNumber(res.data.curPeriodAmount
-						.weChatOrderAmount)
-					this.dataList[1].content[3].number = this.formatNumber(res.data.curPeriodAmount
-						.shoppingOrderAmount)
-					this.dataList[1].content[0].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+					this.dataList[1].content[0].number = res.data.curPeriodAmount
+						.orderAmount
+					this.dataList[1].content[1].number = res.data.curPeriodAmount
+						.innerOrderAmount
+					this.dataList[1].content[2].number = res.data.curPeriodAmount
+						.weChatOrderAmount
+					this.dataList[1].content[3].number = res.data.curPeriodAmount
+						.shoppingOrderAmount
+					this.dataList[1].content[0].increase = new Big(res.data.curPeriodAmount
 						.orderAmount).minus(res.data
-						.prevPeriodAmount.orderAmount).toString())
-					this.dataList[1].content[1].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.prevPeriodAmount.orderAmount).toString()
+					this.dataList[1].content[1].increase = new Big(res.data.curPeriodAmount
 						.innerOrderAmount).minus(res.data
-						.prevPeriodAmount.innerOrderAmount).toString())
-					this.dataList[1].content[2].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.prevPeriodAmount.innerOrderAmount).toString()
+					this.dataList[1].content[2].increase = new Big(res.data.curPeriodAmount
 						.weChatOrderAmount).minus(res
-						.data.prevPeriodAmount.weChatOrderAmount).toString())
-					this.dataList[1].content[3].increase = this.formatNumber(new Big(res.data.curPeriodAmount
+						.data.prevPeriodAmount.weChatOrderAmount).toString()
+					this.dataList[1].content[3].increase = new Big(res.data.curPeriodAmount
 						.shoppingOrderAmount).minus(res
-						.data.prevPeriodAmount.shoppingOrderAmount).toString())
+						.data.prevPeriodAmount.shoppingOrderAmount).toString()
 
 					if (this.currentSource == 0) {
 						this.getPieEcharts()
@@ -392,12 +360,43 @@
 					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
 				}).then(res => {
 					this.productData = res.data
-					this.orderRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
+					this.productRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
 					if (this.currentSource == 1) {
 						this.getPieEcharts()
 					}
-					this.getLineEcharts()
 				})
+			},
+			getOrderProductTopStat(beginDate, endDate, topStatType) {
+				GetOrderProductTopStat({
+					beginDate,
+					endDate,
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					statDimension: {
+						year: 1,
+						'year-month': 2,
+						date: 3
+					} [this.mode],
+					topStatType
+				}).then(res => {
+					console.log(4154, res)
+					if (topStatType == 2) {
+						this.companyRank = res.data.slice(0, 10)
+					} else {
+						this.personRank = res.data.slice(0, 5)
+						this.personData = res.data.slice(0, 10)
+					}
+
+				})
+			},
+			formatRank(data) {
+				return data.map(item => ({
+					...item,
+					orderCountStat: this.formatNumber(item.orderCountStat),
+					orderAmountStat: this.formatNumber(item.orderAmountStat)
+				}))
+			},
+			rankTotal(data, key) {
+				return this.formatNumber(data.reduce((prev, cur) => new Big(prev).plus(cur[key]), '0').toString())
 			},
 			formatNumber(num) {
 				// 将数字转换为字符串
@@ -428,10 +427,7 @@
 						name: item.productCategoryName
 					}))
 				} else {
-					sourceData = this.dataList[1].content.map(item => ({
-						...item,
-						number: item.number.replace(/,/g, '')
-					}));
+					sourceData = this.dataList[1].content;
 					data = [{
 							value: sourceData[1].number,
 							name: '内部下单',
@@ -462,6 +458,7 @@
 					},
 					legend: {
 						orient: 'vertical',
+						selectedMode: false,
 						icon: 'circle',
 						top: 'center',
 						left: '35%',
@@ -505,7 +502,7 @@
 						type: 'value',
 						axisLabel: {
 							formatter: function(value) {
-								return `${value/100}万`
+								return `${value/10000}万`
 							}
 						}
 					},
@@ -775,5 +772,15 @@
 
 	.padding-30 {
 		padding: 30rpx;
+	}
+
+	.line-clamp-name {
+		width: 120rpx;
+		height: 40rpx;
+		display: -webkit-box;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		-webkit-line-clamp: 1;
+		-webkit-box-orient: vertical;
 	}
 </style>

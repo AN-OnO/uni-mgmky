@@ -10,7 +10,7 @@
 					<uni-th width="50" align="left">排名</uni-th>
 					<uni-th width="80" align="left">{{name}}</uni-th>
 					<uni-th width="90" align="right"><text class="quantity">数量</text></uni-th>
-					<uni-th align="right"><text class="amount">金额</text></uni-th>
+					<uni-th  align="right"><text class="amount">金额</text></uni-th>
 				</uni-tr>
 				<!-- 表格数据行 -->
 				<uni-tr v-for="(item, index) in orderRank" :key="index">
@@ -20,7 +20,7 @@
 							class='medal-img'></image>
 						<text class="index-text" v-else>{{index + 1}}</text>
 					</uni-td>
-					<uni-td ><text class="line-clamp-name">{{item.productCategoryName}}</text></uni-td>
+					<uni-td ><text class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text></uni-td>
 					<uni-td align="right">{{item.orderCountStat}}</uni-td>
 					<uni-td align="right">{{item.orderAmountStat}}</uni-td>
 				</uni-tr>
@@ -123,6 +123,7 @@
 		line-height: 34rpx;
 	}
 	.line-clamp-name {
+		width: 120rpx;
 		height: 40rpx;
 		display: -webkit-box;
 		overflow: hidden;
