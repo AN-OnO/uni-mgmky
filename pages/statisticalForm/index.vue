@@ -1,15 +1,17 @@
 <template>
 	<view>
-		<view class="flex-between">
-			<view @click="open" class="mode-title">
-				{{modeTitle}}<uv-icon name="arrow-down-fill" size="16"></uv-icon>
+		<uv-sticky offset-top="0" bgColor='#FFFFFF'>
+			<view class="flex-between">
+				<view @click="open" class="mode-title">
+					{{modeTitle}}<uv-icon name="arrow-down-fill" size="16"></uv-icon>
+				</view>
+				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
+					@confirm="confirm"></uv-datetime-picker>
+				<!-- <uv-calendars ref="calendars" @confirm="confirm" mode="range" allowSameDay /> -->
+				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
+						:current="current" @change="change"></uv-subsection></view>
 			</view>
-			<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
-				@confirm="confirm"></uv-datetime-picker>
-			<!-- <uv-calendars ref="calendars" @confirm="confirm" mode="range" allowSameDay /> -->
-			<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
-					:current="current" @change="change"></uv-subsection></view>
-		</view>
+		</uv-sticky>
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
 				<view class="padding-30">
