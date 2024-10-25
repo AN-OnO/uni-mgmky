@@ -18,7 +18,7 @@
 				:leftIcon="deliveryMethod == 4? '/static/images/logistics/3.svg' : '/static/images/logistics/1.svg'">
 				<uv-upload :fileList="fileList" @afterRead="afterRead" @delete="deletePic" name="1" multiple
 					:maxCount="10" style="margin-top: 15rpx;">
-					<image src="../../static/images/logistics/Group 427319118.svg" class="upload-image"></image>
+					<image src="/static/images/logistics/Group 427319118.svg" class="upload-image"></image>
 				</uv-upload>
 			</uv-form-item>
 			<uv-form-item v-if="deliveryMethod !== 4" label="备注(选填)" labelPosition='top' labelWidth="500rpx"

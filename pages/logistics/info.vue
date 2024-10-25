@@ -5,7 +5,7 @@
 				<view style="background: #333333;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
-							:src="searchType == 2? '../../static/images/logistics/配送中.svg': '../../static/images/logistics/待配送.svg'"
+							:src="searchType == 2? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
 							mode=""></image>
 						<text class="order-status">{{
 							({
@@ -23,7 +23,7 @@
 							}}</text>
 					</view>
 					<view class='flex-center'>
-						<image class="image" src="../../static/images/logistics/infoLocal (已定位).svg" mode=""></image>
+						<image class="image" src="/static/images/logistics/infoLocal (已定位).svg" mode=""></image>
 						<text class="local-text">{{`${data.linkMan } ${data.contactMobile }`}}</text>
 					</view>
 					<div class="address">{{data.address}}</div>
@@ -97,11 +97,11 @@
 			</view>
 			<view v-if="searchType != 3" class="bottom-container">
 				<button v-if="deliveryMethod == 3" class="button-operation white-button">
-					<image src="../../static/images/logistics/电话.svg" class="button-image" mode=""></image><text
+					<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
 				<button v-if="deliveryMethod == 3" class="button-operation white-button">
-					<image src="../../static/images/logistics/导航.svg" class="button-image" mode=""></image><text
+					<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
 				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">

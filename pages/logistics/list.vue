@@ -28,7 +28,7 @@
 								:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
 						</view>
 						<view style="display: flex; align-items: center;">
-							<image src="../../static/images/logistics/Local (已定位).svg"
+							<image src="/static/images/logistics/Local (已定位).svg"
 								style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
 							<text class="line-clamp">{{item.address}}</text>
 						</view>
@@ -39,11 +39,11 @@
  						color: #808080;">{{item.productName}}</text>
 						<view v-if="buttonText" style="display: flex;justify-content: end;">
 							<button v-if="deliveryMethod == 3" class="list-button white-button">
-								<image src="../../static/images/logistics/电话.svg" class="list-image" mode=""></image>
+								<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">电话</text>
 							</button>
 							<button v-if="deliveryMethod == 3" class="list-button white-button">
-								<image src="../../static/images/logistics/导航.svg" class="list-image" mode=""></image>
+								<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">导航</text>
 							</button>
 							<button class="list-button" @click.stop="confirm(item.orderItemNo)">
