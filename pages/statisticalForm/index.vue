@@ -34,14 +34,18 @@
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
-			<view id="pie" style="width: 100%;height:305rpx;"></view>
+			<view style="height:305rpx;">
+				<l-echart ref="pieRef" @finished="getPieEcharts"></l-echart>
+			</view>
 			<view class="bottom-line"></view>
 		</view>
 		<view>
 			<view class="padding-30">
 				<text class="section-title">品类变化趋势</text>
 			</view>
-			<view id="line" style="width: 90%;height:374rpx; padding: 0 30rpx;"></view>
+			<view style="width: 90%;height:374rpx; padding: 0 30rpx;">
+				<l-echart ref="lineRef" @finished="getLineEcharts"></l-echart>
+			</view>
 			<view class="bottom-line"></view>
 		</view>
 		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatOrderRank' :orderRankCount='orderRankCount'
@@ -54,8 +58,9 @@
 			<view class="padding-30">
 				<text class="section-title">订单收款、应收款</text>
 			</view>
-			<view style="padding: 0rpx 30rpx 30rpx"> <uv-subsection style="border-radius: 15rpx;" :list="['下单人', '归属人', '设计人']"
-					:current="currentPerson" @change="changePerson"></uv-subsection></view>
+			<view style="padding: 0rpx 30rpx 30rpx"> <uv-subsection style="border-radius: 15rpx;"
+					:list="['下单人', '归属人', '设计人']" :current="currentPerson" @change="changePerson"></uv-subsection>
+			</view>
 			<view style="padding: 0rpx 30rpx; margin-bottom: 61rpx;">
 				<uni-table>
 					<!-- 表头行 -->
@@ -67,7 +72,7 @@
 					</uni-tr>
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in personData" :key="index">
-						<uni-td >
+						<uni-td>
 							<text class="index-text">石秋梅</text>
 						</uni-td>
 						<uni-td align="right">53,646</uni-td>
@@ -105,7 +110,9 @@
 			<view class="padding-30">
 				<text class="section-title">设备产量</text>
 			</view>
-			<view id="bar" style="height:458rpx;padding: 0 30rpx;"></view>
+			<view style="height:458rpx;padding: 0 30rpx;">
+				<l-echart ref="barRef" @finished="getBarEcharts"></l-echart>
+			</view>
 			<view class="bottom-line"></view>
 		</view>
 	</view>
@@ -282,7 +289,7 @@
 					0: '下单人',
 					1: '归属人',
 					2: '设计人'
-				}[index]
+				} [index]
 			},
 			open() {
 				// if (this.mode == 'date') {
@@ -400,13 +407,8 @@
 
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
-			getPieEcharts() {
-				let myChart = echarts.getInstanceByDom(document.getElementById('pie'));
-				if (myChart != null) {
-					myChart.dispose();
-				}
-				myChart = echarts.init(document.getElementById('pie'));
-
+			async getPieEcharts() {
+				const chart = await this.$refs.pieRef.init(echarts);
 				let sourceData = [];
 				let data = [];
 
@@ -480,14 +482,10 @@
 						data
 					}]
 				};
-				myChart.setOption(option);
+				chart.setOption(option)
 			},
-			getLineEcharts() {
-				let myChart = echarts.getInstanceByDom(document.getElementById('line'));
-				if (myChart != null) {
-					myChart.dispose();
-				}
-				myChart = echarts.init(document.getElementById('line'));
+			async getLineEcharts() {
+				const chart = await this.$refs.lineRef.init(echarts);
 				const option = {
 					tooltip: {
 						trigger: 'axis'
@@ -551,14 +549,10 @@
 						}
 					]
 				};
-				myChart.setOption(option);
+				chart.setOption(option);
 			},
-			getBarEcharts() {
-				let myChart = echarts.getInstanceByDom(document.getElementById('bar'));
-				if (myChart != null) {
-					myChart.dispose();
-				}
-				myChart = echarts.init(document.getElementById('bar'));
+			async getBarEcharts() {
+				const chart = await this.$refs.barRef.init(echarts);
 				const option = {
 					tooltip: {
 						trigger: 'axis'
@@ -613,7 +607,7 @@
 						}
 					]
 				};
-				myChart.setOption(option);
+				chart.setOption(option);
 			}
 		}
 	}
