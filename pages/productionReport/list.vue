@@ -3,89 +3,113 @@
 		<uv-sticky bg-color="#333">
 			<view class="top-nav">
 				<view class="nav-item border-left">
-					<text class="nav-title">1103</text>
+					<text class="nav-title">{{taskCount}}</text>
 					<text class="nav-label">今日完成(件)</text>
 				</view>
 				<view class="nav-item">
-					<text class="nav-title">2164.43</text>
+					<text class="nav-title">{{taskAmount}}</text>
 					<text class="nav-label">今日收益(元)</text>
 				</view>
 			</view>
 		</uv-sticky>
 		<view class="data-list padding">
-			<template v-for="(item,index) in list" :key="index">
-				<view :class="'list-item ' + (index == selectedIndex ? 'active' : '')"
-					@click="handleSelect(item,index)">
+			<template v-for="(item,index) in technologies" :key="index">
+				<view :class="'list-item ' + (isSelected(item.technologyId) ? 'active' : '')"
+					@click="handleSelect(item)">
 					<view class="item-image">
 						<image class="image-icon" :src="item.photo" mode="aspectFit" />
-						<text v-if="item.orderNum > 0" class="badge-tag">{{ item.orderNum }}</text>
+						<text v-if="item.waitOrderItemNum > 0" class="badge-tag">{{ item.waitOrderItemNum }}</text>
 					</view>
 					<text class="item-name">{{ item.name }}</text>
 				</view>
 			</template>
 		</view>
+		<view class="scan-wrap" @click="onScanTap">
+			<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
+		</view>
 	</view>
 </template>
 
 <script>
+	import {
+		ScanResult,
+		MyCompletedStatForToday,
+		ListMyProductionTechnology
+	} from '@/apis/production.js'
 	export default {
 		data() {
 			return {
-				list: [{
-					name: '开单',
-					orderNum: 98,
-					photo: '/static/images/productionReport/开单.png'
-				}, {
-					name: '快递',
-					orderNum: 10,
-					photo: '/static/images/productionReport/快递.png'
-				}, {
-					name: '制作',
-					orderNum: 0,
-					photo: '/static/images/productionReport/制作.png'
-				}, {
-					name: '审核',
-					orderNum: 0,
-					photo: '/static/images/productionReport/审核.png'
-				}, {
-					name: '拼版',
-					orderNum: 0,
-					photo: '/static/images/productionReport/拼版.png'
-				}, {
-					name: '印刷',
-					orderNum: 984,
-					photo: '/static/images/productionReport/印刷.png'
-				}, {
-					name: '质检',
-					orderNum: 0,
-					photo: '/static/images/productionReport/质检.png'
-				}, {
-					name: '分货架',
-					orderNum: 0,
-					photo: '/static/images/productionReport/分货架.png'
-				}, {
-					name: '出库',
-					orderNum: 11,
-					photo: '/static/images/productionReport/出库.png'
-				}, {
-					name: '排产',
-					orderNum: 0,
-					photo: '/static/images/productionReport/排产.png'
-				}, {
-					name: '入库',
-					orderNum: 0,
-					photo: '/static/images/productionReport/入库.png'
-				}, {
-					name: '骑马钉',
-					orderNum: 0,
-					photo: '/static/images/productionReport/骑马钉.png'
-				}],
-				selectedIndex: null
+				technologies: [],
+				selectedItem: null,
+				taskCount: 0,
+				taskAmount: 0
+			}
+		},
+		onLoad() {
+			this.init()
+		},
+		computed: {
+			isSelected() {
+				return technologyId => {
+					return this.selectedItem && this.selectedItem.technologyId === technologyId
+				}
 			}
 		},
 		methods: {
-			handleSelect(item, index) {
-				this.selectedIndex = index
+			init() {
+				MyCompletedStatForToday().then(res => {
+					console.log('MyCompletedStatForToday api result:', res)
+					if (res.code === 0) {
+						this.taskCount = res.data.taskCount
+						this.taskAmount = res.data.taskAmount
+					} else {
+						console.error('MyCompletedStatForToday api error:', res.message)
+					}
+				})
+
+				ListMyProductionTechnology().then(res => {
+					console.log('ListMyProductionTechnology api result:', res)
+					if (res.code === 0) {
+						const {
+							employeeId,
+							employeeName,
+							purchaseSupplierInfos,
+							technologies
+						} = res.data
+						this.technologies = technologies
+					} else {
+						console.error('ListMyProductionTechnology api error:', res.message)
+					}
+				})
+			},
+			handleSelect(item) {
+				this.selectedItem = item
+			},
+			onScanTap() {
+				if (uni.$uv.test.empty(this.selectedItem)) {
+					return uni.$Utils.showToast('请先选择工艺！')
+				}
+				// #ifdef H5
+				uni.navigateTo({
+					url: '/pages/saomiao/saomiao'
+				})
+				// #endif
+
+				// #ifndef H5
+				// 调用小程序的扫码 API
+				uni.scanCode({
+					success: (res) => {
+						console.log('扫码结果：', res);
+						ScanResult({
+							scanResult: res.result,
+							technologyid: this.selectedItem.technologyId,
+							checkinType: 1
+						}).then(scanRes => {
+							console.log('ScanResult result', scanRes)
+						})
+					}
+				});
+				// #endif
 			}
 		}
 	}
@@ -185,5 +209,24 @@
 		flex: 1;
 		text-align: center;
 		font-size: 34rpx;
+	}
+
+	.scan-wrap {
+		width: 122rpx;
+		height: 122rpx;
+		overflow: hidden;
+		background: #333333;
+		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
+		border-radius: 31rpx;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		/* 固定定位 */
+		right: 20rpx;
+		/* 距离右边的距离 */
+		bottom: 70rpx;
+		/* 距离底部的距离 */
+		z-index: 999
 	}
 </style>

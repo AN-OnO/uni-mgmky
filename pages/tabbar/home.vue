@@ -59,7 +59,7 @@
 	}])
 
 	const handleToolEvent = (e) => {
-		uni.$Utils.showToast(`您点击了${e.name}`)
+		// uni.$Utils.showToast(`您点击了${e.name}`)
 		if (e.event) {
 			uni.navigateTo({
 				url: e.event
