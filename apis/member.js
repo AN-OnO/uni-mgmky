@@ -89,3 +89,12 @@ export function GetOrderProductStat(params) {
 export function GetOrderProductTopStat(params) {
 	return request.post('/api/DashboardStat/GetOrderProductTopStat', params)
 }
+
+/**
+ * 品类变化趋势统计
+ * @param params 
+ * @return 
+ */
+export function GetOrderProductTrendStat(params) {
+	return request.post('/api/DashboardStat/GetOrderProductTrendStat', params)
+}

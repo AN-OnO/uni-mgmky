@@ -45,7 +45,7 @@
 			<view class="padding-30">
 				<text class="section-title">品类变化趋势</text>
 			</view>
-			<view style="width: 90%;height:374rpx; padding: 0 30rpx;">
+			<view style=" padding: 0 30rpx;">
 				<l-echart ref="lineRef" @finished="getLineEcharts"></l-echart>
 			</view>
 			<view class="bottom-line"></view>
@@ -78,7 +78,7 @@
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in personData" :key="index">
 						<uni-td>
-							<text class="index-text line-clamp-name">{{item.employeeName}}</text>
+							<uni-tooltip :content="item.employeeName"><text class="index-text line-clamp-name">{{item.employeeName}}</text></uni-tooltip>
 						</uni-td>
 						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
 						<uni-td align="right">{{formatNumber(item.orderPaiedAmt)}}</uni-td>
@@ -127,6 +127,7 @@
 	import {
 		GetOrderProductStat,
 		GetOrderProductTopStat,
+		GetOrderProductTrendStat,
 		GetOrderStat
 	} from '../../apis/member';
 	import {
@@ -227,9 +228,6 @@
 		onLoad() {
 			this.change(0)
 		},
-		onReady() {
-			this.getBarEcharts()
-		},
 		methods: {
 			change(index) {
 				if (index == 0) {
@@ -296,6 +294,7 @@
 				this.getOrderProductStat(beginDate, endDate)
 				this.getOrderProductTopStat(beginDate, endDate, 2)
 				this.getOrderProductTopStat(beginDate, endDate, 3)
+				this.getOrderProductTrendStat(beginDate, endDate)
 			},
 			getOrderStat(beginDate, endDate) {
 				GetOrderStat({
@@ -378,7 +377,6 @@
 					} [this.mode],
 					topStatType
 				}).then(res => {
-					console.log(4154, res)
 					if (topStatType == 2) {
 						this.companyRank = res.data.slice(0, 10)
 					} else {
@@ -388,6 +386,51 @@
 							orderUnpaiedAmt: new Big(item.orderAmountStat).minus(item.orderPaiedAmt).toString() 
 						}))
 					}
+				})
+			},
+			getOrderProductTrendStat(beginDate, endDate) {
+				GetOrderProductTrendStat({
+					beginDate,
+					endDate,
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					statDimension: {
+						year: 1,
+						'year-month': 2,
+						date: 3
+					} [this.mode],
+				}).then(res => {
+					res.data.sort((a, b) => new Date(a.timeDimension)  - new Date(b.timeDimension))
+					const xTime = res.data.reduce((groupArr, cur) => {
+						const time = cur['timeDimension']
+						
+						if (!groupArr.includes(time)) {
+							groupArr.push(time)
+						}
+						
+						return groupArr
+					}, [])
+					const category = res.data.reduce((groupObj, cur) => {
+						const groupKey = cur['productCategoryName']
+						
+						if (!groupObj[groupKey]) {
+							groupObj[groupKey] = []
+						}
+						groupObj[groupKey].push(cur)
+						
+						return groupObj
+					}, {})
+					let yCategory = {}
+					Object.keys(category).forEach(key => {
+						yCategory[key] = xTime.map(time => {
+							const curData = category[key].find(item => item.timeDimension == time)
+							if (curData) {
+								return curData.orderAmountStat
+							} else {
+								return 0
+							}
+						})
+					})
+					this.getLineEcharts(xTime, yCategory)
 				})
 			},
 			formatRank(data) {
@@ -485,70 +528,43 @@
 				};
 				chart.setOption(option)
 			},
-			async getLineEcharts() {
+			async getLineEcharts(xTime, yCategory) {
 				const chart = await this.$refs.lineRef.init(echarts);
 				const option = {
 					tooltip: {
-						trigger: 'axis'
+						trigger: 'axis',
+						confine: true
 					},
 					legend: {
 						icon: 'circle',
 						selectedMode: false,
 					},
+					grid: {
+						top: '30%', // 顶部距离
+						left: '17%'
+					},
 					xAxis: {
 						type: 'category',
 						boundaryGap: false,
-						data: ['09/01', '09/02', '09/03', '09/4', '09/05', '09/06', '09/07']
+						axisLabel: {
+						    rotate: 25, // 设置倾斜角度为25度
+						  },
+						data: xTime
 					},
 					yAxis: {
 						type: 'value',
 						axisLabel: {
 							formatter: function(value) {
-								return `${value/10000}万`
+								return `${(value/10000).toFixed(2)}万`
 							}
 						}
 					},
-					series: [{
-							name: '单页',
-							type: 'line',
-							itemStyle: {
-								color: '#8979FF'
-							},
-							data: []
-						},
-						{
-							name: '不干胶',
-							type: 'line',
-							itemStyle: {
-								color: '#6CD2E7'
-							},
-							data: []
-						},
-						{
-							name: '样本画册',
-							type: 'line',
-							itemStyle: {
-								color: '#6FD195'
-							},
-							data: []
-						},
-						{
-							name: '数码单页',
-							type: 'line',
-							itemStyle: {
-								color: '#FF928A'
-							},
-							data: []
-						},
-						{
-							name: '数码画册',
-							type: 'line',
-							itemStyle: {
-								color: '#F5C461'
-							},
-							data: []
-						}
-					]
+					series: Object.keys(yCategory || {}).map(key => ({
+						name: key,
+						type: 'line',
+						data: yCategory[key],
+						showSymbol: false // 显示节点
+					}))
 				};
 				chart.setOption(option);
 			},
@@ -777,7 +793,7 @@
 	}
 
 	.line-clamp-name {
-		height: 40rpx;
+		height: 35rpx;
 		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
