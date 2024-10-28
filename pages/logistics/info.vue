@@ -32,7 +32,14 @@
 					<view style="display: flex;">
 						<uv-image :src='data.productImage' width="152.67rpx" height="152.67rpx"></uv-image>
 						<view style="padding-left: 30rpx;">
-							<view class="line-clamp-3 info-productName">{{data.productName}}</view>
+							<uni-tooltip>
+								<view class="line-clamp-3 info-productName">{{data.productName}}</view>
+								<template v-slot:content>
+									<view>
+										{{data.productName}}
+									</view>
+								</template>
+							</uni-tooltip>
 							<text class="orderCount">X{{data.orderCount}}</text>
 						</view>
 					</view>
@@ -51,7 +58,17 @@
 							</uv-form-item>
 							<uv-form-item label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view class="line-clamp-3" style="max-width: 380rpx; height: 120rpx;">{{data.productName}}</view>
+									<uni-tooltip>
+										<view class="line-clamp-3" style="max-width: 380rpx; height: 120rpx;">
+											{{data.productName}}
+										</view>
+										<template v-slot:content>
+											<view>
+												{{data.productName}}
+											</view>
+										</template>
+									</uni-tooltip>
+
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
@@ -73,7 +90,17 @@
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
 								customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<view class="line-clamp-3" style="max-width: 380rpx;-webkit-line-clamp: 1; height: 50rpx;">{{data.orderRemark}}</view>
+									<uni-tooltip>
+										<view class="line-clamp-3"
+											style="max-width: 380rpx;-webkit-line-clamp: 1; height: 50rpx;">
+											{{data.orderRemark}}
+										</view>
+										<template v-slot:content>
+											<view>
+												{{data.orderRemark}}
+											</view>
+										</template>
+									</uni-tooltip>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
@@ -89,7 +116,8 @@
 							</uv-form-item>
 							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
 								label="寄件图片:" labelWidth='250rpx' labelPosition='top'>
-								<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
+								<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item"
+									width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 							</uv-form-item>
 						</uv-form>
 					</view>
@@ -263,7 +291,7 @@
 		color: #333333;
 		line-height: 53rpx;
 	}
-	
+
 	.line-clamp-3 {
 		height: 110rpx;
 		display: -webkit-box;
@@ -272,7 +300,7 @@
 		-webkit-line-clamp: 3;
 		-webkit-box-orient: vertical;
 	}
-	
+
 	.info-productName {
 		font-size: 27rpx;
 		color: #333333;
@@ -331,6 +359,7 @@
 		line-height: 42rpx;
 		vertical-align: super;
 	}
+
 	.orderCount {
 		font-weight: 500;
 		font-size: 27rpx;
