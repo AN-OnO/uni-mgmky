@@ -78,7 +78,14 @@
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in personData" :key="index">
 						<uni-td>
-							<uni-tooltip :content="item.employeeName"><text class="index-text line-clamp-name">{{item.employeeName}}</text></uni-tooltip>
+							<uni-tooltip placement="right">
+								<text class="index-text line-clamp-name">{{item.employeeName}}</text>
+								<template v-slot:content>
+									<view style="width: 200rpx;">
+										{{item.employeeName}}
+									</view>
+								</template>
+							</uni-tooltip>
 						</uni-td>
 						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
 						<uni-td align="right">{{formatNumber(item.orderPaiedAmt)}}</uni-td>
@@ -86,9 +93,12 @@
 					</uni-tr>
 					<uni-tr style="background: #FAFAFA;">
 						<uni-td><text class="total-text">合计</text></uni-td>
-						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderAmountStat')}}</text></uni-td>
-						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderPaiedAmt')}}</text></uni-td>
-						<uni-td align="right"><text class="total-text">{{rankTotal(personData, 'orderUnpaiedAmt')}}</text></uni-td>
+						<uni-td align="right"><text
+								class="total-text">{{rankTotal(personData, 'orderAmountStat')}}</text></uni-td>
+						<uni-td align="right"><text
+								class="total-text">{{rankTotal(personData, 'orderPaiedAmt')}}</text></uni-td>
+						<uni-td align="right"><text
+								class="total-text">{{rankTotal(personData, 'orderUnpaiedAmt')}}</text></uni-td>
 					</uni-tr>
 				</uni-table>
 			</view>
@@ -238,7 +248,8 @@
 				} else if (index == 1) {
 					this.mode = 'year-month';
 					this.modeTitle = dayjs().format('YYYY-MM')
-					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format('YYYY-MM-DD'))
+					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
+						'YYYY-MM-DD'))
 				} else {
 					this.mode = 'year';
 					this.modeTitle = dayjs().format('YYYY')
@@ -282,7 +293,8 @@
 				} else if (e.mode == 'year-month') {
 					const month = dayjs(e.value).month() + 1;
 					this.modeTitle = `${year}-${month}`
-					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month').format('YYYY-MM-DD'))
+					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
+						.format('YYYY-MM-DD'))
 				} else {
 					const date = dayjs(e.value).format('YYYY-MM-DD');
 					this.modeTitle = date
@@ -383,7 +395,8 @@
 						this.personRank = res.data.slice(0, 5)
 						this.personData = res.data.slice(0, 10).map(item => ({
 							...item,
-							orderUnpaiedAmt: new Big(item.orderAmountStat).minus(item.orderPaiedAmt).toString() 
+							orderUnpaiedAmt: new Big(item.orderAmountStat).minus(item.orderPaiedAmt)
+								.toString()
 						}))
 					}
 				})
@@ -399,24 +412,24 @@
 						date: 3
 					} [this.mode],
 				}).then(res => {
-					res.data.sort((a, b) => new Date(a.timeDimension)  - new Date(b.timeDimension))
+					res.data.sort((a, b) => new Date(a.timeDimension) - new Date(b.timeDimension))
 					const xTime = res.data.reduce((groupArr, cur) => {
 						const time = cur['timeDimension']
-						
+
 						if (!groupArr.includes(time)) {
 							groupArr.push(time)
 						}
-						
+
 						return groupArr
 					}, [])
 					const category = res.data.reduce((groupObj, cur) => {
 						const groupKey = cur['productCategoryName']
-						
+
 						if (!groupObj[groupKey]) {
 							groupObj[groupKey] = []
 						}
 						groupObj[groupKey].push(cur)
-						
+
 						return groupObj
 					}, {})
 					let yCategory = {}
@@ -547,8 +560,8 @@
 						type: 'category',
 						boundaryGap: false,
 						axisLabel: {
-						    rotate: 25, // 设置倾斜角度为25度
-						  },
+							rotate: 25, // 设置倾斜角度为25度
+						},
 						data: xTime
 					},
 					yAxis: {
