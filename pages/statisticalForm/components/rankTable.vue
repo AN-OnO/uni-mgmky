@@ -135,7 +135,7 @@
 	}
 
 	.line-clamp-name {
-		height: 35rpx;
+		height: 36rpx;
 		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
