@@ -20,7 +20,7 @@
 							class='medal-img'></image>
 						<text class="index-text" v-else>{{index + 1}}</text>
 					</uni-td>
-					<uni-td ><text class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text></uni-td>
+					<uni-td ><uni-tooltip :content="item.productCategoryName || item.customerName || item.employeeName" placement="right"><text class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text></uni-tooltip></uni-td>
 					<uni-td align="right">{{item.orderCountStat}}</uni-td>
 					<uni-td align="right">{{item.orderAmountStat}}</uni-td>
 				</uni-tr>
@@ -123,7 +123,7 @@
 		line-height: 34rpx;
 	}
 	.line-clamp-name {
-		height: 40rpx;
+		height: 35rpx;
 		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
