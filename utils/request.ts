@@ -28,15 +28,15 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 	const { code, message, ...resData } = data
 	switch (statusCode) {
 		case StatusCode.SUCCESS:
+			return data;
+		case StatusCode.LOGIN_ERROR:
 			if (code === 1001) {
-				Utils.showToast('message');
+				Utils.showToast(message);
 				Utils.removeAllStorage()
 				Utils.navigateTo('/pages/login/login')
 			} else {
-				return data;
+				Utils.showToast('登录失效');
 			}
-		case StatusCode.LOGIN_ERROR:
-			Utils.showToast('登录失效');
 			break;
 		case StatusCode.SYSTEM_ERROR:
 			Utils.showToast('系统错误');
