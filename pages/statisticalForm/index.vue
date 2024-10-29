@@ -3,7 +3,8 @@
 		<uv-sticky bgColor='#FFFFFF'>
 			<view class="flex-between">
 				<view @click="open" class="mode-title">
-					{{modeTitle}}<uv-icon name="arrow-down-fill" size="16"></uv-icon>
+					{{modeTitle}}
+					<image src="/static/images/statisticalForm/arrow.svg" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
@@ -20,7 +21,7 @@
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
 						<view class="ele-title">{{item.title}}<text
-								:class="`${+item.increase > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{formatNumber(+item.increase > 0 ? `+${item.increase}` : item.increase)}}</text>
+								:class="`${item.increase > 0 ? 'ele-basis positive' : 'ele-basis negative'}`">{{formatNumber(item.increase > 0 ? `+${item.increase}` : item.increase)}}</text>
 						</view>
 						<view class="ele-value">
 							{{formatNumber(item.number)}}
@@ -109,13 +110,14 @@
 				<text class="section-title">印刷在产统计(件)</text>
 			</view>
 			<view class="printedStat-content">
-				<text class="printedStat-total">总印数0，总套数0</text>
+				<text class="printedStat-total">{{`总印数${totalPrintPagesCount}，总套数${totalSuiteCount}`}}</text>
 				<view class="printedStat-line"></view>
 				<view class="flex-wrap">
 					<view v-for="(item, index) in printedStat" :key="index" class="printed-content">
-						<view class="ele-title">{{item.name}}<text class="ele-basis negative">{{item.amount}}</text>
+						<view class="ele-title">{{item.name}}<text
+								:class="`${item.increase > 0 ? 'ele-basis positive':'ele-basis negative'}`">{{formatNumber(item.increase > 0 ? `+${item.increase}` : item.increase)}}</text>
 						</view>
-						<view class="ele-value">{{item.pages}}</view>
+						<view class="ele-value">{{formatNumber(item.count)}}</view>
 					</view>
 				</view>
 			</view>
@@ -125,10 +127,10 @@
 			<view class="padding-30">
 				<text class="section-title">设备产量</text>
 			</view>
-			<view style="height:458rpx;padding: 0 30rpx;">
-				<l-echart ref="barRef" @finished="getBarEcharts"></l-echart>
+			<view v-for="(item, index) in capacityData" :key="index" style="padding: 0 30rpx;">
+				<l-echart :ref='`bar${index}Ref`' @finished="getBarEcharts(`bar${index}Ref`, item)"></l-echart>
+				<view class="capacityStat-line"></view>
 			</view>
-			<view class="bottom-line"></view>
 		</view>
 	</view>
 </template>
@@ -138,7 +140,9 @@
 		GetOrderProductStat,
 		GetOrderProductTopStat,
 		GetOrderProductTrendStat,
-		GetOrderStat
+		GetOrderStat,
+		GetPrintProductionStat,
+		GetThingsCapacityStat
 	} from '../../apis/member';
 	import {
 		useUserStore
@@ -161,6 +165,14 @@
 				currentSource: 0,
 				currentPerson: 0,
 				currentPersonName: '下单人',
+				productData: [],
+				productRank: [],
+				companyRank: [],
+				personRank: [],
+				personData: [],
+				totalPrintPagesCount: 0,
+				totalSuiteCount: 0,
+				capacityData: [],
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -202,36 +214,26 @@
 						}]
 					}
 				],
-				productData: [],
-				productRank: [],
-				companyRank: [],
-				personRank: [],
-				personData: [],
 				printedStat: [{
 						name: '单面',
-						amount: '0',
-						pages: '0'
+						increase: '0',
+						count: '0'
 					},
 					{
 						name: '单面版',
-						amount: '0',
-						pages: '0'
+						increase: '0',
+						count: '0'
 					},
 					{
 						name: '双面',
-						amount: '0',
-						pages: '0'
+						increase: '0',
+						count: '0'
 					},
 					{
-						name: '正面版',
-						amount: '0',
-						pages: '0'
+						name: '双面版',
+						increase: '0',
+						count: '0'
 					},
-					{
-						name: '左右翻',
-						amount: '0',
-						pages: '0'
-					}
 				]
 			}
 		},
@@ -307,6 +309,8 @@
 				this.getOrderProductTopStat(beginDate, endDate, 2)
 				this.getOrderProductTopStat(beginDate, endDate, 3)
 				this.getOrderProductTrendStat(beginDate, endDate)
+				this.getPrintProductionStat(beginDate, endDate)
+				this.getThingsCapacityStat(beginDate, endDate)
 			},
 			getOrderStat(beginDate, endDate) {
 				GetOrderStat({
@@ -318,46 +322,44 @@
 						uni.$Utils.showToast(res.message)
 						return
 					}
-					this.dataList[0].content[0].number = res.data.curPeriodCount.orderCount
-					this.dataList[0].content[1].number = res.data.curPeriodCount
-						.innerOrderCount
-					this.dataList[0].content[2].number = res.data.curPeriodCount
-						.weChatOrderCount
-					this.dataList[0].content[3].number = res.data.curPeriodCount
-						.shoppingOrderCount
-					this.dataList[0].content[0].increase = res.data.curPeriodCount
-						.orderCount - res.data
-						.prevPeriodCount.orderCount
-					this.dataList[0].content[1].increase = res.data.curPeriodCount
-						.innerOrderCount - res.data
-						.prevPeriodCount.innerOrderCount
-					this.dataList[0].content[2].increase = res.data.curPeriodCount
-						.weChatOrderCount - res.data
-						.prevPeriodCount.weChatOrderCount
-					this.dataList[0].content[3].increase = res.data.curPeriodCount
-						.shoppingOrderCount - res
-						.data.prevPeriodCount.shoppingOrderCount
+					const curPeriodCount = res.data.curPeriodCount
+					const prevPeriodCount = res.data.prevPeriodCount
+					const curPeriodAmount = res.data.curPeriodAmount
+					const prevPeriodAmount = res.data.prevPeriodAmount
 
-					this.dataList[1].content[0].number = res.data.curPeriodAmount
+					this.dataList[0].content[0].number = curPeriodCount.orderCount
+					this.dataList[0].content[1].number = curPeriodCount
+						.innerOrderCount
+					this.dataList[0].content[2].number = curPeriodCount
+						.weChatOrderCount
+					this.dataList[0].content[3].number = curPeriodCount
+						.shoppingOrderCount
+					this.dataList[0].content[0].increase = curPeriodCount
+						.orderCount - prevPeriodCount.orderCount
+					this.dataList[0].content[1].increase = curPeriodCount
+						.innerOrderCount - prevPeriodCount.innerOrderCount
+					this.dataList[0].content[2].increase = curPeriodCount
+						.weChatOrderCount - prevPeriodCount.weChatOrderCount
+					this.dataList[0].content[3].increase = curPeriodCount
+						.shoppingOrderCount - prevPeriodCount.shoppingOrderCount
+
+
+					this.dataList[1].content[0].number = curPeriodAmount
 						.orderAmount
-					this.dataList[1].content[1].number = res.data.curPeriodAmount
+					this.dataList[1].content[1].number = curPeriodAmount
 						.innerOrderAmount
-					this.dataList[1].content[2].number = res.data.curPeriodAmount
+					this.dataList[1].content[2].number = curPeriodAmount
 						.weChatOrderAmount
-					this.dataList[1].content[3].number = res.data.curPeriodAmount
+					this.dataList[1].content[3].number = curPeriodAmount
 						.shoppingOrderAmount
-					this.dataList[1].content[0].increase = new Big(res.data.curPeriodAmount
-						.orderAmount).minus(res.data
-						.prevPeriodAmount.orderAmount).toString()
-					this.dataList[1].content[1].increase = new Big(res.data.curPeriodAmount
-						.innerOrderAmount).minus(res.data
-						.prevPeriodAmount.innerOrderAmount).toString()
-					this.dataList[1].content[2].increase = new Big(res.data.curPeriodAmount
-						.weChatOrderAmount).minus(res
-						.data.prevPeriodAmount.weChatOrderAmount).toString()
-					this.dataList[1].content[3].increase = new Big(res.data.curPeriodAmount
-						.shoppingOrderAmount).minus(res
-						.data.prevPeriodAmount.shoppingOrderAmount).toString()
+					this.dataList[1].content[0].increase = new Big(curPeriodAmount
+						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
+					this.dataList[1].content[1].increase = new Big(curPeriodAmount
+						.innerOrderAmount).minus(prevPeriodAmount.innerOrderAmount).toString()
+					this.dataList[1].content[2].increase = new Big(curPeriodAmount
+						.weChatOrderAmount).minus(prevPeriodAmount.weChatOrderAmount).toString()
+					this.dataList[1].content[3].increase = new Big(curPeriodAmount
+						.shoppingOrderAmount).minus(prevPeriodAmount.shoppingOrderAmount).toString()
 
 					if (this.currentSource == 0) {
 						this.getPieEcharts()
@@ -436,14 +438,43 @@
 					Object.keys(category).forEach(key => {
 						yCategory[key] = xTime.map(time => {
 							const curData = category[key].find(item => item.timeDimension == time)
-							if (curData) {
-								return curData.orderAmountStat
-							} else {
-								return 0
-							}
+
+							return curData ? curData.orderAmountStat : 0
 						})
 					})
 					this.getLineEcharts(xTime, yCategory)
+				})
+			},
+			getPrintProductionStat(beginDate, endDate) {
+				GetPrintProductionStat({
+					beginDate,
+					endDate,
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+				}).then(res => {
+					this.totalPrintPagesCount = res.data.totalPrintPagesCount
+					this.totalSuiteCount = res.data.totalSuiteCount
+					this.printedStat[0].count = res.data.curPeriodCount.singlePagesCount
+					this.printedStat[0].increase = new Big(res.data.curPeriodCount.singlePagesCount).minus(res.data
+						.prevPeriodCount.singlePagesCount).toString()
+					this.printedStat[1].count = res.data.curPeriodCount.singleSuiteCount
+					this.printedStat[1].increase = new Big(res.data.curPeriodCount.singleSuiteCount).minus(res.data
+						.prevPeriodCount.singleSuiteCount).toString()
+					this.printedStat[2].count = res.data.curPeriodCount.doublePagesCount
+					this.printedStat[2].increase = new Big(res.data.curPeriodCount.doublePagesCount).minus(res.data
+						.prevPeriodCount.doublePagesCount).toString()
+					this.printedStat[3].count = res.data.curPeriodCount.doubleSuiteCount
+					this.printedStat[3].increase = new Big(res.data.curPeriodCount.doubleSuiteCount).minus(res.data
+						.prevPeriodCount.doubleSuiteCount).toString()
+				})
+			},
+			getThingsCapacityStat(beginDate, endDate) {
+				GetThingsCapacityStat({
+					beginDate,
+					endDate,
+					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+				}).then(res => {
+					console.log(111, res.data)
+					this.capacityData = res.data
 				})
 			},
 			formatRank(data) {
@@ -518,8 +549,13 @@
 						orient: 'vertical',
 						selectedMode: false,
 						icon: 'circle',
+						itemHeight: 8, // 修改icon图形大小
+						itemGap: 8, // 修改间距
+						textStyle: {
+							padding: [0, 0, 0, -10], // 修改文字和图标距离
+						},
 						top: 'center',
-						left: '35%',
+						left: '43%',
 						formatter: function(name) {
 							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(2)}%`;
 						}
@@ -527,7 +563,7 @@
 					series: [{
 						name: '订单金额',
 						type: 'pie',
-						center: ['20%', '50%'],
+						center: ['28%', '50%'],
 						radius: ['40%', '70%'],
 						label: {
 							show: false,
@@ -541,7 +577,7 @@
 				};
 				chart.setOption(option)
 			},
-			async getLineEcharts(xTime, yCategory) {
+			async getLineEcharts(xTime = [], yCategory = {}) {
 				const chart = await this.$refs.lineRef.init(echarts);
 				const option = {
 					tooltip: {
@@ -572,7 +608,7 @@
 							}
 						}
 					},
-					series: Object.keys(yCategory || {}).map(key => ({
+					series: Object.keys(yCategory).map(key => ({
 						name: key,
 						type: 'line',
 						data: yCategory[key],
@@ -581,9 +617,12 @@
 				};
 				chart.setOption(option);
 			},
-			async getBarEcharts() {
-				const chart = await this.$refs.barRef.init(echarts);
+			async getBarEcharts(ref, data) {
+				const chart = await this.$refs.ref.init(echarts);
 				const option = {
+					title: {
+						text: data.thingName,
+					},
 					tooltip: {
 						trigger: 'axis'
 					},
@@ -598,11 +637,15 @@
 					xAxis: {
 						type: 'value',
 						position: 'top', // 设置X轴在顶部
-
 					},
 					yAxis: {
 						type: 'category',
-						data: ['5号轮转', '6号理光彩印机'],
+						data: data.thingStatusStatList.map(item => ({
+							4: '待打印',
+							6: '已上机',
+							10: '已打印',
+							30: '已取消'
+						} [item.status])),
 						axisTick: {
 							show: false // 不显示刻度线
 						},
@@ -617,7 +660,7 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: [],
+							data: data.thingStatusStatList.map(item => item.pagesCount),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -629,7 +672,7 @@
 							itemStyle: {
 								color: '#3CC3DF'
 							},
-							data: [],
+							data: data.thingStatusStatList.map(item => item.suiteCount),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -777,6 +820,10 @@
 		margin: 30rpx 0;
 	}
 
+	.capacityStat-line {
+		border: 2rpx solid #EDEEF0;
+	}
+
 	.printedStat-total {
 		font-weight: bold;
 		font-size: 31rpx;
@@ -797,7 +844,7 @@
 		padding: 8rpx
 	}
 
-	.printed-content:not(:nth-child(3)):not(:nth-child(5)) {
+	.printed-content:not(:nth-child(3)):not(:nth-child(4)) {
 		border-right: 2rpx solid #F0F0F0;
 	}
 
@@ -812,5 +859,11 @@
 		text-overflow: ellipsis;
 		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
+	}
+
+	.arrow-img {
+		max-width: 30.53rpx;
+		max-height: 30.53rpx;
+		margin: auto;
 	}
 </style>

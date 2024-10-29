@@ -98,3 +98,21 @@ export function GetOrderProductTopStat(params) {
 export function GetOrderProductTrendStat(params) {
 	return request.post('/api/DashboardStat/GetOrderProductTrendStat', params)
 }
+
+/**
+ * 印刷在产统计
+ * @param params 
+ * @return 
+ */
+export function GetPrintProductionStat(params) {
+	return request.post('/api/DashboardStat/GetPrintProductionStat', params)
+}
+
+/**
+ * 设备产量
+ * @param params 
+ * @return 
+ */
+export function GetThingsCapacityStat(params) {
+	return request.post('/api/DashboardStat/GetThingsCapacityStat', params)
+}
