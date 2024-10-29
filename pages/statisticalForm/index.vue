@@ -37,7 +37,7 @@
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
-			<view style="height:305rpx;">
+			<view style="height:343rpx;">
 				<l-echart ref="pieRef" @finished="getPieEcharts"></l-echart>
 			</view>
 			<view class="bottom-line"></view>
@@ -543,10 +543,12 @@
 
 				const option = {
 					tooltip: {
-						trigger: 'item'
+						trigger: 'item',
+						confine: true
 					},
 					legend: {
 						orient: 'vertical',
+						height: '30%',
 						selectedMode: false,
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
@@ -554,17 +556,16 @@
 						textStyle: {
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
 						},
-						top: 'center',
-						left: '43%',
+						top: 'bottom',
 						formatter: function(name) {
-							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(2)}%`;
+							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(0)}%`;
 						}
 					},
 					series: [{
 						name: '订单金额',
 						type: 'pie',
-						center: ['28%', '50%'],
-						radius: ['40%', '70%'],
+						center: ['50%', '30%'],
+						radius: ['35%', '60%'],
 						label: {
 							show: false,
 							position: 'center'
@@ -586,10 +587,15 @@
 					},
 					legend: {
 						icon: 'circle',
+						itemHeight: 8, // 修改icon图形大小
+						itemGap: 8, // 修改间距
+						textStyle: {
+							padding: [0, 0, 0, -10], // 修改文字和图标距离
+						},
 						selectedMode: false,
 					},
 					grid: {
-						top: '30%', // 顶部距离
+						top: '25%', // 顶部距离
 						left: '17%'
 					},
 					xAxis: {
@@ -604,7 +610,7 @@
 						type: 'value',
 						axisLabel: {
 							formatter: function(value) {
-								return `${(value/10000).toFixed(2)}万`
+								return `${(value/10000).toFixed(0)}万`
 							}
 						}
 					},
@@ -628,6 +634,8 @@
 					},
 					legend: {
 						icon: 'circle',
+						itemHeight: 8, // 修改icon图形大小
+						itemGap: 8, // 修改间距
 						top: '75%',
 					},
 					grid: {
