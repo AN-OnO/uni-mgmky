@@ -37,7 +37,7 @@
  						height: 85rpx;
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
-						<view v-if="buttonText" style="display: flex;justify-content: end;">
+						<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
 							<button v-if="deliveryMethod == 3" class="list-button white-button">
 								<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">电话</text>

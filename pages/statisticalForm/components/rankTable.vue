@@ -10,7 +10,7 @@
 					<uni-th width="50" align="left">排名</uni-th>
 					<uni-th width="100" align="left">{{name}}</uni-th>
 					<uni-th width="70" align="right"><text class="quantity">数量</text></uni-th>
-					<uni-th  align="right"><text class="amount">金额</text></uni-th>
+					<uni-th align="right"><text class="amount">金额</text></uni-th>
 				</uni-tr>
 				<!-- 表格数据行 -->
 				<uni-tr v-for="(item, index) in orderRank" :key="index">
@@ -20,7 +20,15 @@
 							class='medal-img'></image>
 						<text class="index-text" v-else>{{index + 1}}</text>
 					</uni-td>
-					<uni-td ><text class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text></uni-td>
+					<uni-td><uni-tooltip placement="right">
+							<text
+								class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text>
+							<template v-slot:content>
+								<view style="width: 200rpx;">
+									{{item.productCategoryName || item.customerName || item.employeeName}}
+								</view>
+							</template>
+						</uni-tooltip></uni-td>
 					<uni-td align="right">{{item.orderCountStat}}</uni-td>
 					<uni-td align="right">{{item.orderAmountStat}}</uni-td>
 				</uni-tr>
@@ -80,7 +88,7 @@
 		color: #333333;
 		line-height: 53rpx;
 	}
-	
+
 	.section-title::before {
 		content: '';
 		position: absolute;
@@ -92,6 +100,7 @@
 		top: 50%;
 		transform: translateY(-50%);
 	}
+
 	.quantity {
 		font-weight: bold;
 		font-size: 27rpx;
@@ -110,26 +119,30 @@
 		max-width: 45.8rpx;
 		max-height: 45.8rpx;
 	}
+
 	.total-text {
 		font-weight: bold;
 		font-size: 27rpx;
 		color: #333333;
 		line-height: 34rpx;
 	}
+
 	.index-text {
 		font-weight: bold;
 		font-size: 23rpx;
 		color: #808080;
 		line-height: 34rpx;
 	}
+
 	.line-clamp-name {
-		height: 40rpx;
+		height: 36rpx;
 		display: -webkit-box;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 	}
+
 	.bottom-line {
 		width: 100%;
 		background: #F0F0F0;

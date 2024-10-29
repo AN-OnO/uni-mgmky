@@ -32,8 +32,10 @@
 </template>
 
 <script>
-	import { DeliveryFinished } from "../../apis/member";
-import config from "@/common/config";
+	import {
+		DeliveryFinished
+	} from "../../apis/member";
+	import config from "@/common/config";
 	export default {
 		props: {
 			closeModal: {
@@ -81,8 +83,9 @@ import config from "@/common/config";
 				});
 			},
 			async afterRead(event) {
-				let lists = event.file
-				let fileListLen = this.fileList.length
+				const lists = event.file
+				const fileListLen = this.fileList.length
+
 				lists.forEach((item) => {
 					this.fileList.push({
 						...item,
@@ -90,16 +93,15 @@ import config from "@/common/config";
 						message: '上传中'
 					})
 				})
-				for (let i = 0; i < lists.length; i++) {
-					const result = await this.uploadFilePromise(lists[i].url)
-					let item = this.fileList[fileListLen]
-					this.fileList.splice(fileListLen, 1, Object.assign(item, {
+				lists.forEach(async (item, index) => {
+					const result = await this.uploadFilePromise(item.url)
+					this.fileList.splice(fileListLen + index, 1, {
+						...item,
 						...result.data[0],
 						status: 'success',
 						message: '',
-					}))
-					fileListLen++
-				}
+					})
+				})
 			},
 			uploadFilePromise(url) {
 				return new Promise((resolve, reject) => {
@@ -121,7 +123,7 @@ import config from "@/common/config";
 			deletePic(event) {
 				this.fileList.splice(event.index, 1)
 			},
-		}
+		},
 	}
 </script>
 

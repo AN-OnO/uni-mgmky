@@ -150,7 +150,7 @@
 						style.color = this.current === index ? "#fff" : this.inactiveColor;
 					} else {
 						// button模式下，激活时文字颜色默认为activeColor
-						style.color = this.current === index ? this.activeColor : this.inactiveColor;
+						style.color = this.current === index ? '#333333' : this.inactiveColor;
 					}
 					return style;
 				};
@@ -218,6 +218,7 @@
 			transition-property: transform, color;
 			transition-duration: 0.3s;
 			transition-timing-function: ease-in-out;
+			border-radius: 11rpx;
 			/* #endif */
 			&--first {
 				border-top-left-radius: 3px;
