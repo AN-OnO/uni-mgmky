@@ -28,7 +28,6 @@
 				</template>
 			</view>
 		</view>
-		<tabbar-nav></tabbar-nav>
 	</view>
 </template>
 
