@@ -164,7 +164,7 @@
 			return {
 				value: Number(new Date()),
 				mode: 'date',
-				modeTitle: `${dayjs().format('YYYY-MM-DD')}`,
+				modeTitle: `${dayjs().format('YYYY/MM/DD')}`,
 				current: 0,
 				currentSource: 0,
 				currentPerson: 0,
@@ -242,7 +242,7 @@
 				]
 			}
 		},
-		onLoad() {
+		onReady() {
 			this.change(0)
 		},
 		methods: {
