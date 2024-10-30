@@ -6,16 +6,17 @@
 		<view class="login-form">
 			<uv-form ref="form" labelWidth="30rpx" :model="loginForm" :rules="loginFormRules">
 				<uv-form-item prop="userName" :custom-style="formItemStyle">
-					<uv-input v-model="loginForm.userName" placeholder="请输入账号" border="none">
+					<uv-input v-model="loginForm.userName" placeholder="请输入账号" fontSize="16" border="none">
 					</uv-input>
 				</uv-form-item>
 				<uv-form-item prop="password" :custom-style="formItemStyle">
-					<uv-input type="password" v-model="loginForm.password" placeholder="请输入密码" border="none">
+					<uv-input type="password" v-model="loginForm.password" placeholder="请输入密码" fontSize="16"
+						border="none">
 					</uv-input>
 				</uv-form-item>
 			</uv-form>
 			<uv-button type="default" text="登录" size="large" :custom-style="loginBtnStyle"
-				@click="handleLogin"></uv-button>
+				:custom-text-style="{fontSize:'18px'}" @click="handleLogin"></uv-button>
 		</view>
 	</view>
 </template>

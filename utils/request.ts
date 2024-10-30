@@ -25,18 +25,27 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 		statusCode,
 		data,
 	} = res || {};
+	
+	if (data == undefined) {
+		Utils.showToast('服务接口请求异常');
+		return Promise.reject(res);
+	}
 	const { code, message, ...resData } = data
+	const toLogin = () => {		
+		Utils.removeAllStorage()
+		Utils.navigateTo('/pages/index/login')
+	}
 	switch (statusCode) {
 		case StatusCode.SUCCESS:
-			return data;
-		case StatusCode.LOGIN_ERROR:
 			if (code === 1001) {
 				Utils.showToast(message);
-				Utils.removeAllStorage()
-				Utils.navigateTo('/pages/login/login')
+				toLogin()
 			} else {
-				Utils.showToast('登录失效');
+				return data;
 			}
+		case StatusCode.LOGIN_ERROR:
+			Utils.showToast('登录失效');
+			toLogin()
 			break;
 		case StatusCode.SYSTEM_ERROR:
 			Utils.showToast('系统错误');
