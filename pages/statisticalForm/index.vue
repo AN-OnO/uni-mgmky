@@ -665,8 +665,7 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: data.thingStatusStatList.map(item => item.pagesCount ? item.pagesCount :
-								null),
+							data: data.thingStatusStatList.map(item => item.pagesCount || null),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -678,8 +677,7 @@
 							itemStyle: {
 								color: '#3CC3DF'
 							},
-							data: data.thingStatusStatList.map(item => item.suiteCount ? item.suiteCount :
-								null),
+							data: data.thingStatusStatList.map(item => item.suiteCount || null),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right', // 数据位置

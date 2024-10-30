@@ -1,5 +1,5 @@
 <template>
-	<view :class="{'pickerMask':visable}" @click="maskClick" @touchmove.stop.prevent="returnHandle">
+	<uv-overlay :show="visable" @click="maskClick">
 		<view class="picker-box" :class="{'picker-show':visable}">
 			<view class="operate-box" @touchmove.stop.prevent="returnHandle" @tap.stop="returnHandle">
 				<view class="time-box">
@@ -27,7 +27,7 @@
 				</picker-view-column>
 			</picker-view>
 		</view>
-	</view>
+	</uv-overlay>
 </template>
 <script>
     export default {
