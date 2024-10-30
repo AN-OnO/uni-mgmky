@@ -8,7 +8,7 @@
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
-				<TermPicker v-model:visable="pickerVisable"  @confirm="confirmRange" />
+				<TermPicker v-model:visable="pickerVisable" @confirm="confirmRange" />
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
 			</view>
@@ -127,9 +127,12 @@
 			<view class="padding-30">
 				<text class="section-title">设备产量</text>
 			</view>
-			<view v-for="(item, index) in capacityData" :key="index" class="capacity-contain">
-				<l-echart :ref='`barRef${index}`' @finished="getBarEcharts(`barRef${index}`, item)"></l-echart>
-			</view>
+			<template v-for="(item, index) in capacityData" :key="index">
+				<view class="capacity-contain">
+					<l-echart :ref='`barRef${index}`' @finished="getBarEcharts(`barRef${index}`, item)"></l-echart>
+				</view>
+				<view class="capacity-line"></view>
+			</template>
 		</view>
 	</view>
 </template>
@@ -246,12 +249,12 @@
 			change(index) {
 				if (index == 0) {
 					this.mode = 'date';
-					const date = dayjs().format('YYYY-MM-DD');
+					const date = dayjs().format('YYYY/MM/DD');
 					this.modeTitle = date;
 					this.updateData(date, date)
 				} else if (index == 1) {
 					this.mode = 'year-month';
-					this.modeTitle = dayjs().format('YYYY-MM')
+					this.modeTitle = dayjs().format('YYYY/MM')
 					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
 						'YYYY-MM-DD'))
 				} else {
@@ -294,7 +297,7 @@
 					this.updateData(`${year}-01-01`, `${year}-12-31`)
 				} else {
 					const month = dayjs(e.value).month() + 1;
-					this.modeTitle = `${year}-${month}`
+					this.modeTitle = `${year}/${month < 10 ? '0' + month : month}`
 					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
 						.format('YYYY-MM-DD'))
 				}
@@ -662,7 +665,8 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: data.thingStatusStatList.map(item => item.pagesCount ? item.pagesCount : null),
+							data: data.thingStatusStatList.map(item => item.pagesCount ? item.pagesCount :
+								null),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -674,7 +678,8 @@
 							itemStyle: {
 								color: '#3CC3DF'
 							},
-							data: data.thingStatusStatList.map(item => item.suiteCount ? item.suiteCount : null),
+							data: data.thingStatusStatList.map(item => item.suiteCount ? item.suiteCount :
+								null),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right', // 数据位置
@@ -824,11 +829,11 @@
 
 	.capacity-contain {
 		padding: 0 30rpx;
-		margin-bottom: 30rpx;
 	}
 
-	.capacity-contain:not(:last-child) {
-		border-bottom: 2rpx solid #EDEEF0;
+	.capacity-line:not(:last-child) {
+		margin: 0 30rpx 30rpx;
+		border: 2rpx solid #EDEEF0;
 	}
 
 	.printedStat-total {
