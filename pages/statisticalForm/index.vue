@@ -286,7 +286,7 @@
 				}
 			},
 			confirmRange(date) {
-				this.modeTitle = `${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
+				this.modeTitle = date[0] == date[1] ? date[0] : `${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
 				this.updateData(date[0], date[1])
 			},
 			confirm(e) {
