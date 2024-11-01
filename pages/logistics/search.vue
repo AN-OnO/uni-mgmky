@@ -14,8 +14,8 @@
 					<text :class="item.deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0]}}</text>
 				</view>
 				<view style="display: flex; align-items: center;">
-					<image src="/static/images/logistics/Local (已定位).svg"
-						style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
+					<image src="/static/images/logistics/Local (已定位).svg" style=" max-width: 30rpx; max-height: 30rpx;"
+						mode=""></image>
 					<text class="line-clamp">{{item.address}}</text>
 				</view>
 				<text class="line-clamp" style="
@@ -25,11 +25,12 @@
 				color: #808080;">{{item.productName}}</text>
 				<view v-if="item.delivryStatus == 3" class="finish-text">已完成</view>
 				<view v-else style="display: flex;justify-content: end;">
-					<button v-if="deliveryMethod == 3" class="list-button white-button">
+					<button v-if="deliveryMethod == 3" class="list-button white-button"
+						@click.stop="callPhone(item.mobile)">
 						<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">电话</text>
 					</button>
-					<button v-if="deliveryMethod == 3" class="list-button white-button">
+					<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="goNavigation">
 						<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
 						<text class="button-text" style="color: #333333;">导航</text>
 					</button>
@@ -152,6 +153,39 @@
 				this.pageIndex = this.pageIndex + 1;
 				this.search('loadMore');
 			},
+			callPhone(mobile) {
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
+			}
+			goNavigation() {
+				uni.getLocation({
+					success: res => {
+						// 获取当前位置
+						let currentLocation = {
+							latitude: res.latitude,
+							longitude: res.longitude
+						};
+						// 打开地图进行导航
+						uni.openLocation({
+							latitude: res.latitude,
+							longitude: res.longitude,
+							success: function() {
+								console.log('导航成功');
+							},
+							fail: function(err) {
+								console.log('导航失败', err);
+							}
+						});
+					}
+				});
+			}
 		}
 	}
 </script>

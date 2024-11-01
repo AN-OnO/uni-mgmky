@@ -38,11 +38,11 @@
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
 						<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
-							<button v-if="deliveryMethod == 3" class="list-button white-button">
+							<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="callPhone(item.mobile)">
 								<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">电话</text>
 							</button>
-							<button v-if="deliveryMethod == 3" class="list-button white-button">
+							<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="goNavigation">
 								<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
 								<text class="button-text" style="color: #333333;">导航</text>
 							</button>
@@ -203,7 +203,40 @@
 						this.getList(res.result)
 					}
 				});
-			}
+			},
+			callPhone(mobile) {
+			    uni.makePhoneCall({
+			      phoneNumber: mobile, // 需要拨打的电话号码
+			      success: (res) => {
+			        console.log('拨打电话成功', res);
+			      },
+			      fail: (res) => {
+			        console.log('拨打电话失败', res);
+			      }
+			    });
+			},
+			goNavigation() {
+			    uni.getLocation({
+			      success: res => {
+			        // 获取当前位置
+			        let currentLocation = {
+			          latitude: res.latitude,
+			          longitude: res.longitude
+			        };
+			        // 打开地图进行导航
+			        uni.openLocation({
+			          latitude: res.latitude,
+			          longitude: res.longitude,
+			          success: function () {
+			            console.log('导航成功');
+			          },
+			          fail: function (err) {
+			            console.log('导航失败', err);
+			          }
+			        });
+			      }
+			    });
+			  }
 		}
 	}
 </script>

@@ -9,7 +9,7 @@
 				<image class="image-icon" src="/static/images/app/考勤打卡1.png"></image>
 				<text>考勤打卡</text>
 			</view>
-			<view class="flex-row flex-1 align-center card relative">
+			<view class="flex-row flex-1 align-center card relative" @click="handleToolEvent(tools[1])">
 				<image class="image-icon" src="/static/images/app/统计报表1.png"></image>
 				<text>统计报表</text>
 				<image class="top-img" src="/static/images/app/AI智能.svg" mode="heightFix"></image>

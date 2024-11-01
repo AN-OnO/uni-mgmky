@@ -124,11 +124,11 @@
 				</view>
 			</view>
 			<view v-if="searchType != 3" class="bottom-container">
-				<button v-if="deliveryMethod == 3" class="button-operation white-button">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button" @click.stop="callPhone(data.contactMobile)">
 					<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
-				<button v-if="deliveryMethod == 3" class="button-operation white-button">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button" @click.stop="goNavigation">
 					<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
@@ -215,6 +215,39 @@
 						});
 					},
 				})
+			},
+			callPhone(mobile) {
+			    uni.makePhoneCall({
+			      phoneNumber: mobile, // 需要拨打的电话号码
+			      success: (res) => {
+			        console.log('拨打电话成功', res);
+			      },
+			      fail: (res) => {
+			        console.log('拨打电话失败', res);
+			      }
+			    });
+			},
+			goNavigation() {
+				uni.getLocation({
+					success: res => {
+						// 获取当前位置
+						let currentLocation = {
+							latitude: res.latitude,
+							longitude: res.longitude
+						};
+						// 打开地图进行导航
+						uni.openLocation({
+							latitude: res.latitude,
+							longitude: res.longitude,
+							success: function() {
+								console.log('导航成功');
+							},
+							fail: function(err) {
+								console.log('导航失败', err);
+							}
+						});
+					}
+				});
 			}
 		}
 	}
