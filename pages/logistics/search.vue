@@ -141,9 +141,11 @@
 				}
 
 			},
-			closeModal() {
+			closeModal(key) {
 				this.$refs.modal.close();
-				this.search()
+				if (key == 'reFresh') {
+					this.search()
+				}
 			},
 			loadMore() {
 				this.status = 'loading';

@@ -148,9 +148,11 @@
 					this.reFresh()
 				}
 			},
-			closeModal() {
+			closeModal(key) {
 				this.$refs.modal.close();
-				this.reFresh()
+				if (key == 'reFresh') {
+					this.reFresh()
+				}
 			},
 			getList(keywords) {
 				if (keywords) {

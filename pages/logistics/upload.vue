@@ -71,7 +71,7 @@
 					express_no: this.formValue.number,
 					express_company: this.formValue.company
 				})
-				this.closeModal()
+				this.closeModal('reFresh')
 			},
 			onScanTap() {
 				// 调用小程序的扫码 API

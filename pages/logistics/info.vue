@@ -201,9 +201,6 @@
 			},
 			closeModal() {
 				this.$refs.modal.close();
-				uni.navigateBack({
-					delta: 1
-				});
 			},
 			copyText(text) {
 				// 调用小程序 API 复制文字到剪贴板
