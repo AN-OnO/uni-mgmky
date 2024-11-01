@@ -1,7 +1,9 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<view class="flex-between">
+			<image src="../../static/images/statisticalForm/banner图.svg" mode="" class="banner-img"
+				:style="{display: showBanner ? 'block' : 'none'} "></image>
+			<view class="flex-between" :style="{'margin-top': showBanner ? '250rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
 					<image src="/static/images/statisticalForm/arrow.svg" class="arrow-img"></image>
@@ -178,6 +180,7 @@
 				totalSuiteCount: 0,
 				capacityData: [],
 				pickerVisable: false,
+				showBanner: true,
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -245,6 +248,14 @@
 		onReady() {
 			this.change(0)
 		},
+		onPageScroll(e) {
+			if (e.scrollTop > 0) {
+				this.showBanner = false
+				uni.setNavigationBarColor({
+					backgroundColor: '#ffffff'
+				});
+			}
+		},
 		methods: {
 			change(index) {
 				if (index == 0) {
@@ -286,7 +297,8 @@
 				}
 			},
 			confirmRange(date) {
-				this.modeTitle = date[0] == date[1] ? date[0] : `${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
+				this.modeTitle = date[0] == date[1] ? date[0] :
+					`${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
 				this.updateData(date[0], date[1])
 			},
 			confirm(e) {
@@ -692,6 +704,13 @@
 </script>
 
 <style>
+	.banner-img {
+		position: absolute;
+		top: -100rpx;
+		height: 429rpx;
+		width: 100%;
+	}
+
 	.flex-between {
 		display: flex;
 		justify-content: space-between;
