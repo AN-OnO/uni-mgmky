@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<image src="../../static/images/statisticalForm/banner图.svg" mode="" class="banner-img"
+			<image src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"
 				:style="{display: showBanner ? 'block' : 'none'} "></image>
 			<view class="flex-between" :style="{'margin-top': showBanner ? '250rpx' : '0'}">
 				<view @click="open" class="mode-title">
