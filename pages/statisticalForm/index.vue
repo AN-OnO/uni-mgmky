@@ -654,6 +654,7 @@
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
 						},
 						top: '85%',
+						selectedMode: false,
 					},
 					grid: {
 						top: '20%', // 顶部距离
