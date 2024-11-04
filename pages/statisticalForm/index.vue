@@ -155,7 +155,7 @@
 	import * as echarts from 'echarts';
 	import RankTable from './components/rankTable.vue';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
-	const userData = useUserStore().userData;
+	const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
 	export default {
 		components: {
 			RankTable,
@@ -330,7 +330,7 @@
 				GetOrderStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
+					mercantileAgents
 				}).then(res => {
 					if (res.code !== 0) {
 						uni.$Utils.showToast(res.message)
@@ -384,7 +384,7 @@
 				GetOrderProductStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
+					mercantileAgents
 				}).then(res => {
 					this.productData = res.data
 					this.productRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
@@ -397,7 +397,7 @@
 				GetOrderProductTopStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -421,7 +421,7 @@
 				GetOrderProductTrendStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -463,7 +463,7 @@
 				GetPrintProductionStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents
 				}).then(res => {
 					this.totalPrintPagesCount = res.data.totalPrintPagesCount
 					this.totalSuiteCount = res.data.totalSuiteCount
@@ -485,7 +485,7 @@
 				GetThingsCapacityStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents
 				}).then(res => {
 					this.capacityData = res.data
 				})
