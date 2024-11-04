@@ -163,7 +163,7 @@
 						console.log('拨打电话失败', res);
 					}
 				});
-			}
+			},
 			goNavigation() {
 				uni.getLocation({
 					success: res => {

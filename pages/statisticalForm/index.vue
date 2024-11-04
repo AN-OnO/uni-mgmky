@@ -254,6 +254,7 @@
 			if (e.scrollTop > 0) {
 				this.showBanner = false
 				uni.setNavigationBarColor({
+					frontColor: '#000000',
 					backgroundColor: '#ffffff'
 				});
 			}

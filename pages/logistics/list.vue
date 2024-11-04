@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container" style="background-color: #F0F1F5;">
+	<view class="page-container">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
@@ -13,7 +13,7 @@
 				</view>
 			</view>
 		</view>
-		<view>
+		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
@@ -244,7 +244,7 @@
 </script>
 
 <style scoped>
-	uni-page-body {
+	.page-container {
 		background-color: #F0F1F5;
 		height: 100%;
 	}

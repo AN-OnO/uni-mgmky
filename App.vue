@@ -15,5 +15,8 @@
 <style lang="scss">
 	@import "@/static/css/common.scss";
 	@import "@/uni_modules/uv-ui-tools/index.scss";
+	page {
+		height: 100%;
+	}
 	
 </style>
