@@ -1,8 +1,7 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<image src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"
-				:style="{display: showBanner ? 'block' : 'none'} "></image>
+			<image v-if="showBanner" src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"></image>
 			<view class="flex-between" :style="{'margin-top': showBanner ? '250rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
@@ -10,7 +9,7 @@
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
-				<TermPicker v-model:visable="pickerVisable" @confirm="confirmRange" />
+				<TermPicker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
 			</view>
@@ -163,10 +162,13 @@
 			TermPicker
 		},
 		data() {
+			const date = dayjs().subtract(1, 'day');
+			
 			return {
 				value: Number(new Date()),
 				mode: 'date',
-				modeTitle: `${dayjs().format('YYYY/MM/DD')}`,
+				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
+				modeTitle: date.format('YYYY/MM/DD'),
 				current: 0,
 				currentSource: 0,
 				currentPerson: 0,
@@ -260,7 +262,7 @@
 			change(index) {
 				if (index == 0) {
 					this.mode = 'date';
-					const date = dayjs().format('YYYY/MM/DD');
+					const date = dayjs().subtract(1, 'day').format('YYYY/MM/DD');
 					this.modeTitle = date;
 					this.updateData(date, date)
 				} else if (index == 1) {
