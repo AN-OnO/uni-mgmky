@@ -19,44 +19,39 @@
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
 					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
-				<uv-list v-for="(item, index) in listData" :key="index" @click="jumpToInfo(item)"
-					style="margin-top: 15rpx;border-radius: 15rpx;">
-					<uv-list-item style="margin: 20rpx;">
-						<view class="flex-between">
-							<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-							<text
-								:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
-						</view>
-						<view style="display: flex; align-items: center;">
-							<image src="/static/images/logistics/Local (已定位).svg"
-								style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
-							<text class="line-clamp">{{item.address}}</text>
-						</view>
-						<text class="line-clamp" style="
+				<view v-for="(item, index) in listData" :key="index" @click="jumpToInfo(item)" class="list-contain">
+					<view class="flex-between">
+						<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
+						<text :class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
+					</view>
+					<view style="display: flex; align-items: center;">
+						<image src="/static/images/logistics/Local (已定位).svg"
+							style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
+						<text class="line-clamp">{{item.address}}</text>
+					</view>
+					<text class="line-clamp" style="
  						margin-bottom: 15rpx;
  						height: 85rpx;
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
-						<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
-							<button v-if="deliveryMethod == 3" class="list-button white-button"
-								@click.stop="callPhone(item.mobile)">
-								<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
-								<text class="button-text" style="color: #333333;">电话</text>
-							</button>
-							<button v-if="deliveryMethod == 3" class="list-button white-button"
-								@click.stop="goNavigation">
-								<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-								<text class="button-text" style="color: #333333;">导航</text>
-							</button>
-							<button class="list-button" @click.stop="confirm(item.orderItemNo)">
-								<image
-									:src="buttonText == '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
-									class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
-							</button>
-						</view>
-						<view v-else class="finish-text">已完成</view>
-					</uv-list-item>
-				</uv-list>
+					<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
+						<button v-if="deliveryMethod == 3" class="list-button white-button"
+							@click.stop="callPhone(item.mobile)">
+							<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
+							<text class="button-text" style="color: #333333;">电话</text>
+						</button>
+						<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="goNavigation">
+							<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
+							<text class="button-text" style="color: #333333;">导航</text>
+						</button>
+						<button class="list-button" @click.stop="confirm(item.orderItemNo)">
+							<image
+								:src="buttonText == '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+								class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
+						</button>
+					</view>
+					<view v-else class="finish-text">已完成</view>
+				</view>
 				<view class="scan-wrap" @click="onScanTap">
 					<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
 				</view>
@@ -270,6 +265,14 @@
 		color: rgba(255, 255, 255, 0.6);
 		line-height: 38rpx;
 		text-align: center;
+	}
+
+	.list-contain {
+		margin-top: 15rpx;
+		border-radius: 15rpx;
+		background: #ffffff;
+		align-content: flex-start;
+		padding: 20rpx;
 	}
 
 	.logistics-method {

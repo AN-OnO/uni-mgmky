@@ -124,7 +124,8 @@
 				</view>
 			</view>
 			<view v-if="searchType != 3" class="bottom-container">
-				<button v-if="deliveryMethod == 3" class="button-operation white-button" @click.stop="callPhone(data.contactMobile)">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button"
+					@click.stop="callPhone(data.contactMobile)">
 					<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
@@ -177,9 +178,6 @@
 			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.searchType = parseInt(options.searchType);
 			this.orderItemNo = options.orderItemNo;
-			uni.setNavigationBarColor({
-				backgroundColor: 'rgba(89,87,230,0.6)'
-			});
 			GetDeliveryDetail({
 				orderItemNo: this.orderItemNo
 			}).then(res => {
@@ -217,15 +215,15 @@
 				})
 			},
 			callPhone(mobile) {
-			    uni.makePhoneCall({
-			      phoneNumber: mobile, // 需要拨打的电话号码
-			      success: (res) => {
-			        console.log('拨打电话成功', res);
-			      },
-			      fail: (res) => {
-			        console.log('拨打电话失败', res);
-			      }
-			    });
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
 			},
 			goNavigation() {
 				uni.getLocation({
@@ -259,7 +257,7 @@
 	}
 
 	.container-background {
-		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
+		background: #F2F2F2;
 	}
 
 	.container {

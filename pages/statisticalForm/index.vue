@@ -2,7 +2,7 @@
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
 			<image v-if="showBanner" src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"></image>
-			<view class="flex-between" :style="{'margin-top': showBanner ? '250rpx' : '0'}">
+			<view class="flex-between" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
 					<image src="/static/images/statisticalForm/arrow.svg" class="arrow-img"></image>
@@ -163,7 +163,7 @@
 		},
 		data() {
 			const date = dayjs().subtract(1, 'day');
-			
+
 			return {
 				value: Number(new Date()),
 				mode: 'date',
@@ -710,9 +710,10 @@
 <style>
 	.banner-img {
 		position: absolute;
-		top: -100rpx;
+		top: -150rpx;
 		height: 429rpx;
 		width: 100%;
+		z-index: -1;
 	}
 
 	.flex-between {
