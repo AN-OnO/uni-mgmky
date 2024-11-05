@@ -58,17 +58,9 @@
 							</uv-form-item>
 							<uv-form-item label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<uni-tooltip>
-										<view class="line-clamp-3" style="max-width: 380rpx; height: 120rpx;">
-											{{data.productName}}
-										</view>
-										<template v-slot:content>
-											<view>
-												{{data.productName}}
-											</view>
-										</template>
-									</uni-tooltip>
-
+									<view style="max-width: 380rpx">
+										{{data.productName}}
+									</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
@@ -90,17 +82,9 @@
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
 								customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<uni-tooltip>
-										<view class="line-clamp-3"
-											style="max-width: 380rpx;-webkit-line-clamp: 1; height: 50rpx;">
-											{{data.orderRemark}}
-										</view>
-										<template v-slot:content>
-											<view>
-												{{data.orderRemark}}
-											</view>
-										</template>
-									</uni-tooltip>
+									<view style="max-width: 380rpx;">
+										{{data.orderRemark}}
+									</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
@@ -272,7 +256,7 @@
 	.container-content {
 		background: #FFFFFF;
 		margin-top: 15rpx;
-		padding: 30rpx;
+		padding: 30rpx 30rpx 0;
 	}
 
 	.image {
@@ -356,10 +340,9 @@
 
 	.bottom-container {
 		background: #FFFFFF;
-		height: 167rpx;
 		padding: 15rpx;
 		display: flex;
-		justify-content: end;
+		justify-content: flex-end;
 	}
 
 	.button-operation {
