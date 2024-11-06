@@ -91,7 +91,8 @@
 				searchType: 1,
 				status: 'loadmore',
 				count: 0,
-				orderItemNo: ''
+				orderItemNo: '',
+				keywords: ''
 			}
 		},
 		onLoad(options) {
@@ -143,18 +144,22 @@
 						orderItemNo: orderItemNo
 					});
 					this.reFresh()
+					uni.$Utils.showToast('已开始运输')
 				}
 			},
 			closeModal(key) {
 				this.$refs.modal.close();
 				if (key == 'reFresh') {
 					this.reFresh()
+					uni.$Utils.showToast('已开始运输')
 				}
 			},
 			getList(keywords) {
 				if (keywords) {
 					this.pageIndex = 1
+					this.listData = [];
 				}
+				this.keywords = keywords
 				GetList({
 					pageSize: 10,
 					pageIndex: this.pageIndex,
@@ -185,7 +190,7 @@
 			reFresh() {
 				this.pageIndex = 1;
 				this.listData = [];
-				this.getList()
+				this.getList(this.keywords)
 			},
 			loadMore() {
 				this.status = 'loading';
@@ -196,7 +201,7 @@
 				// 调用小程序的扫码 API
 				uni.scanCode({
 					success: (res) => {
-						console.log('扫码结果：', res);
+						console.log('扫码结果：', res.result);
 						this.getList(res.result)
 					}
 				});
