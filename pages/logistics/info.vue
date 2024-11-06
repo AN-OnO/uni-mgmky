@@ -5,21 +5,21 @@
 				<view style="background: #333333;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
-							:src="searchType == 2? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
+							:src="data.status == 1? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
 							mode=""></image>
 						<text class="order-status">{{
 							({
 								3: {
-									1: '待配送',
-									2: '配送中',
-									3: '已完成'
+									0: '待配送',
+									1: '配送中',
+									2: '已完成'
 								},
 								4: {
-									1: '待取送',
-									2: '取送中',
-									3: '已完成'
+									0: '待取送',
+									1: '取送中',
+									2: '已完成'
 								}
-							})[deliveryMethod][searchType]
+							})[deliveryMethod][data.status]
 							}}</text>
 					</view>
 					<view class='flex-center'>
@@ -87,18 +87,19 @@
 									</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
+							<uv-form-item v-if="data.status == 2" class="align-right " label="完成时间:"
+								labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.finishTime}}</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+							<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right "
 								label="寄件单号:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.express_fee}}</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+							<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right "
 								label="寄件图片:" labelWidth='250rpx' labelPosition='top'>
 								<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item"
 									width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
@@ -107,7 +108,7 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="searchType != 3" class="bottom-container">
+			<view v-if="data.status  != 2" class="bottom-container">
 				<button v-if="deliveryMethod == 3" class="button-operation white-button"
 					@click.stop="callPhone(data.contactMobile)">
 					<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
@@ -118,18 +119,19 @@
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
 				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
-					<image :src="searchType == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+					<image
+						:src="data.status  == 0 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
 					<text class="text-operation">{{({
 								3: {
-									1: '开始配送',
-									2: '完成配送',
+									0: '开始配送',
+									1: '完成配送',
 								},
 								4: {
-									1: '开始取送',
-									2: '完成取送',
+									0: '开始取送',
+									1: '完成取送',
 								}
-							})[deliveryMethod][searchType]
+							})[deliveryMethod][data.status]
 							}}</text>
 				</button>
 			</view>
@@ -154,26 +156,27 @@
 			return {
 				deliveryMethod: 3,
 				data: {},
-				searchType: 1,
 				orderItemNo: '',
 			}
 		},
 		onLoad(options) {
 			this.deliveryMethod = parseInt(options.deliveryMethod);
-			this.searchType = parseInt(options.searchType);
 			this.orderItemNo = options.orderItemNo;
-			GetDeliveryDetail({
-				orderItemNo: this.orderItemNo
-			}).then(res => {
-				this.data = res.data
-			})
+			this.getData()
 		},
 		methods: {
-			confirm(orderItemNo) {
-				if (this.searchType == 2) {
+			getData() {
+				GetDeliveryDetail({
+					orderItemNo: this.orderItemNo
+				}).then(res => {
+					this.data = res.data
+				})
+			},
+			async confirm(orderItemNo) {
+				if (this.data.status == 1) {
 					this.$refs.modal.open();
 				} else {
-					ConfirmDelivery({
+					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					})
 					uni.navigateBack({
@@ -181,8 +184,11 @@
 					});
 				}
 			},
-			closeModal() {
+			closeModal(key) {
 				this.$refs.modal.close();
+				if (key == 'reFresh') {
+					this.getData()
+				}
 			},
 			copyText(text) {
 				// 调用小程序 API 复制文字到剪贴板
