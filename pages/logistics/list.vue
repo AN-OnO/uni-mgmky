@@ -151,7 +151,7 @@
 				this.$refs.modal.close();
 				if (key == 'reFresh') {
 					this.reFresh()
-					uni.$Utils.showToast('已开始运输')
+					uni.$Utils.showToast('已完成运输')
 				}
 			},
 			getList(keywords) {
