@@ -3,7 +3,7 @@ import type {
 	HttpTask,
 	HttpError
 } from "@/uni_modules/uv-ui-tools/libs/luch-request";
-import config from "@/common/config";
+import { baseURL } from "@/common/config";
 import Utils from "@/utils/index";
 import { StatusCode } from "@/enums";
 
@@ -16,8 +16,7 @@ import { StatusCode } from "@/enums";
  * 详细: https://www.uviewui.com/js/http.html;
  */
 
-const http = uni.$uv.http;
-const { baseURL } = config;
+const http = uni.$uv.http; 
 const timeout = 30000;
 
 function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, HttpTask>) {

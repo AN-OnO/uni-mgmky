@@ -32,61 +32,71 @@
 			}
 		},
 		{
-			"path": "pages/logistics/list",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#333"
-			}
-		},
-		{
-			"path": "pages/logistics/info",
-			"style": {
-				"navigationBarTitleText": "详情",
-				"navigationBarBackgroundColor": "#F2F2F2"
-			}
-		},
-		{
-			"path": "pages/logistics/upload",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/logistics/search",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/productionReport/list",
-			"style": {
-				"navigationBarTitleText": "报工",
-				"navigationBarTextStyle": "white",
-				"navigationBarBackgroundColor": "#333",
-				"backgroundColor": "#F0F1F5"
-			}
-		},
-		{
-			"path": "pages/statisticalForm/index",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#DBEBFF"
-			}
-		},
-		{
-			"path": "pages/statisticalForm/components/rankTable",
-			"style": {
-				"navigationBarTitleText": ""
-			}
-		},
-		{
 			"path": "pages/saomiao/saomiao",
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		}
+	],
+	"subPackages": [{
+			"root": "pages/productionReport",
+			"pages": [{
+				"path": "list",
+				"style": {
+					"navigationBarTitleText": "报工",
+					"navigationBarTextStyle": "white",
+					"navigationBarBackgroundColor": "#333",
+					"backgroundColor": "#F0F1F5"
+				}
+			}]
+		},
+		{
+			"root": "pages/statisticalForm",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationBarTitleText": "",
+					"navigationBarBackgroundColor": "#DBEBFF"
+				}
+			}, {
+				"path": "components/rankTable",
+				"style": {
+					"navigationBarTitleText": ""
+				}
+			}]
+		},
+		{
+			"root": "pages/logistics",
+			"pages": [{
+					"path": "list",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationBarTextStyle": "white",
+						"navigationBarBackgroundColor": "#333"
+					}
+				},
+				{
+					"path": "info",
+					"style": {
+						"navigationBarTitleText": "详情",
+						"navigationBarBackgroundColor": "#F2F2F2"
+					}
+				},
+				{
+					"path": "upload",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "search",
+					"style": {
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
+				}
+			]
 		}
 	],
 	"globalStyle": {
@@ -96,25 +106,26 @@
 		"backgroundColor": "#F0F1F5"
 	},
 	"tabBar": {
-		// "color": "#C7D2DC",
-		// "fontSize": "12px",
-		// "selectedColor": "#333",
-		// "backgroundColor": "white",
-		// "iconWidth": "32px",
-		// "height": "60px",
-		// "list": [{
-		// 		"pagePath": "pages/tabbar/home",
-		// 		"text": "首页",
-		// 		"iconPath": "/static/images/tabbar/home.svg",
-		// 		"selectedIconPath": "/static/images/tabbar/home_active.svg"
-		// 	},
-		// 	{
-		// 		"pagePath": "pages/tabbar/user",
-		// 		"text": "我的",
-		// 		"iconPath": "/static/images/tabbar/mine.svg",
-		// 		"selectedIconPath": "/static/images/tabbar/mine_active.svg"
-		// 	}
-		// ]
+		"custom": true,
+		"color": "#C7D2DC",
+		"fontSize": "12px",
+		"selectedColor": "#333",
+		"backgroundColor": "white",
+		"iconWidth": "32px",
+		"height": "88px",
+		"list": [{
+				"pagePath": "pages/tabbar/home",
+				"text": "首页"
+				// "iconPath": "/static/images/tabbar/home.svg",
+				// "selectedIconPath": "/static/images/tabbar/home_active.svg"
+			},
+			{
+				"pagePath": "pages/tabbar/user",
+				"text": "我的"
+				// "iconPath": "/static/images/tabbar/mine.svg",
+				// "selectedIconPath": "/static/images/tabbar/mine_active.svg"
+			}
+		]
 	},
 	"uniIdRouter": {}
 }

@@ -1,11 +1,11 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<image v-if="showBanner" src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"></image>
+			<image v-if="showBanner" :src="$IMG_URL+'/statisticalForm/banner.svg'" mode="" class="banner-img"></image>
 			<view class="flex-between" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
-					<image src="/static/images/statisticalForm/arrow.svg" class="arrow-img"></image>
+					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>

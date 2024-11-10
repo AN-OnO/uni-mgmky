@@ -34,7 +34,8 @@
 	import {
 		ScanResult,
 		MyCompletedStatForToday,
-		ListMyProductionTechnology
+		ListMyProductionTechnology,
+		GetTechnologyOrderItemDetail
 	} from '@/apis/production.js'
 	export default {
 		data() {

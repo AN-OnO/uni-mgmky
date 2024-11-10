@@ -35,7 +35,7 @@
 	import {
 		DeliveryFinished
 	} from "../../apis/member";
-	import config from "@/common/config";
+	import {baseURL} from "@/common/config";
 	export default {
 		props: {
 			closeModal: {
@@ -105,7 +105,7 @@
 			uploadFilePromise(url) {
 				return new Promise((resolve, reject) => {
 					uni.uploadFile({
-						url: config.baseURL + '/api/FileUpload/UploadFile', // 开发者服务器的上传接口地址
+						url: baseURL + '/api/FileUpload/UploadFile', // 开发者服务器的上传接口地址
 						filePath: url, // 要上传的文件资源路径
 						name: 'file', // 必填，后台用来解析的文件名
 						formData: {

@@ -16,7 +16,7 @@
 				<uni-tr v-for="(item, index) in orderRank" :key="index">
 					<uni-td align="center">
 						<image v-if="index < 3"
-							:src="index == 0 ? '/static/images/statisticalForm/gold.svg' : index == 1 ? '/static/images/statisticalForm/silver.svg': '/static/images/statisticalForm/bronze.svg'"
+							:src="$IMG_URL+ (index == 0 ? '/statisticalForm/gold.svg' : index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
 							class='medal-img'></image>
 						<text class="index-text" v-else>{{index + 1}}</text>
 					</uni-td>

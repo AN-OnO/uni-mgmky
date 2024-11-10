@@ -1,7 +1,6 @@
 <template>
-	<view class="page-container">
-
-
+	<view >
+		
 	</view>
 </template>
 
