@@ -93,7 +93,9 @@
 					if (res.code === 0) {
 						userStore.setToken(res.data.accessToken)
 						userStore.setUserData(res.data.logonUserInfo)
-						uni.$Utils.switchTab('/pages/tabbar/home')
+						// uni.$Utils.switchTab('/pages/tabbar/home')
+						uni.$Utils.redirectTo('/pages/tabbar/index')
+						uni.$Utils.setStorage('tabbar', 'home')
 					} else {
 						uni.$Utils.showToast(res.message)
 					}
