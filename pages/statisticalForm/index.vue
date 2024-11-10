@@ -1,14 +1,15 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<view class="flex-between">
+			<image v-if="showBanner" src="/static/images/statisticalForm/banner.svg" mode="" class="banner-img"></image>
+			<view class="flex-between" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
 					<image src="/static/images/statisticalForm/arrow.svg" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
-				<!-- <uv-calendars ref="calendars" @confirm="confirm" mode="range" allowSameDay /> -->
+				<TermPicker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
 			</view>
@@ -127,10 +128,12 @@
 			<view class="padding-30">
 				<text class="section-title">设备产量</text>
 			</view>
-			<view v-for="(item, index) in capacityData" :key="index" style="padding: 0 30rpx;">
-				<l-echart :ref='`bar${index}Ref`' @finished="getBarEcharts(`bar${index}Ref`, item)"></l-echart>
-				<view class="capacityStat-line"></view>
-			</view>
+			<template v-for="(item, index) in capacityData" :key="index">
+				<view class="capacity-contain">
+					<l-echart :ref='`barRef${index}`' @finished="getBarEcharts(`barRef${index}`, item)"></l-echart>
+				</view>
+				<view class="capacity-line"></view>
+			</template>
 		</view>
 	</view>
 </template>
@@ -151,16 +154,21 @@
 	import Big from 'big.js';
 	import * as echarts from 'echarts';
 	import RankTable from './components/rankTable.vue';
-	const userData = useUserStore().userData;
+	import TermPicker from '@/components/term-picker/term-picker.vue'
+	const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
 	export default {
 		components: {
 			RankTable,
+			TermPicker
 		},
 		data() {
+			const date = dayjs().subtract(1, 'day');
+
 			return {
 				value: Number(new Date()),
 				mode: 'date',
-				modeTitle: `${dayjs().format('YYYY-MM-DD')}`,
+				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
+				modeTitle: date.format('YYYY/MM/DD'),
 				current: 0,
 				currentSource: 0,
 				currentPerson: 0,
@@ -173,6 +181,8 @@
 				totalPrintPagesCount: 0,
 				totalSuiteCount: 0,
 				capacityData: [],
+				pickerVisable: false,
+				showBanner: true,
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -237,19 +247,28 @@
 				]
 			}
 		},
-		onLoad() {
+		onReady() {
 			this.change(0)
+		},
+		onPageScroll(e) {
+			if (e.scrollTop > 0) {
+				this.showBanner = false
+				uni.setNavigationBarColor({
+					frontColor: '#000000',
+					backgroundColor: '#ffffff'
+				});
+			}
 		},
 		methods: {
 			change(index) {
 				if (index == 0) {
 					this.mode = 'date';
-					const date = dayjs().format('YYYY-MM-DD');
+					const date = dayjs().subtract(1, 'day').format('YYYY/MM/DD');
 					this.modeTitle = date;
 					this.updateData(date, date)
 				} else if (index == 1) {
 					this.mode = 'year-month';
-					this.modeTitle = dayjs().format('YYYY-MM')
+					this.modeTitle = dayjs().format('YYYY/MM')
 					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
 						'YYYY-MM-DD'))
 				} else {
@@ -274,33 +293,28 @@
 				} [index]
 			},
 			open() {
-				// if (this.mode == 'date') {
-				// 	this.$refs.calendars.open();
-				// } else {
-				this.$refs.datetimePicker.open();
-				// }
+				if (this.mode == 'date') {
+					this.pickerVisable = true
+				} else {
+					this.$refs.datetimePicker.open();
+				}
+			},
+			confirmRange(date) {
+				this.modeTitle = date[0] == date[1] ? date[0] :
+					`${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
+				this.updateData(date[0], date[1])
 			},
 			confirm(e) {
-				if (e.range) {
-					// 选择日期范围
-					// this.modeTitle = `${startTime}/${endTime}`
-					this.updateData(e.range.before, e.range.after)
-					return
-				}
 				const year = dayjs(e.value).year();
 
 				if (e.mode == 'year') {
 					this.modeTitle = year
 					this.updateData(`${year}-01-01`, `${year}-12-31`)
-				} else if (e.mode == 'year-month') {
+				} else {
 					const month = dayjs(e.value).month() + 1;
-					this.modeTitle = `${year}-${month}`
+					this.modeTitle = `${year}/${month < 10 ? '0' + month : month}`
 					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
 						.format('YYYY-MM-DD'))
-				} else {
-					const date = dayjs(e.value).format('YYYY-MM-DD');
-					this.modeTitle = date
-					this.updateData(date, date)
 				}
 			},
 			updateData(beginDate, endDate) {
@@ -316,7 +330,7 @@
 				GetOrderStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
+					mercantileAgents
 				}).then(res => {
 					if (res.code !== 0) {
 						uni.$Utils.showToast(res.message)
@@ -370,7 +384,7 @@
 				GetOrderProductStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId)
+					mercantileAgents
 				}).then(res => {
 					this.productData = res.data
 					this.productRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
@@ -383,7 +397,7 @@
 				GetOrderProductTopStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -407,7 +421,7 @@
 				GetOrderProductTrendStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -449,7 +463,7 @@
 				GetPrintProductionStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents
 				}).then(res => {
 					this.totalPrintPagesCount = res.data.totalPrintPagesCount
 					this.totalSuiteCount = res.data.totalSuiteCount
@@ -471,9 +485,8 @@
 				GetThingsCapacityStat({
 					beginDate,
 					endDate,
-					mercantileAgents: userData.mercantileAgents?.map(item => item.mercantileAgentId),
+					mercantileAgents
 				}).then(res => {
-					console.log(111, res.data)
 					this.capacityData = res.data
 				})
 			},
@@ -624,10 +637,11 @@
 				chart.setOption(option);
 			},
 			async getBarEcharts(ref, data) {
-				const chart = await this.$refs.ref.init(echarts);
+				const chart = await this.$refs[ref][0].init(echarts);
 				const option = {
 					title: {
 						text: data.thingName,
+						left: 'center'
 					},
 					tooltip: {
 						trigger: 'axis'
@@ -635,11 +649,15 @@
 					legend: {
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
-						itemGap: 8, // 修改间距
-						top: '75%',
+						itemGap: 28, // 修改间距
+						textStyle: {
+							padding: [0, 0, 0, -10], // 修改文字和图标距离
+						},
+						top: '85%',
+						selectedMode: false,
 					},
 					grid: {
-						top: '15%', // 顶部距离
+						top: '20%', // 顶部距离
 						left: '15%'
 					},
 					xAxis: {
@@ -648,12 +666,7 @@
 					},
 					yAxis: {
 						type: 'category',
-						data: data.thingStatusStatList.map(item => ({
-							4: '待打印',
-							6: '已上机',
-							10: '已打印',
-							30: '已取消'
-						} [item.status])),
+						data: data.thingStatusStatList.map(item => item.statusDes),
 						axisTick: {
 							show: false // 不显示刻度线
 						},
@@ -668,7 +681,7 @@
 							itemStyle: {
 								color: '#6FD195'
 							},
-							data: data.thingStatusStatList.map(item => item.pagesCount),
+							data: data.thingStatusStatList.map(item => item.pagesCount || null),
 							label: {
 								show: true, // 在柱状图上显示数据
 								position: 'right' // 数据位置
@@ -680,10 +693,10 @@
 							itemStyle: {
 								color: '#3CC3DF'
 							},
-							data: data.thingStatusStatList.map(item => item.suiteCount),
+							data: data.thingStatusStatList.map(item => item.suiteCount || null),
 							label: {
 								show: true, // 在柱状图上显示数据
-								position: 'right' // 数据位置
+								position: 'right', // 数据位置
 							}
 						}
 					]
@@ -695,6 +708,14 @@
 </script>
 
 <style>
+	.banner-img {
+		position: absolute;
+		top: -150rpx;
+		height: 429rpx;
+		width: 100%;
+		z-index: -1;
+	}
+
 	.flex-between {
 		display: flex;
 		justify-content: space-between;
@@ -828,7 +849,12 @@
 		margin: 30rpx 0;
 	}
 
-	.capacityStat-line {
+	.capacity-contain {
+		padding: 0 30rpx;
+	}
+
+	.capacity-line:not(:last-child) {
+		margin: 0 30rpx 30rpx;
 		border: 2rpx solid #EDEEF0;
 	}
 

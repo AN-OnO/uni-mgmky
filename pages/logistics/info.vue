@@ -5,21 +5,21 @@
 				<view style="background: #333333;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
-							:src="searchType == 2? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
+							:src="data.status == 1? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
 							mode=""></image>
 						<text class="order-status">{{
 							({
 								3: {
-									1: '待配送',
-									2: '配送中',
-									3: '已完成'
+									0: '待配送',
+									1: '配送中',
+									2: '已完成'
 								},
 								4: {
-									1: '待取送',
-									2: '取送中',
-									3: '已完成'
+									0: '待取送',
+									1: '取送中',
+									2: '已完成'
 								}
-							})[deliveryMethod][searchType]
+							})[deliveryMethod][data.status]
 							}}</text>
 					</view>
 					<view class='flex-center'>
@@ -58,17 +58,9 @@
 							</uv-form-item>
 							<uv-form-item label="订购内容:" labelWidth='250rpx' customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<uni-tooltip>
-										<view class="line-clamp-3" style="max-width: 380rpx; height: 120rpx;">
-											{{data.productName}}
-										</view>
-										<template v-slot:content>
-											<view>
-												{{data.productName}}
-											</view>
-										</template>
-									</uni-tooltip>
-
+									<view style="max-width: 380rpx">
+										{{data.productName}}
+									</view>
 								</template>
 							</uv-form-item>
 							<uv-form-item class="align-right " label="订购数量:" labelWidth='250rpx'>
@@ -90,31 +82,24 @@
 							<uv-form-item class="align-right " label="下单备注:" labelWidth='250rpx'
 								customStyle='align-items: flex-start'>
 								<template v-slot:right>
-									<uni-tooltip>
-										<view class="line-clamp-3"
-											style="max-width: 380rpx;-webkit-line-clamp: 1; height: 50rpx;">
-											{{data.orderRemark}}
-										</view>
-										<template v-slot:content>
-											<view>
-												{{data.orderRemark}}
-											</view>
-										</template>
-									</uni-tooltip>
+									<view style="max-width: 380rpx;">
+										{{data.orderRemark}}
+									</view>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="searchType == 3" class="align-right " label="完成时间:" labelWidth='250rpx'>
+							<uv-form-item v-if="data.status == 2" class="align-right " label="完成时间:"
+								labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.finishTime}}</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+							<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right "
 								label="寄件单号:" labelWidth='250rpx'>
 								<template v-slot:right>
 									<text>{{data.express_fee}}</text>
 								</template>
 							</uv-form-item>
-							<uv-form-item v-if="deliveryMethod == 4 && searchType == 3" class="align-right "
+							<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right "
 								label="寄件图片:" labelWidth='250rpx' labelPosition='top'>
 								<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item"
 									width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
@@ -123,28 +108,30 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="searchType != 3" class="bottom-container">
-				<button v-if="deliveryMethod == 3" class="button-operation white-button">
+			<view v-if="data.status  != 2" class="bottom-container">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button"
+					@click.stop="callPhone(data.contactMobile)">
 					<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">电话</text>
 				</button>
-				<button v-if="deliveryMethod == 3" class="button-operation white-button">
+				<button v-if="deliveryMethod == 3" class="button-operation white-button" @click.stop="goNavigation">
 					<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 						class="text-operation" style="color: #333333;">导航</text>
 				</button>
 				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
-					<image :src="searchType == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+					<image
+						:src="data.status  == 0 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
 					<text class="text-operation">{{({
 								3: {
-									1: '开始配送',
-									2: '完成配送',
+									0: '开始配送',
+									1: '完成配送',
 								},
 								4: {
-									1: '开始取送',
-									2: '完成取送',
+									0: '开始取送',
+									1: '完成取送',
 								}
-							})[deliveryMethod][searchType]
+							})[deliveryMethod][data.status]
 							}}</text>
 				</button>
 			</view>
@@ -169,29 +156,27 @@
 			return {
 				deliveryMethod: 3,
 				data: {},
-				searchType: 1,
 				orderItemNo: '',
 			}
 		},
 		onLoad(options) {
 			this.deliveryMethod = parseInt(options.deliveryMethod);
-			this.searchType = parseInt(options.searchType);
 			this.orderItemNo = options.orderItemNo;
-			uni.setNavigationBarColor({
-				backgroundColor: 'rgba(89,87,230,0.6)'
-			});
-			GetDeliveryDetail({
-				orderItemNo: this.orderItemNo
-			}).then(res => {
-				this.data = res.data
-			})
+			this.getData()
 		},
 		methods: {
-			confirm(orderItemNo) {
-				if (this.searchType == 2) {
+			getData() {
+				GetDeliveryDetail({
+					orderItemNo: this.orderItemNo
+				}).then(res => {
+					this.data = res.data
+				})
+			},
+			async confirm(orderItemNo) {
+				if (this.data.status == 1) {
 					this.$refs.modal.open();
 				} else {
-					ConfirmDelivery({
+					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					})
 					uni.navigateBack({
@@ -199,11 +184,11 @@
 					});
 				}
 			},
-			closeModal() {
+			closeModal(key) {
 				this.$refs.modal.close();
-				uni.navigateBack({
-					delta: 1
-				});
+				if (key == 'reFresh') {
+					this.getData()
+				}
 			},
 			copyText(text) {
 				// 调用小程序 API 复制文字到剪贴板
@@ -218,6 +203,39 @@
 						});
 					},
 				})
+			},
+			callPhone(mobile) {
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
+			},
+			goNavigation() {
+				uni.getLocation({
+					success: res => {
+						// 获取当前位置
+						let currentLocation = {
+							latitude: res.latitude,
+							longitude: res.longitude
+						};
+						// 打开地图进行导航
+						uni.openLocation({
+							latitude: res.latitude,
+							longitude: res.longitude,
+							success: function() {
+								console.log('导航成功');
+							},
+							fail: function(err) {
+								console.log('导航失败', err);
+							}
+						});
+					}
+				});
 			}
 		}
 	}
@@ -229,7 +247,7 @@
 	}
 
 	.container-background {
-		background: linear-gradient(180deg, rgba(89, 87, 230, 0.6) 0%, rgba(89, 87, 230, 0) 100%), #F0F1F5;
+		background: #F2F2F2;
 	}
 
 	.container {
@@ -244,7 +262,7 @@
 	.container-content {
 		background: #FFFFFF;
 		margin-top: 15rpx;
-		padding: 30rpx;
+		padding: 30rpx 30rpx 0;
 	}
 
 	.image {
@@ -328,10 +346,9 @@
 
 	.bottom-container {
 		background: #FFFFFF;
-		height: 167rpx;
 		padding: 15rpx;
 		display: flex;
-		justify-content: end;
+		justify-content: flex-end;
 	}
 
 	.button-operation {

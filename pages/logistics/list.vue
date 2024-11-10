@@ -1,5 +1,5 @@
 <template>
-	<view class="page-container" style="background-color: #F0F1F5;">
+	<view class="page-container">
 		<view style="background-color: #333333; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
@@ -13,48 +13,45 @@
 				</view>
 			</view>
 		</view>
-		<view>
+		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
 					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
-				<uv-list v-for="(item, index) in listData" :key="index" @click="jumpToInfo(item)"
-					style="margin-top: 15rpx;border-radius: 15rpx;">
-					<uv-list-item style="margin: 20rpx;">
-						<view class="flex-between">
-							<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
-							<text
-								:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
-						</view>
-						<view style="display: flex; align-items: center;">
-							<image src="/static/images/logistics/Local (已定位).svg"
-								style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
-							<text class="line-clamp">{{item.address}}</text>
-						</view>
-						<text class="line-clamp" style="
+				<view v-for="(item, index) in listData" :key="index" @click="jumpToInfo(item)" class="list-contain">
+					<view class="flex-between">
+						<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
+						<text :class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
+					</view>
+					<view style="display: flex; align-items: center;">
+						<image src="/static/images/logistics/Local (已定位).svg"
+							style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
+						<text class="line-clamp">{{item.address}}</text>
+					</view>
+					<text class="line-clamp" style="
  						margin-bottom: 15rpx;
  						height: 85rpx;
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
-						<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
-							<button v-if="deliveryMethod == 3" class="list-button white-button">
-								<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
-								<text class="button-text" style="color: #333333;">电话</text>
-							</button>
-							<button v-if="deliveryMethod == 3" class="list-button white-button">
-								<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-								<text class="button-text" style="color: #333333;">导航</text>
-							</button>
-							<button class="list-button" @click.stop="confirm(item.orderItemNo)">
-								<image
-									:src="buttonText == '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
-									class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
-							</button>
-						</view>
-						<view v-else class="finish-text">已完成</view>
-					</uv-list-item>
-				</uv-list>
+					<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
+						<button v-if="deliveryMethod == 3" class="list-button white-button"
+							@click.stop="callPhone(item.mobile)">
+							<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
+							<text class="button-text" style="color: #333333;">电话</text>
+						</button>
+						<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="goNavigation">
+							<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
+							<text class="button-text" style="color: #333333;">导航</text>
+						</button>
+						<button class="list-button" @click.stop="confirm(item.orderItemNo)">
+							<image
+								:src="buttonText == '开始取送' ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+								class="list-image" mode=""></image><text class="button-text">{{buttonText}}</text>
+						</button>
+					</view>
+					<view v-else class="finish-text">已完成</view>
+				</view>
 				<view class="scan-wrap" @click="onScanTap">
 					<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
 				</view>
@@ -94,7 +91,8 @@
 				searchType: 1,
 				status: 'loadmore',
 				count: 0,
-				orderItemNo: ''
+				orderItemNo: '',
+				keywords: ''
 			}
 		},
 		onLoad(options) {
@@ -146,16 +144,22 @@
 						orderItemNo: orderItemNo
 					});
 					this.reFresh()
+					uni.$Utils.showToast('已开始运输')
 				}
 			},
-			closeModal() {
+			closeModal(key) {
 				this.$refs.modal.close();
-				this.reFresh()
+				if (key == 'reFresh') {
+					this.reFresh()
+					uni.$Utils.showToast('已完成运输')
+				}
 			},
 			getList(keywords) {
 				if (keywords) {
 					this.pageIndex = 1
+					this.listData = [];
 				}
+				this.keywords = keywords
 				GetList({
 					pageSize: 10,
 					pageIndex: this.pageIndex,
@@ -186,7 +190,7 @@
 			reFresh() {
 				this.pageIndex = 1;
 				this.listData = [];
-				this.getList()
+				this.getList(this.keywords)
 			},
 			loadMore() {
 				this.status = 'loading';
@@ -197,8 +201,41 @@
 				// 调用小程序的扫码 API
 				uni.scanCode({
 					success: (res) => {
-						console.log('扫码结果：', res);
+						console.log('扫码结果：', res.result);
 						this.getList(res.result)
+					}
+				});
+			},
+			callPhone(mobile) {
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
+			},
+			goNavigation() {
+				uni.getLocation({
+					success: res => {
+						// 获取当前位置
+						let currentLocation = {
+							latitude: res.latitude,
+							longitude: res.longitude
+						};
+						// 打开地图进行导航
+						uni.openLocation({
+							latitude: res.latitude,
+							longitude: res.longitude,
+							success: function() {
+								console.log('导航成功');
+							},
+							fail: function(err) {
+								console.log('导航失败', err);
+							}
+						});
 					}
 				});
 			}
@@ -207,7 +244,7 @@
 </script>
 
 <style scoped>
-	uni-page-body {
+	.page-container {
 		background-color: #F0F1F5;
 		height: 100%;
 	}
@@ -233,6 +270,14 @@
 		color: rgba(255, 255, 255, 0.6);
 		line-height: 38rpx;
 		text-align: center;
+	}
+
+	.list-contain {
+		margin-top: 15rpx;
+		border-radius: 15rpx;
+		background: #ffffff;
+		align-content: flex-start;
+		padding: 20rpx;
 	}
 
 	.logistics-method {
