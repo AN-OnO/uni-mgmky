@@ -152,7 +152,12 @@
 	} from '../../store/user';
 	import dayjs from 'dayjs';
 	import Big from 'big.js';
-	import * as echarts from '@/uni_modules/lime-echart/static/echarts.min'
+	// #ifdef H5
+	import * as echarts from 'echarts';
+	// #endif
+	// #ifndef H5
+	const echarts = require('../../uni_modules/lime-echart/static/echarts.min.js')
+	// #endif
 	import RankTable from './components/rankTable.vue';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
 	const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
@@ -511,7 +516,9 @@
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
 			async getPieEcharts() {
+				console.log(111)
 				const chart = await this.$refs.pieRef.init(echarts);
+				console.log(222, chart)
 				let sourceData = [];
 				let data = [];
 
