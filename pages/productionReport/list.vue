@@ -104,9 +104,13 @@
 						ScanResult({
 							scanResult: res.result,
 							technologyid: this.selectedItem.technologyId,
-							checkinType: 1
+							checkinType: 1 // 入库类型 1：切换 2：覆盖 3：新增
 						}).then(scanRes => {
 							console.log('ScanResult result', scanRes)
+							uni.showToast({
+								title: JSON.stringify(scanRes),
+								duration: 5000
+							})
 						})
 					}
 				});

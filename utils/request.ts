@@ -16,7 +16,7 @@ import { StatusCode } from "@/enums";
  * 详细: https://www.uviewui.com/js/http.html;
  */
 
-const http = uni.$uv.http; 
+const http = uni.$uv.http;
 const timeout = 30000;
 
 function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, HttpTask>) {
@@ -24,13 +24,13 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 		statusCode,
 		data,
 	} = res || {};
-	
+
 	if (data == undefined) {
-		Utils.showToast('服务接口请求异常');
+		Utils.showToast(res.errMsg || '服务接口请求异常');
 		return Promise.reject(res);
 	}
 	const { code, message, ...resData } = data
-	const toLogin = () => {		
+	const toLogin = () => {
 		Utils.removeAllStorage()
 		Utils.navigateTo('/pages/index/login')
 	}
