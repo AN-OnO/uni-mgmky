@@ -516,9 +516,7 @@
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
 			async getPieEcharts() {
-				console.log(111)
 				const chart = await this.$refs.pieRef.init(echarts);
-				console.log(222, chart)
 				let sourceData = [];
 				let data = [];
 
