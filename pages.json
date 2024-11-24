@@ -48,6 +48,29 @@
 					"navigationBarBackgroundColor": "#333",
 					"backgroundColor": "#F0F1F5"
 				}
+			},
+			{
+				"path": "info",
+				"style": {
+					"navigationBarTitleText": "",
+					"navigationBarTextStyle": "white",
+					"navigationBarBackgroundColor": "#333",
+					"backgroundColor": "#F0F1F5"
+				}
+			},
+			{
+				"path": "confirm",
+				"style": {
+					"navigationBarTitleText": "订单详情",
+					"backgroundColor": "#F0F1F5"
+				}
+			},
+			{
+				"path": "search",
+				"style": {
+					"navigationBarTitleText": "",
+					"navigationStyle": "custom"
+				}
 			}]
 		},
 		{

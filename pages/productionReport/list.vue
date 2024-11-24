@@ -20,13 +20,17 @@
 						<image class="image-icon" :src="item.photo" mode="aspectFit" />
 						<text v-if="item.waitOrderItemNum > 0" class="badge-tag">{{ item.waitOrderItemNum }}</text>
 					</view>
-					<text class="item-name">{{ item.name }}</text>
+					<view class="flex-1 flex-column justify-between">
+						<text class="item-name margin-bottom-xs">{{ item.name }}</text>
+						<uv-icon name="arrow-right" label="详情" labelPos="left" @click="goDetail(item)"></uv-icon>
+					</view>
 				</view>
 			</template>
 		</view>
-		<view class="scan-wrap" @click="onScanTap">
+		<!-- <view class="scan-wrap" @click="onScanTap">
 			<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
-		</view>
+		</view> -->
+		<uv-loading-page :loading="loading"></uv-loading-page>
 	</view>
 </template>
 
@@ -34,6 +38,7 @@
 	import {
 		ScanResult,
 		MyCompletedStatForToday,
+		ListTechnologyOrderItems,
 		ListMyProductionTechnology,
 		GetTechnologyOrderItemDetail
 	} from '@/apis/production.js'
@@ -43,7 +48,8 @@
 				technologies: [],
 				selectedItem: null,
 				taskCount: 0,
-				taskAmount: 0
+				taskAmount: 0,
+				loading: true
 			}
 		},
 		onLoad() {
@@ -52,7 +58,8 @@
 		computed: {
 			isSelected() {
 				return technologyId => {
-					return this.selectedItem && this.selectedItem.technologyId === technologyId
+					// return this.selectedItem && this.selectedItem.technologyId === technologyId
+					return false
 				}
 			}
 		},
@@ -81,10 +88,17 @@
 					} else {
 						console.error('ListMyProductionTechnology api error:', res.message)
 					}
-				})
+				}).finally(() => this.loading = false)
 			},
 			handleSelect(item) {
 				this.selectedItem = item
+			},
+			goDetail(item) {
+				uni.navigateTo({
+					url: `/pages/productionReport/info?name=${item.name}&technologyId=${item.technologyId}`,
+					animationType: 'pop-in',
+					animationDuration: 300
+				})
 			},
 			onScanTap() {
 				if (uni.$uv.test.empty(this.selectedItem)) {
@@ -120,12 +134,14 @@
 	}
 </script>
 
-<style>
-	page {
-		background-color: #F0F1F5;
-	}
-</style>
 <style lang="scss" scoped>
+	.page-container {
+		background-color: #F0F1F5;
+		min-height: 100%;
+		padding-bottom: env(safe-area-inset-bottom);
+		padding-bottom: constant(safe-area-inset-bottom);
+	}
+
 	.top-nav {
 		display: flex;
 		flex-direction: row;
@@ -178,7 +194,6 @@
 		border-radius: 15rpx;
 		display: flex;
 		flex-direction: row;
-		align-items: center;
 
 		&.active {
 			background-color: #333;
@@ -211,7 +226,6 @@
 	}
 
 	.item-name {
-		flex: 1;
 		text-align: center;
 		font-size: 34rpx;
 	}
