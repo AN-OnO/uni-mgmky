@@ -116,3 +116,7 @@ export function GetPrintProductionStat(params) {
 export function GetThingsCapacityStat(params) {
 	return request.post('/api/DashboardStat/GetThingsCapacityStat', params)
 }
+
+export function ClockIn() {
+	return request.post('/api/Attendance/ClockIn');
+}

@@ -36,6 +36,39 @@
 			"style": {
 				"navigationBarTitleText": ""
 			}
+		},
+		{
+			"path": "pages/check/check",
+			"style": {
+				"navigationBarTitleText": "考勤打卡"
+			}
+		},
+		{
+			"path": "pages/check/list",
+			"style": {
+				"navigationBarTitleText": "打卡记录"
+			}
+		},
+		{
+			"path" : "pages/check/apply/apply",
+			"style" : 
+			{
+				"navigationBarTitleText" : "申请补卡"
+			}
+		 },
+		 {
+			"path" : "pages/check/apply/index",
+			"style" : 
+			{
+				"navigationBarTitleText" : ""
+			}
+		 },
+		 {
+			"path" : "pages/check/apply/records",
+			"style" : 
+			{
+				"navigationBarTitleText" : "补卡记录"
+			}
 		}
 	],
 	"subPackages": [{
