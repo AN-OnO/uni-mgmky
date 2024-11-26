@@ -114,7 +114,7 @@
 	};
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .container {
 	padding: 20px;
 	display: flex;

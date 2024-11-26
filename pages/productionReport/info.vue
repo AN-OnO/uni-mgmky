@@ -18,7 +18,8 @@
 			</view>
 		</uv-sticky>
 		<view class="data-list padding-sm">
-			<view class="list-item" v-for="(item,index) in listData" :key="index">
+			<view class="list-item" v-for="(item,index) in listData" :key="index"
+				@click="handleClick(item,!showButton)">
 				<view class="flex-row justify-between">
 					<text class="order-no">{{item.saleOrderNo}}</text>
 					<text class="checktime">{{item.checkintime}}</text>
@@ -30,8 +31,8 @@
 				<view class="order-info uv-line-2">
 					{{item.productName}}
 				</view>
-				<view v-if="tabIndex===0" class="flex-row justify-end margin-top-sm">
-					<button class="list-button" @click="jumpToConfirm(item.orderItemNo, item.productionTechnologyId)">
+				<view v-if="showButton" class="flex-row justify-end margin-top-sm">
+					<button class="list-button" @click.stop="handleClick(item, showButton)">
 						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
 						<text class="button-text">完成任务</text>
 					</button>
@@ -99,7 +100,12 @@
 		onPullDownRefresh() {
 			this.refresh()
 		},
-		computed: {},
+		computed: {
+			showButton() {
+				const tabItem = this.tabList[this.tabIndex]
+				return tabItem.status === 0
+			}
+		},
 		methods: {
 			init() {
 				MyCompletedStatForToday().then(res => {
@@ -189,6 +195,9 @@
 					}
 				});
 				// #endif
+			},
+			handleClick(item, isNavigable = false) {
+				isNavigable && this.jumpToConfirm(item.orderItemNo, item.productionTechnologyId)
 			},
 			jumpToConfirm(orderItemNo, technologyId) {
 				uni.navigateTo({
@@ -329,7 +338,9 @@
 		margin-right: 0;
 		margin-left: 15rpx;
 		background: #333333;
-		border-radius: 191rpx
+		border-radius: 191rpx;
+		display: flex;
+		align-items: center;
 	}
 
 	.list-image {

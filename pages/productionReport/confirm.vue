@@ -50,7 +50,7 @@
 				</view>
 			</view>
 
-			<view class="order-num-wrap margin-top">
+			<view v-if="!isFinished" class="order-num-wrap margin-top">
 				<text class="un-complete-count">待完成数量({{orderDetail.unCompleteCount}})</text>
 				<uv-line margin="30rpx 0"></uv-line>
 				<view class="number-box">
@@ -65,7 +65,7 @@
 			</view>
 		</view>
 		<view v-if="!isFinished&&!isEmpty" class="page-footer">
-			<view class="flex-row justify-end padding-top-sm padding-bottom">
+			<view class="flex-row justify-end padding-sm padding-bottom">
 				<button class="list-button" @click="onConfirm(item)">
 					<image class="list-image" src="/static/images/logistics/完成.svg"></image>
 					<text class="button-text">完成任务</text>
@@ -109,6 +109,7 @@
 				}).then(res => {
 					if (res.code === 0) {
 						this.orderDetail = res.data
+						this.isFinished = this.orderDetail.uStatus === 1
 						uni.setNavigationBarTitle({
 							title: `订单详情(${this.orderDetail.productionTechnologyName})`
 						})
@@ -150,7 +151,7 @@
 					console.log('ScanResult respone', res)
 					const success = res.code === 0
 					let message = success ? '任务已完成！' : '任务完成失败，请重试！'
-					
+
 					uni.showModal({
 						title: '提示',
 						content: message,
@@ -195,7 +196,6 @@
 		right: 0;
 		height: $footerHeight;
 		background-color: #fff;
-		padding-right: 10rpx;
 		padding-bottom: calc(30rpx + env(safe-area-inset-bottom)/2);
 		padding-bottom: calc(30rpx + constant(safe-area-inset-bottom)/2);
 	}
@@ -304,7 +304,8 @@
 		border-radius: 100px;
 		width: 92rpx;
 		height: 46rpx;
-		line-height: 46rpx;
+		display: flex;
+		justify-content: center;
 		text-align: center;
 		margin-left: 10rpx;
 
@@ -352,7 +353,9 @@
 		margin-right: 0;
 		margin-left: 15rpx;
 		background: #333333;
-		border-radius: 191rpx
+		border-radius: 191rpx;
+		display: flex;
+		align-items: center;
 	}
 
 	.list-image {
