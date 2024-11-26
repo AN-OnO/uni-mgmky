@@ -6,10 +6,10 @@
 				<label>补卡时间</label>
 			</view>
 			<view class="datetime-picker">
-				<picker mode="date" :value="makeUpDate" @change="onDateChange">
+				<picker mode="date" v-model="makeUpDate" @change="onDateChange">
 					<view class="picker-view">{{ makeUpDate }}</view>
 				</picker>
-				<picker mode="time" :value="makeUpTime" @change="onTimeChange">
+				<picker mode="time" v-model="makeUpTime" @change="onTimeChange">
 					<view class="picker-view">{{ makeUpTime }}</view>
 				</picker>
 			</view>
@@ -33,48 +33,57 @@
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			makeUpDate: this.getFormattedDate(new Date()), // 默认当前日期
-			makeUpTime: '12:00',
-			reason: '' // 补卡理由
-		};
-	},
-	methods: {
-		// 格式化日期
-		getFormattedDate(date) {
-			const d = new Date(date);
-			return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+	import {Mend} from '../../../apis/check.js';
+	export default {
+		data() {
+			return {
+				makeUpDate: this.getFormattedDate(new Date()), // 默认当前日期
+				makeUpTime: this.getFormattedTime(new Date()),
+				reason: '' ,// 补卡理由
+			};
 		},
-    // 日期选择器变化处理
-		onDateChange(e) {
-			this.makeUpDate = e.target.value;
-		},
-		onTimeChange(e) {
-			this.makeUpTime = e.target.value;
-		},
-    // 提交补卡申请
-		submitApplication() {
-      // 验证补卡时间
-			if (!this.makeUpDate) {
-				uni.showToast({ title: '请选择补卡时间和日期', icon: 'none' });
-			return;
+		methods: {
+			// 格式化日期
+			getFormattedDate(date) {
+				const d = new Date(date);
+				return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`;
+			},
+			getFormattedTime(date){
+				const d = new Date(date);
+				return `${d.getHours().toString().padStart(2,'0')}:${d.getMinutes().toString().padStart(2,'0')}`;
+			},
+			// 提交补卡申请
+			async submitApplication() {
+				// 验证补卡时间
+				if (!this.makeUpDate || !this.makeUpTime) {
+					uni.showToast({ 
+						title: '请选择补卡时间和日期',
+						icon: 'none',
+					});
+					return;
+				}
+				const fullDateTime = `${this.makeUpDate} ${this.makeUpTime}`;
+				
+				try{
+					// 调用API接口提交补卡申请
+					await Mend(fullDateTime, this.reason);
+					// 提交成功后提示
+					uni.showToast({ title: '提交成功', icon: 'success' });
+							  
+					// 清空输入内容（可选）
+					this.makeUpDate = this.getFormattedDate(new Date());
+					this.makeUpTime = this.getFormattedTime(new Date());
+					this.reason = '';
+				} catch (error) {
+					uni.showToast({
+						title: '提交失败，请重试',
+						icon:'none'
+					});
+					console.error('提交补卡申请失败：', error);
+				}
+			}
 		}
-      const fullDateTime = `${this.makeUpDate} ${this.makeUpTime}`;
-      // 这里应该调用API接口提交补卡申请
-      // 示例：uni.request({...})
-      
-      // 提交成功后提示
-      uni.showToast({ title: '提交成功', icon: 'success' });
-      
-      // 清空输入内容（可选）
-      this.makeUpDate = this.getFormattedDate(new Date());
-	  makeUpTime: '12:00',
-      this.reason = '';
-    }
-  }
-};
+	};
 </script>
 
 <style scoped>

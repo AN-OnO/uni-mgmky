@@ -5,7 +5,7 @@
 			<text class="app-description margin-top-sm">轻松掌握每一步</text>
 		</view>
 		<view class="flex-row margin-top-lg margin-bottom-sm">
-			<view class="flex-row flex-1 align-center card margin-right-sm">
+			<view class="flex-row flex-1 align-center card margin-right-sm" @click="handleToolEvent(tools[0])">
 				<image class="image-icon" :src="$IMG_URL +'/app/考勤打卡1.png'"></image>
 				<text>考勤打卡</text>
 			</view>
@@ -40,7 +40,7 @@
 	const tools = ref([{
 		icon:  '/app/考勤打卡.svg',
 		name: '考勤打卡',
-		event: ''
+		event: '/pages/check/check'
 	}, {
 		icon: '/app/统计报表.svg',
 		name: '统计报表',
