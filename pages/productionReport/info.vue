@@ -39,7 +39,7 @@
 				</view>
 			</view>
 
-			<uv-empty v-if="loadStatus!=='loadmore'&& !listData.length" mode="order"
+			<uv-empty v-if="!listData.length&& loadStatus === 'nomore'" mode="order"
 				icon="https://cdn.uviewui.com/uview/empty/order.png"></uv-empty>
 			<uv-load-more v-else :status="loadStatus" />
 		</view>
@@ -63,7 +63,7 @@
 				count: 0, // 订单总数量
 				listData: [], // 订单分页数据
 				loading: true,
-				loadStatus: 'loadmore', // 订单加载状态
+				loadStatus: 'loading', // 订单加载状态
 				taskCount: 0,
 				taskAmount: 0,
 				pageIndex: 1,
@@ -121,7 +121,7 @@
 			},
 			changeTab(e) {
 				this.tabIndex = e.index
-				this.loadStatus = 'loadmore'
+				this.loadStatus = 'loading'
 				this.listData = []
 				this.refresh()
 			},

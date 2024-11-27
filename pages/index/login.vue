@@ -1,5 +1,6 @@
 <template>
 	<view class="content">
+		<uv-status-bar></uv-status-bar>
 		<image class="logo" src="/static/logo.png"></image>
 		<text class="title">{{appName}}</text>
 
@@ -75,7 +76,6 @@
 	// 登录按钮自定义样式
 	const loginBtnStyle = computed(() => {
 		return {
-			width: 'calc(100vw - 100rpx)',
 			background: '#333333',
 			color: '#fff',
 			marginTop: '160rpx',
@@ -134,5 +134,6 @@
 
 	.login-form {
 		margin-top: 200rpx;
+		width: calc(100vw - 100rpx);
 	}
 </style>

@@ -64,14 +64,17 @@
 				</view>
 			</view>
 		</view>
-		<view v-if="!isFinished&&!isEmpty" class="page-footer">
-			<view class="flex-row justify-end padding-sm padding-bottom">
-				<button class="list-button" @click="onConfirm(item)">
-					<image class="list-image" src="/static/images/logistics/完成.svg"></image>
-					<text class="button-text">完成任务</text>
-				</button>
+		<template v-if="!isFinished&&!isEmpty">
+			<view class="footer-height"></view>
+			<view class="page-footer">
+				<view class="flex-row justify-end padding-sm">
+					<button class="list-button" @click="onConfirm(item)">
+						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
+						<text class="button-text">完成任务</text>
+					</button>
+				</view>
 			</view>
-		</view>
+		</template>
 
 		<uv-loading-page :loading="loading"></uv-loading-page>
 	</view>
@@ -176,7 +179,7 @@
 </script>
 
 <style lang="scss" scoped>
-	$footerHeight: 100rpx;
+	$footerHeight: 120rpx;
 	$radius: 15rpx;
 	$shadow: 0rpx 8rpx 46rpx 0rpx #EBEDF5;
 
@@ -184,10 +187,13 @@
 		background-color: #F0F1F5;
 		min-height: 100%;
 		box-sizing: border-box;
-		padding-bottom: calc($footerHeight + 30rpx + env(safe-area-inset-bottom)/2);
-		padding-bottom: calc($footerHeight + 30rpx + constant(safe-area-inset-bottom)/2);
 	}
 
+	.footer-height{
+		height: $footerHeight;
+		padding-bottom:  env(safe-area-inset-bottom);
+		padding-bottom: constant(safe-area-inset-bottom);
+	}
 	.page-footer {
 		position: fixed;
 		z-index: 990;
@@ -196,8 +202,11 @@
 		right: 0;
 		height: $footerHeight;
 		background-color: #fff;
-		padding-bottom: calc(30rpx + env(safe-area-inset-bottom)/2);
-		padding-bottom: calc(30rpx + constant(safe-area-inset-bottom)/2);
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		padding-bottom:  env(safe-area-inset-bottom);
+		padding-bottom: constant(safe-area-inset-bottom);
 	}
 
 	.order-card {
