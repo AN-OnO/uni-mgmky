@@ -72,10 +72,10 @@
 				<uni-table>
 					<!-- 表头行 -->
 					<uni-tr style="background: #FAFAFA;">
-						<uni-th width="70" align="left">{{currentPersonName}}</uni-th>
-						<uni-th width="90" align="right"><text class="quantity">应收</text></uni-th>
-						<uni-th width="90" align="right"><text class="quantity">已收</text></uni-th>
-						<uni-th width="90" align="right"><text class="amount">未收</text></uni-th>
+						<uni-th align="left">{{currentPersonName}}</uni-th>
+						<uni-th align="right"><text class="quantity">应收</text></uni-th>
+						<uni-th align="right"><text class="quantity">已收</text></uni-th>
+						<uni-th align="right"><text class="amount">未收</text></uni-th>
 					</uni-tr>
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in personData" :key="index">
@@ -565,8 +565,8 @@
 						confine: true
 					},
 					legend: {
-						orient: 'vertical',
-						height: '30%',
+						orient: 'horizontal',
+						width: '90%',
 						selectedMode: false,
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
@@ -574,7 +574,7 @@
 						textStyle: {
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
 						},
-						top: 'bottom',
+						top: '65%',
 						formatter: function(name) {
 							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(0)}%`;
 						}
