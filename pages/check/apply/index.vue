@@ -1,5 +1,5 @@
 <template>
-	<view class="container">
+	<view class="container" :style="{ backgroundColor: getBackgroundColor() }">
 		<view class="tab-bar">
 			<view class="tab-item" :class="{ active: currentTab === 0 }" @click="switchTab(0)">申请补卡</view>
 			<view class="tab-item" :class="{ active: currentTab === 1 }" @click="switchTab(1)">补卡记录</view>
@@ -29,6 +29,9 @@ export default {
 	methods: {
 		switchTab(index) {
 			this.currentTab = index;
+		},
+		getBackgroundColor() {
+			return this.currentTab === 0 ? '#fff' : '#f0f0f0';
 		}
 	}
 };
@@ -37,6 +40,7 @@ export default {
 <style>
 .container {
 	padding-top: 0; 
+	background-color: #f0f0f0; 
 }
 
 .tab-bar {
@@ -50,7 +54,7 @@ export default {
 .tab-item {
 	flex: 1;
 	text-align: center;
-	font-size: 18px;
+	font-size: 17px;
 	color: #333;
 	cursor: pointer;
 	position: relative; /* 为伪元素定位 */

@@ -14,7 +14,7 @@
 				</picker>
 			</view>
 		</view>
-		<view class="input-group">
+		<view class="input-reason">
 			<view class="apply-reason">
 				<image class="reason-icon" src="/static/images/check/理由.png" />
 				<label>补卡理由(选填)</label>
@@ -93,7 +93,6 @@
 
 <style scoped>
 	.apply-container {
-		padding: 20px;
 		background-color: #fff;
 	}
 
@@ -102,6 +101,7 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
+		border-bottom: 3px solid #ccc;
 	}
 
 	.apply-time,
@@ -137,44 +137,14 @@
 	}
 
 	.picker-view {
-		border-bottom: 1px solid #ccc;
 		padding: 10px;
 		text-align: center;
 	}
 
-	/* 为了让日期和时间在同一个框中显示，并且看起来像一个整体的输入框，
-   我们可以给.datetime-picker添加一个额外的样式来模拟输入框的边框 */
 	.datetime-picker {
-		border: 1px solid #ccc;
 		border-radius: 5px;
 		overflow: hidden;
 		/* 确保子元素不会溢出 */
-	}
-
-	.date-picker,
-	.time-picker {
-		border: none;
-		/* 移除picker组件的内部边框 */
-		width: 50%;
-		/* 或者根据需要调整宽度 */
-	}
-
-	.date-picker .picker-view,
-	.time-picker .picker-view {
-		border-bottom: none;
-		/* 移除picker视图的下边框，因为我们已经有了外部边框 */
-	}
-
-	/* 为了让日期和时间在同一个框中显示时中间没有分隔线，
-   我们可以给第一个picker添加一个右边框，给第二个picker移除左边框（如果有的话） */
-	.date-picker .picker-view {
-		border-right: 1px solid #ccc;
-		/* 添加右边框 */
-	}
-
-	/* 如果.time-picker有默认的左边框，需要移除它 */
-	.time-picker .picker-view {
-		/* 根据实际情况，可能需要添加一些特定的样式来移除或覆盖默认的左边框 */
 	}
 
 	.textarea {
@@ -184,8 +154,12 @@
 		box-sizing: border-box;
 		margin-top: 5px;
 	}
-
-	.char-limit {}
+	
+	.char-limit {
+		text-align: right;
+		font-size: 14px;
+		color: #a8a8a8;
+	}
 
 	button {
 		margin-top: 150px;

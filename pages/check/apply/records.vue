@@ -1,120 +1,162 @@
 <template>
-  <view class="container">
-    <!-- 顶部导航栏 -->
-    <view class="nav-bar">
-      <button @click="filterRecords('all')" :class="{ active: currentFilter === 'all' }">全部记录</button>
-      <button @click="filterRecords('pending')" :class="{ active: currentFilter === 'pending' }">待处理</button>
-      <button @click="filterRecords('processed')" :class="{ active: currentFilter === 'processed' }">已处理</button>
-      <view class="search-container">
-        <input v-model="searchQuery" placeholder="搜索补卡记录" @input="onSearchInput" />
-        <view class="search-icon" @click="searchRecords">🔍</view>
-      </view>
-    </view>
+	<view class="container">
+    <!-- 筛选按钮区域 -->
+		<view class="filter-bar">
+			<button @click="filterRecords('pending')" class="filter-button">待处理 ({{ pendingCount }})</button>
+			<button @click="filterRecords('all')" class="filter-button">所有</button>
+			<button @click="filterRecords('processed')" class="filter-button">已处理</button>
+			<view class="search" @click="searchRecords">
+				<image src="../../../static/images/check/搜索.png" class="search-img" />
+			</view>
+		</view>
 
-    <!-- 补卡记录列表 -->
-    <view class="records-list">
-      <view class="record-item" v-for="(record, index) in filteredRecords" :key="index">
-        <view class="record-info">
-          <text>日期: {{ record.date }}</text>
-          <text>理由: {{ record.reason }}</text>
-          <text>状态: {{ record.status === 'pending' ? '待处理' : '已处理' }}</text>
-        </view>
-      </view>
-      <view v-if="filteredRecords.length === 0" class="no-records">暂无符合条件的补卡记录</view>
-    </view>
-  </view>
+    <!-- 补卡记录列表区域 -->
+		<view class="record-list">
+			<block v-for="(record, index) in filteredRecords" :key="index">
+				<view class="record-item">
+					<view class="record-ststus">
+						<image v-if="record.status === '已通过'" src="/static/images/check/已通过 .png" class="status-icon"/>
+						<image v-else-if="record.status === '未通过'" src="/static/images/check/未通过.png" class="status-icon"/>
+						<text v-else class="await">{{ record.status }}</text>
+					</view>
+					<view class="record-date">
+						<image class="time-icon" src="/static/images/check/时间.png" />
+						<text>补卡时间 {{ record.date }} {{ record.time }}</text>
+					</view>
+					<view class="record-reason">
+						<image class="reason-icon" src="/static/images/check/理由.png" />
+						<text>补卡理由 {{ record.reason }}</text>
+					</view>
+					<view class="record-pass">
+						<text>{{ record.passDate }} {{ record.passTime }}</text>
+					</view>
+				</view>
+			</block>
+		</view>
+	</view>
 </template>
-
 
 <script>
 export default {
-  data() {
-    return {
-      records: [], // 所有补卡记录
-      filteredRecords: [], // 过滤后的补卡记录
-      currentFilter: 'all', // 当前选中的过滤条件
-      searchQuery: '' // 搜索查询字符串
-    };
-  },
-  methods: {
-    // 获取补卡记录（模拟数据）
-    fetchRecords() {
-      // 在实际应用中，您应该从服务器获取数据
-      // 这里我们使用模拟数据
-      this.records = [
-        { date: '2023-04-01', reason: '忘记打卡', status: 'pending' },
-        { date: '2023-04-02', reason: '迟到', status: 'processed' },
-        { date: '2023-04-03', reason: '外出办事', status: 'pending' },
-        // ... 更多记录
-      ];
-      // 默认显示所有记录
-      this.filterRecords('all');
-    },
-    // 根据过滤条件筛选记录
-    filterRecords(status) {
-      this.currentFilter = status;
-      if (status === 'all') {
-        this.filteredRecords = this.records;
-      } else if (status === 'pending') {
-        this.filteredRecords = this.records.filter(record => record.status === 'pending');
-      } else if (status === 'processed') {
-        this.filteredRecords = this.records.filter(record => record.status === 'processed');
-      }
-    },
-    // 搜索记录
-    searchRecords() {
-      if (this.searchQuery.trim() === '') {
-        // 如果搜索查询为空，则显示所有记录
-        this.filterRecords('all');
-      } else {
-        // 否则根据搜索查询过滤记录
-        this.filteredRecords = this.records.filter(record =>
-          record.date.includes(this.searchQuery) ||
-          record.reason.includes(this.searchQuery)
-        );
-      }
-    },
-    // 当用户在搜索输入框中输入时调用
-    onSearchInput(event) {
-      this.searchQuery = event.target.value;
-      // 可以选择在这里自动调用searchRecords，或者等待用户点击搜索图标
-      // this.searchRecords();
-    }
-  },
-  // 生命周期钩子，页面加载时获取补卡记录
-  onLoad() {
-    this.fetchRecords();
-  }
+	data() {
+		return { 
+			records: [
+				{ id: 1, 
+				status: '待处理', 
+				date: '2023-10-01', 
+				time: '09:20', 
+				reason: '忘记打卡', 
+				passDate: '2023-10-02', 
+				passTime: '09:00'},
+				{ id: 2, status: '已通过', date: '2023-10-02' },
+				{ id: 3, status: '待处理', date: '2023-10-03' },
+				{ id: 4, status: '未通过', date: '2023-10-04' },
+			],
+			currentFilter: 'all',
+			pendingCount: 0
+		};
+	},
+	computed: {
+		filteredRecords() {
+			if (this.currentFilter === 'all') {
+				return this.records;
+			} else if (this.currentFilter === 'pending') {
+				return this.records.filter(record => record.status === '待处理');
+			} else if (this.currentFilter === 'processed') {
+				return this.records.filter(record => record.status === '已通过' || record.status === '未通过');
+			}
+			return [];
+		}
+	},
+	methods: {
+		filterRecords(filter) {
+			this.currentFilter = filter;
+			this.updatePendingCount();
+		},
+		searchRecords() {
+			console.log('搜索补卡记录')
+		},
+		updatePendingCount() {
+			this.pendingCount = this.records.filter(record => record.status === '待处理').length;
+		}
+	},
+	mounted() {
+		this.updatePendingCount();
+	}
 };
 </script>
 
-<style>
-.container {
-  padding: 10px;
-}
+<style scoped>
+	.container {
+	}
 
-.nav-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
+	.filter-bar {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		margin: 0 10px 10px 0;
+	}
 
-.nav-bar button {
-  margin-right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  background-color: #fff;
-  cursor: pointer;
-}
+	.filter-button {
+		height: 40px;
+		line-height: 40px;
+		font-size: 12px;
+		padding: 0px 16px;
+		background-color: #fff;
+		color: #808080;
+		border-radius: 4px;
+		border: none;
+	}
 
-.nav-bar button.active {
-  background-color: #007bff;
-  color: #fff;
-  border-color: #007bff;
-}
+	.filter-button:hover {
+		background-color: #58c3de;
+		color: #fff;
+	}
+	
+	.search {
+		margin-left: 90px;
+		display: flex;
+		align-items: center;
+	}
+	
+	.search-img {
+		width: 24px;
+		height: 24px;
+	}
 
+	.record-list {
+		margin-top: 14px;
+	}
 
+	.record-item {
+		display: flex;
+		align-items: center;
+		margin-bottom: 3px;
+		padding: 8px;
+		background-color: #fff;
+		border-radius: 6px 6px 6px 6px;
+		font-size: 14px;
+	}
+	
+	.record-status {
+	  display: flex;
+	  align-items: center;
+	  margin-left: auto; /* 将状态推到右边 */
+	}
+	
+	.await {
+		color: #FB762B;
+	}
+	
+	.status-icon,
+	.time-icon,
+	.reason-icon{
+		height: 20px;
+		width: 20px;
+	}
+	
+	.record-pass {
+	  margin-left: 8px; 
+	}
 </style>
 
