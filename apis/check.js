@@ -14,7 +14,7 @@ export function ClockIn() {
  * @return 
  */
 export function GetLatestAttendances(params) {
-	return request.post('/api/Attendance/GetLatestAttendances');
+	return request.get('/api/Attendance/GetLatestAttendances');
 }
 
 /**
