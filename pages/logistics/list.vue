@@ -31,7 +31,7 @@
 					</view>
 					<text class="line-clamp" style="
  						margin-bottom: 15rpx;
- 						height: 85rpx;
+ 						height: 81rpx;
  						-webkit-line-clamp: 2;
  						color: #808080;">{{item.productName}}</text>
 					<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
