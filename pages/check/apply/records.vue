@@ -11,27 +11,23 @@
 		</view>
 
     <!-- 补卡记录列表区域 -->
-		<view class="record-list">
-			<block v-for="(record, index) in filteredRecords" :key="index">
-				<view class="record-item">
-					<view class="record-ststus">
-						<image v-if="record.status === '已通过'" src="/static/images/check/已通过 .png" class="status-icon"/>
-						<image v-else-if="record.status === '未通过'" src="/static/images/check/未通过.png" class="status-icon"/>
-						<text v-else class="await">{{ record.status }}</text>
-					</view>
-					<view class="record-date">
-						<image class="time-icon" src="/static/images/check/时间.png" />
-						<text>补卡时间 {{ record.date }} {{ record.time }}</text>
-					</view>
-					<view class="record-reason">
-						<image class="reason-icon" src="/static/images/check/理由.png" />
-						<text>补卡理由 {{ record.reason }}</text>
-					</view>
-					<view class="record-pass">
-						<text>{{ record.passDate }} {{ record.passTime }}</text>
-					</view>
-				</view>
-			</block>
+		<view v-for="record in filteredRecords" :key="record.id" class="record-item">
+			<view class="record-status">
+				<image v-if="record.status === '已通过'" src="/static/images/check/已通过 .png" class="status-icon" />
+				<image v-else-if="record.status === '未通过'" src="/static/images/check/未通过.png" class="status-icon" />
+				<text v-else class="await">{{ record.status }}</text>
+			</view>
+			<view class="record-date">
+				<image class="time-icon" src="/static/images/check/时间.png" />
+				<text>补卡时间：{{ record.date }} {{ record.time }}</text>
+			</view>
+			<view class="record-reason">
+				<image class="reason-icon" src="/static/images/check/理由.png" />
+				<text>补卡理由：{{ record.reason }}</text>
+			</view>
+			<view class="record-pass">
+				<text>{{ record.passDate }} {{ record.passTime }}</text>
+			</view>
 		</view>
 	</view>
 </template>
@@ -87,9 +83,6 @@ export default {
 </script>
 
 <style scoped>
-	.container {
-	}
-
 	.filter-bar {
 		display: flex;
 		align-items: center;
@@ -100,7 +93,7 @@ export default {
 	.filter-button {
 		height: 40px;
 		line-height: 40px;
-		font-size: 12px;
+		font-size: 13px;
 		padding: 0px 16px;
 		background-color: #fff;
 		color: #808080;
@@ -124,14 +117,9 @@ export default {
 		height: 24px;
 	}
 
-	.record-list {
-		margin-top: 14px;
-	}
-
 	.record-item {
-		display: flex;
-		align-items: center;
-		margin-bottom: 3px;
+		margin-top:3px;
+		margin-bottom: 6px;
 		padding: 8px;
 		background-color: #fff;
 		border-radius: 6px 6px 6px 6px;
@@ -139,24 +127,36 @@ export default {
 	}
 	
 	.record-status {
-	  display: flex;
-	  align-items: center;
-	  margin-left: auto; /* 将状态推到右边 */
+		text-align: right;
+	}
+	
+	.record-pass {
+		text-align: right;
+		color: #808080;
 	}
 	
 	.await {
 		color: #FB762B;
 	}
 	
-	.status-icon,
-	.time-icon,
-	.reason-icon{
+	.status-icon {
 		height: 20px;
 		width: 20px;
 	}
 	
-	.record-pass {
-	  margin-left: 8px; 
+	.time-icon,
+	.reason-icon{
+		height: 15px;
+		width: 15px;
+		margin-right: 2px;
+	}
+	
+	.record-date,
+	.record-reason {
+		display: flex;
+		align-items: center;
+		text-align: left;
+		margin-left: 8px; 
 	}
 </style>
 
