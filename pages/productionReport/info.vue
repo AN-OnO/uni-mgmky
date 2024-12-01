@@ -197,11 +197,11 @@
 				// #endif
 			},
 			handleClick(item, isNavigable = false) {
-				isNavigable && this.jumpToConfirm(item.orderItemNo, item.productionTechnologyId)
+				isNavigable && this.jumpToConfirm(item.orderItemNo)
 			},
-			jumpToConfirm(orderItemNo, technologyId) {
+			jumpToConfirm(orderItemNo) {
 				uni.navigateTo({
-					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${technologyId}`,
+					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${this.technologyId}`,
 					animationType: 'pop-in',
 					animationDuration: 300
 				})

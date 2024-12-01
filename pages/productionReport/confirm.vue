@@ -140,18 +140,19 @@
 				})
 			},
 			completeTask(order) {
+				if (this.orderDetail.unCompleteCount >= this.orderDetail.orderCount) {
+					return uni.$uv.toast('待完成数量不能超过订购数量！')
+				}
 				const navigateBack = (success = false) => {
 					success && uni.$Utils.navigateBack()
 				}
-				
 				ScanResult({
 					scanResult: this.orderDetail.orderItemNo,
-					// technologyid: order.productionTechnologyId,
-					checkinType: 0, // 1：切换 2：覆盖 3：新增
-					// employeeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-					// makeQuantity: 0 // 完成件数
+					technologyid: this.orderDetail.productionTechnologyId,
+					// checkinType: 0, // 1：切换 2：覆盖 3：新增
+					// employeeId: "",
+					makeQuantity: this.orderDetail.unCompleteCount // 完成件数
 				}).then(res => {
-					console.log('ScanResult respone', res)
 					const success = res.code === 0
 					let message = success ? '任务已完成！' : (res.message || '任务完成失败！')
 
