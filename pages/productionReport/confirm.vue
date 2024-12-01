@@ -68,7 +68,7 @@
 			<view class="footer-height"></view>
 			<view class="page-footer">
 				<view class="flex-row justify-end padding-sm">
-					<button class="list-button" @click="onConfirm(item)">
+					<button class="list-button" @click="onConfirm()">
 						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
 						<text class="button-text">完成任务</text>
 					</button>
@@ -130,22 +130,22 @@
 			decrement() {
 				this.orderDetail.unCompleteCount--;
 			},
-			onConfirm(order) {
+			onConfirm() {
 				uni.showModal({
 					title: '提示',
 					content: '您是否确认完成任务？',
 					success: ({
 						confirm
-					}) => confirm && this.completeTask(order)
+					}) => confirm && this.completeTask()
 				})
 			},
 			completeTask(order) {
 				const navigateBack = (success = false) => {
 					success && uni.$Utils.navigateBack()
 				}
-
+				
 				ScanResult({
-					scanResult: order.orderItemNo,
+					scanResult: this.orderDetail.orderItemNo,
 					// technologyid: order.productionTechnologyId,
 					checkinType: 0, // 1：切换 2：覆盖 3：新增
 					// employeeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -153,7 +153,7 @@
 				}).then(res => {
 					console.log('ScanResult respone', res)
 					const success = res.code === 0
-					let message = success ? '任务已完成！' : '任务完成失败，请重试！'
+					let message = success ? '任务已完成！' : (res.message || '任务完成失败！')
 
 					uni.showModal({
 						title: '提示',
@@ -189,11 +189,12 @@
 		box-sizing: border-box;
 	}
 
-	.footer-height{
+	.footer-height {
 		height: $footerHeight;
-		padding-bottom:  env(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
 	}
+
 	.page-footer {
 		position: fixed;
 		z-index: 990;
@@ -205,7 +206,7 @@
 		display: flex;
 		align-items: center;
 		justify-content: flex-end;
-		padding-bottom:  env(safe-area-inset-bottom);
+		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
 	}
 
