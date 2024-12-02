@@ -140,7 +140,7 @@
 				})
 			},
 			completeTask(order) {
-				if (this.orderDetail.unCompleteCount >= this.orderDetail.orderCount) {
+				if (this.orderDetail.unCompleteCount > this.orderDetail.orderCount) {
 					return uni.$uv.toast('待完成数量不能超过订购数量！')
 				}
 				const navigateBack = (success = false) => {

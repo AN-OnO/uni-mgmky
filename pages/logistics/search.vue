@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view style="height: calc(var(--status-bar-height) + 44px)"></view>
-		<view style="display: flex; margin: 30rpx;">
+		<view style="display: flex; ">
 			<uv-icon name="arrow-left" size="20" @click="goback"></uv-icon>
 			<uv-search v-model="keywords" placeholder="单号/产品名/客户号" :showAction='false' @search='search'></uv-search>
 		</view>
