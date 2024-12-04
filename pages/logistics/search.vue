@@ -33,7 +33,7 @@
 				</button>
 				<button class="list-button" @click.stop="openModal(item.delivryStatus, item.orderItemNo)">
 					<image
-						:src="item.delivryStatus == 1 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+						:src="item.delivryStatus == 1 && item.deliveryMethod == 3 ? '/static/images/logistics/开始配送.svg': item.delivryStatus == 1 ? '/static/images/logistics/开始取送.svg' :'/static/images/logistics/完成.svg'"
 						class="list-image" mode=""></image><text class="button-text">{{
 								({
 		                          3: {
@@ -230,7 +230,7 @@
 		height: 69rpx;
 		margin-right: 0;
 		margin-left: 15rpx;
-		background: #333333;
+		background: #2FB7DF;
 		border-radius: 191rpx
 	}
 

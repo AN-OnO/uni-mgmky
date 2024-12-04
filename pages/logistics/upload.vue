@@ -142,7 +142,7 @@
 
 	.upload-button {
 		height: 92rpx;
-		background: #333333;
+		background: #2FB7DF;
 		border-radius: 31rpx;
 		margin-top: 61rpx;
 	}

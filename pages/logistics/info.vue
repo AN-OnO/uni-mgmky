@@ -120,7 +120,7 @@
 				</button>
 				<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
 					<image
-						:src="data.status  == 0 ? '/static/images/logistics/开始.svg':'/static/images/logistics/完成.svg'"
+						:src="data.status  == 0 && deliveryMethod == 3 ? '/static/images/logistics/开始配送.svg': data.status  == 0  ? '/static/images/logistics/开始取送.svg':'/static/images/logistics/完成.svg'"
 						style="max-width: 45.8rpx;max-height: 45.8rpx; " mode=""></image>
 					<text class="text-operation">{{({
 								3: {
@@ -353,7 +353,7 @@
 
 	.button-operation {
 		height: 69rpx;
-		background: #333333;
+		background: #2FB7DF;
 		border-radius: 191rpx;
 		margin-right: 0;
 		margin-left: 15rpx;

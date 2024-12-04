@@ -117,3 +117,13 @@ export function GetThingsCapacityStat(params) {
 	return request.post('/api/DashboardStat/GetThingsCapacityStat', params)
 }
 
+/**
+ * 取消配送
+ * @param params 
+ * @return 
+ */
+export function CancelDeliveryByPSP(params) {
+	return request.post('/api/Production/CancelDeliveryByPSP', params)
+}
+
+

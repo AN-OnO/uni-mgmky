@@ -76,7 +76,7 @@
 	// 登录按钮自定义样式
 	const loginBtnStyle = computed(() => {
 		return {
-			background: '#333333',
+			background: '#2FB7DF',
 			color: '#fff',
 			marginTop: '160rpx',
 			borderRadius: '100rpx'
