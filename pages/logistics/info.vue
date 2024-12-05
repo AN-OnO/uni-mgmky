@@ -357,6 +357,9 @@
 		border-radius: 191rpx;
 		margin-right: 0;
 		margin-left: 15rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.white-button {
@@ -374,7 +377,6 @@
 		font-size: 27rpx;
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
-		vertical-align: super;
 	}
 
 	.orderCount {
