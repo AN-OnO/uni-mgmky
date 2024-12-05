@@ -45,7 +45,7 @@
 									<button v-if="deliveryMethod == 3" class="list-button white-button"
 										@click.stop="goNavigation">
 										<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-										<text class="button-text" style="color: #333333;">导航111</text>
+										<text class="button-text" style="color: #333333;">导航</text>
 									</button>
 									<button class="list-button" @click.stop="confirm(item.orderItemNo)">
 										<image
