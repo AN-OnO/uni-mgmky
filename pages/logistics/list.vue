@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<view style="background-color: #333333; padding-bottom: 30rpx;">
+		<view style="background-color: #2FB7DF; padding-bottom: 30rpx;">
 			<view style="display: flex; justify-content: space-around;">
 				<view>
 					<view class="amount">{{amount}}</view>
@@ -16,7 +16,7 @@
 		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between" >
-					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
+					<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab"></uv-tabs>
 					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
 				<uni-swipe-action>
