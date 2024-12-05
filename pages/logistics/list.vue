@@ -15,25 +15,24 @@
 		</view>
 		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
-				<view class="flex-between">
+				<view class="flex-between" style="margin-bottom: 15rpx;">
 					<uv-tabs :list="list" lineColor='#333333' @click="changeTab"></uv-tabs>
 					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
 				<uni-swipe-action>
-					<uni-swipe-action-item v-for="(item, index) in listData" :key="index" :right-options="options" :disabled="deliveryMethod != 3 || searchType != 2"
-						@click="cancelDelivery(item.orderItemNo)">
+					<uni-swipe-action-item v-for="(item, index) in listData" :key="index" :right-options="options"
+						:disabled="deliveryMethod != 3 || searchType != 2" @click="cancelDelivery(item.orderItemNo)" style="margin-bottom: 15rpx;">
 						<view @click="jumpToInfo(item)" class="list-contain">
 							<view class="flex-between">
-								<text style="font-weight: 500;font-size: 34rpx;">{{item.companyName}}</text>
+								<text class="list-companyName">{{item.companyName}}</text>
 								<text
 									:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
 							</view>
 							<view style="display: flex; align-items: center;">
-								<image src="/static/images/logistics/Local (已定位).svg"
-									style=" max-width: 30rpx; max-height: 30rpx;" mode=""></image>
-								<text class="line-clamp">{{item.address}}</text>
+								<image src="/static/images/logistics/Local (已定位).svg" class="local-img" mode=""></image>
+								<text class="line-clamp address-text">{{item.address}}</text>
 							</view>
-							<text class="line-clamp productName" >{{item.productName}}</text>
+							<text class="line-clamp productName">{{item.productName}}</text>
 							<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
 								<button v-if="deliveryMethod == 3" class="list-button white-button"
 									@click.stop="callPhone(item.mobile)">
@@ -101,7 +100,7 @@
 				options: [{
 					text: '撤销',
 					style: {
-						backgroundColor: 'red'
+						backgroundColor: 'red',
 					}
 				}]
 			}
@@ -294,7 +293,6 @@
 	}
 
 	.list-contain {
-		margin-bottom: 15rpx;
 		border-radius: 15rpx;
 		background: #ffffff;
 		align-content: flex-start;
@@ -306,6 +304,13 @@
 		font-size: 27rpx;
 		color: #F6801E;
 		line-height: 38rpx;
+	}
+
+	.list-companyName {
+		font-weight: 500;
+		font-size: 34rpx;
+		color: #000000;
+		line-height: 53rpx;
 	}
 
 	.time {
@@ -320,6 +325,12 @@
 		justify-content: space-between;
 	}
 
+	.local-img {
+		max-width: 30rpx;
+		max-height: 30rpx;
+		margin-right: 8rpx;
+	}
+
 	.line-clamp {
 		display: -webkit-box;
 		overflow: hidden;
@@ -327,11 +338,24 @@
 		-webkit-line-clamp: 1;
 		-webkit-box-orient: vertical;
 	}
+
+	.address-text {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #000000;
+		line-height: 38rpx;
+	}
+
 	.productName {
 		margin-bottom: 15rpx;
 		-webkit-line-clamp: 2;
 		color: #808080;
+		font-weight: 400;
+		font-size: 27rpx;
+		color: #808080;
+		line-height: 38rpx;
 	}
+
 	.list-button {
 		height: 69rpx;
 		margin-right: 0;
