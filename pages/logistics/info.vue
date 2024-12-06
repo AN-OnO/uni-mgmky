@@ -353,7 +353,7 @@
 
 	.button-operation {
 		height: 69rpx;
-		background: #2FB7DF;
+		background: #333333;
 		border-radius: 191rpx;
 		margin-right: 0;
 		margin-left: 15rpx;

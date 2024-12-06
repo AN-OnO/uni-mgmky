@@ -399,18 +399,15 @@
 	.scan-wrap {
 		width: 122rpx;
 		height: 122rpx;
-		background: #333333;
+		background: #2FB7DF;
 		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
 		border-radius: 31rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		position: fixed;
-		/* 固定定位 */
-		right: 20rpx;
-		/* 距离右边的距离 */
-		bottom: 70rpx;
-		/* 距离底部的距离 */
+		position: fixed; 
+		right: 20rpx; 
+		bottom: 70rpx; 
 		z-index: 999
 	}
 
