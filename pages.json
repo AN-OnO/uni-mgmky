@@ -76,10 +76,8 @@
 			"pages": [{
 				"path": "list",
 				"style": {
-					"navigationBarTitleText": "报工",
-					"navigationBarTextStyle": "white",
-					"navigationBarBackgroundColor": "#333",
-					"backgroundColor": "#F0F1F5"
+					"navigationBarTitleText": "",
+					"navigationBarBackgroundColor": "#D5E8FF"
 				}
 			},
 			{
@@ -103,6 +101,14 @@
 				"style": {
 					"navigationBarTitleText": "",
 					"navigationStyle": "custom"
+				}
+			},
+			{
+				"path" : "index",
+				"style" : 
+				{
+					"navigationBarTitleText" : "报工",
+					"navigationBarBackgroundColor": "#D5E8FF"
 				}
 			}]
 		},

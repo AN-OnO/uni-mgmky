@@ -48,7 +48,7 @@
 	}, {
 		icon: '/app/报工.svg',
 		name: '报工',
-		event: '/pages/productionReport/list'
+		event: '/pages/productionReport/index'
 	}, {
 		icon: '/app/配送.svg',
 		name: '配送',
