@@ -123,7 +123,7 @@ export function GetThingsCapacityStat(params) {
  * @return 
  */
 export function CancelDeliveryByPSP(params) {
-	return request.post('/api/Production/CancelDeliveryByPSP', params)
+	return request.post('/api/Delivery/CancelDeliveryByPSP', params)
 }
 
 
