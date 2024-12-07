@@ -59,9 +59,22 @@
 		},
 		methods: {
 			onClick(e) {
-				uni.navigateTo({
-					url: '/pages/productionReport/list'
-				})
+				if (e.title == '批量报工') {
+					// 调用小程序的扫码 API
+					uni.scanCode({
+						success: (res) => {
+							console.log('扫码结果：', res);
+							uni.navigateTo({
+								// 批量报工工艺选择
+								url: ``
+							})
+						}
+					});
+				} else {
+					uni.navigateTo({
+						url: `/pages/productionReport/list?type=${e.title}`
+					})
+				}
 			}
 		},
 		onLoad() {
@@ -69,7 +82,7 @@
 				if (res.code === 0) {
 					this.taskCount = res.data.taskCount
 					this.taskAmount = res.data.taskAmount
-				} 
+				}
 			})
 		}
 	}

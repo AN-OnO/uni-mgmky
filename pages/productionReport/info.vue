@@ -1,25 +1,14 @@
 <template>
 	<view class="page-container">
 		<uv-sticky>
-			<view class="top-nav">
-				<view class="nav-item border-left">
-					<text class="nav-title">{{taskCount}}</text>
-					<text class="nav-label">今日完成(件)</text>
-				</view>
-				<view class="nav-item">
-					<text class="nav-title">{{taskAmount}}</text>
-					<text class="nav-label">今日收益(元)</text>
-				</view>
-			</view>
 			<view class="tabs-wrap">
-				<uv-tabs ref="tabs" :list="tabList" :current="tabIndex" lineColor='#333333'
+				<uv-tabs ref="tabs" :list="tabList" :current="tabIndex" lineColor='#2FB7DF'
 					@click="changeTab"></uv-tabs>
 				<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 			</view>
 		</uv-sticky>
 		<view class="data-list padding-sm">
-			<view class="list-item" v-for="(item,index) in listData" :key="index"
-				@click="handleClick(item,!showButton)">
+			<view class="list-item" v-for="(item,index) in listData" :key="index" @click="jumpToConfirm(item.orderItemNo)">
 				<view class="flex-row justify-between">
 					<text class="order-no">{{item.saleOrderNo}}</text>
 					<text class="checktime">{{item.checkintime}}</text>
@@ -30,12 +19,6 @@
 				</view>
 				<view class="order-info uv-line-2">
 					{{item.productName}}
-				</view>
-				<view v-if="showButton" class="flex-row justify-end margin-top-sm">
-					<button class="list-button" @click.stop="handleClick(item, showButton)">
-						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
-						<text class="button-text">完成任务</text>
-					</button>
 				</view>
 			</view>
 
@@ -64,8 +47,6 @@
 				listData: [], // 订单分页数据
 				loading: true,
 				loadStatus: 'loading', // 订单加载状态
-				taskCount: 0,
-				taskAmount: 0,
 				pageIndex: 1,
 				pageSize: 10,
 				tabList: [{
@@ -87,12 +68,12 @@
 		},
 		onLoad(options) {
 			uni.setNavigationBarTitle({
-				title: options.name
+				title: `订单列表(${options.name})`
 			})
 			this.technologyId = options.technologyId
 		},
 		onShow() {
-			this.init()
+			this.refresh()
 		},
 		onReachBottom() {
 			this.loadMore()
@@ -107,18 +88,6 @@
 			}
 		},
 		methods: {
-			init() {
-				MyCompletedStatForToday().then(res => {
-					if (res.code === 0) {
-						this.taskCount = res.data.taskCount
-						this.taskAmount = res.data.taskAmount
-					} else {
-						console.error('MyCompletedStatForToday api error:', res.message)
-					}
-				})
-
-				this.refresh()
-			},
 			changeTab(e) {
 				this.tabIndex = e.index
 				this.loadStatus = 'loading'
@@ -191,13 +160,10 @@
 					scanType: ['barCode', 'qrCode', 'datamatrix', 'pdf417'],
 					success: (res) => {
 						console.log('扫码结果：', res.result);
-						this.jumpToConfirm(res.result, this.technologyId)
+						this.jumpToConfirm(res.result)
 					}
 				});
 				// #endif
-			},
-			handleClick(item, isNavigable = false) {
-				isNavigable && this.jumpToConfirm(item.orderItemNo)
 			},
 			jumpToConfirm(orderItemNo) {
 				uni.navigateTo({
@@ -212,60 +178,19 @@
 
 <style lang="scss" scoped>
 	.page-container {
-		background-color: #F0F1F5;
+		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
 		min-height: 100%;
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
 	}
 
-
-	.top-nav {
-		display: flex;
-		flex-direction: row;
-		padding-top: 15rpx;
-		padding-bottom: 30rpx;
-		background-color: #333;
-	}
-
 	.tabs-wrap {
-		background-color: #F0F1F5;
+		background: #D5E8FF;
 		padding-right: 30rpx;
 		display: flex;
 		justify-content: space-between;
-		border-bottom: 1px solid #F0F1F5;
 	}
 
-	.nav-item {
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		flex: 1;
-
-		.nav-title {
-			font-size: 46rpx;
-			line-height: 69rpx;
-			color: #fff;
-		}
-
-		.nav-label {
-			font-size: 28rpx;
-			color: rgba(255, 255, 255, 0.6);
-		}
-	}
-
-	.nav-item.border-left {
-		position: relative;
-
-		&::after {
-			content: '';
-			position: absolute;
-			right: 0;
-			height: 76rpx;
-			width: 1px;
-			background-color: rgba(255, 255, 255, 0.1);
-		}
-	}
 
 	.data-list {
 		display: grid;
@@ -281,6 +206,7 @@
 		.order-no {
 			font-weight: bold;
 			font-size: 42rpx;
+			color: #333333;
 			line-height: 61rpx;
 		}
 
@@ -291,14 +217,16 @@
 		}
 
 		.order-company {
-			font-size: 28rpx;
-			line-height: 40rpx;
+			font-weight: 500;
+			font-size: 27rpx;
+			color: #333333;
+			line-height: 38rpx;
 		}
 
 		.order-info {
+			font-size: 27rpx;
 			color: #808080;
-			font-size: 28rpx;
-			line-height: 40rpx;
+			line-height: 38rpx;
 
 		}
 	}
@@ -333,45 +261,23 @@
 		font-size: 34rpx;
 	}
 
-	.list-button {
-		height: 69rpx;
-		margin-right: 0;
-		margin-left: 15rpx;
-		background: #333333;
-		border-radius: 191rpx;
-		display: flex;
-		align-items: center;
-	}
-
-	.list-image {
-		max-width: 45.8rpx;
-		max-height: 45.8rpx;
-	}
-
-	.button-text {
-		font-weight: 500;
-		font-size: 27rpx;
-		color: rgba(255, 255, 255, 0.9);
-		line-height: 42rpx;
-		vertical-align: super;
-	}
-
 	.scan-wrap {
 		width: 122rpx;
 		height: 122rpx;
-		overflow: hidden;
-		background: #333333;
+		background: #2FB7DF;
 		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
 		border-radius: 31rpx;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		position: fixed;
-		/* 固定定位 */
 		right: 20rpx;
-		/* 距离右边的距离 */
 		bottom: 70rpx;
-		/* 距离底部的距离 */
 		z-index: 999
+	}
+
+	.scan-img {
+		max-width: 73rpx;
+		max-height: 73rpx;
 	}
 </style>

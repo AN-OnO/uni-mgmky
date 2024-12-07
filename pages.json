@@ -84,9 +84,7 @@
 				"path": "info",
 				"style": {
 					"navigationBarTitleText": "",
-					"navigationBarTextStyle": "white",
-					"navigationBarBackgroundColor": "#333",
-					"backgroundColor": "#F0F1F5"
+					"navigationBarBackgroundColor": "#D5E8FF"
 				}
 			},
 			{

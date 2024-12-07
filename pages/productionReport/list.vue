@@ -30,13 +30,15 @@
 		data() {
 			return {
 				technologies: [],
-				selectedItem: null,
+				technologyId: '',
 				taskCount: 0,
 				taskAmount: 0,
-				loading: true
+				loading: true,
+				type: '',
 			}
 		},
-		onLoad() {
+		onLoad(options) {
+			this.type = options.type
 			this.init()
 		},
 		methods: {
@@ -51,18 +53,21 @@
 							technologies
 						} = res.data
 						this.technologies = technologies
-					} 
+					}
 				}).finally(() => this.loading = false)
 			},
 			handleSelect(item) {
-				this.selectedItem = item
-			},
-			goDetail(item) {
-				uni.navigateTo({
-					url: `/pages/productionReport/info?name=${item.name}&technologyId=${item.technologyId}`,
-					animationType: 'pop-in',
-					animationDuration: 300
-				})
+				this.technologyId = item.technologyId
+
+				if (this.type == '查看订单') {
+					uni.navigateTo({
+						url: `/pages/productionReport/info?name=${item.name}&technologyId=${this.technologyId}`,
+						animationType: 'pop-in',
+						animationDuration: 300
+					})
+				} else {
+					this.onScanTap()
+				}
 			},
 			onScanTap() {
 				// #ifdef H5
@@ -76,17 +81,32 @@
 				uni.scanCode({
 					success: (res) => {
 						console.log('扫码结果：', res);
-						ScanResult({
-							scanResult: res.result,
-							technologyid: this.selectedItem.technologyId,
-							checkinType: 1 // 入库类型 1：切换 2：覆盖 3：新增
-						}).then(scanRes => {
-							console.log('ScanResult result', scanRes)
-							uni.showToast({
-								title: JSON.stringify(scanRes),
-								duration: 5000
+						if (this.type == '报工') {
+							this.loading = true
+							ScanResult({
+								scanResult: res.result,
+								technologyid: this.technologyId,
+							}).then(scanRes => {
+								console.log('ScanResult result', scanRes)
+								if (scanRes.code == 0) {
+									uni.showToast({
+										title: '报工成功',
+										duration: 3000
+									})
+								} else {
+									uni.showToast({
+										title: scanRes.message,
+										duration: 5000
+									})
+								}
+							}).finally(() => this.loading = false)
+						} else if (this.type == '多人报工') {
+							uni.navigateTo({
+								url: `/pages/productionReport/confirm?orderItemNo=${res.result}&technologyId=${this.technologyId}`,
+								animationType: 'pop-in',
+								animationDuration: 300
 							})
-						})
+						}
 					}
 				});
 				// #endif
@@ -144,7 +164,7 @@
 			top: -55rpx;
 			right: -45rpx;
 			text-align: center;
-			background-color:  #FF6F1E;
+			background-color: #FF6F1E;
 			padding: 3.82rpx 9.54rpx;
 			border-radius: 308rpx;
 			font-size: 23rpx;
