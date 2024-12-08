@@ -1,0 +1,19 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="&#231;&#188;&#150;&#232;&#190;&#145;">
+<g id="Group 1195">
+<path id="Rectangle 333" d="M15.4041 4.87717C15.8885 4.39272 16.674 4.39272 17.1584 4.87717L18.9128 6.63152C19.3973 7.11597 19.3973 7.90141 18.9128 8.38586L9.62713 17.6714C9.39448 17.9041 9.07895 18.0348 8.74995 18.0348L6.75506 18.0348C6.20277 18.0348 5.75506 17.587 5.75506 17.0348L5.75506 15.0399C5.75506 14.7109 5.88575 14.3954 6.1184 14.1627L15.4041 4.87717Z" fill="url(#paint0_linear_4194_10327)"/>
+<path id="Vector 6" d="M12.5566 18.0171L19.9998 18.0171" stroke="url(#paint1_linear_4194_10327)" stroke-width="1.57891" stroke-linecap="round"/>
+<path id="Vector 5" d="M11.8945 5.31567L17.4769 10.8979" stroke="white" stroke-width="1.57891"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4194_10327" x1="18.0356" y1="5.75434" x2="-3.45511" y2="27.2453" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2FB7DF"/>
+<stop offset="1" stop-color="#70CEEA"/>
+</linearGradient>
+<linearGradient id="paint1_linear_4194_10327" x1="16.2782" y1="18.0171" x2="16.2782" y2="19.7671" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2FB7DF"/>
+<stop offset="1" stop-color="#70CEEA"/>
+</linearGradient>
+</defs>
+</svg>

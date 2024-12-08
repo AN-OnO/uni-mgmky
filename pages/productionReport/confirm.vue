@@ -1,60 +1,24 @@
 <template>
 	<view class="page-container">
 		<uv-empty v-if="isEmpty" mode="data" icon="https://cdn.uviewui.com/uview/empty/data.png"></uv-empty>
-		<view v-else-if="!loading" class="order-card padding">
-			<view class="order-card-head">
-				<view class="order-status">
-					<image class="icon-status margin-right-xs" src="/static/images/productionReport/待完成.svg"></image>
-					<text class="text-status">{{orderDetail.uStatusDesc}}</text>
-				</view>
-				<text class="sale-order-no">{{orderDetail.saleOrderNo}}</text>
-				<text class="order-company">{{orderDetail.orderItemNo}} {{orderDetail.companyName}}</text>
-			</view>
-			<view class="order-card-content">
-				<view class="product-wrap">
-					<image class="product-photo" :src="orderDetail.photo"></image>
-					<view class="product-info">
-						<text class="product-name uv-line-3">{{orderDetail.productName}}</text>
-						<text class="product-count">x{{orderDetail.orderCount}}</text>
-					</view>
-				</view>
-				<!--  -->
-				<uv-line margin="30rpx 0"></uv-line>
-				<text class="order-intro-title">订单信息</text>
-				<view class="label-item">
-					<text class="order-label">订单编号：</text>
-					<text class="order-label-info">{{orderDetail.saleOrderNo}}</text>
-					<view class="copy-tag">
-						<text class="copy-text" @click="onCopy(orderDetail.saleOrderNo)">复制</text>
-					</view>
-				</view>
-				<view class="label-item">
-					<text class="order-label">下单时间：</text>
-					<text class="order-label-info">{{orderDetail.checkintime}}</text>
-				</view>
-				<view class="label-item">
-					<text class="order-label">客户名称：</text>
-					<text class="order-label-info">{{orderDetail.companyName}}</text>
-				</view>
-				<view class="label-item">
-					<text class="order-label">订购内容：</text>
-					<text class="order-label-info">{{orderDetail.productName}}</text>
-				</view>
-				<view class="label-item">
-					<text class="order-label">订购数量：</text>
-					<text class="order-label-info">{{orderDetail.orderCount}}</text>
-				</view>
-				<view class="label-item">
-					<text class="order-label">下单备注：</text>
-					<text class="order-label-info">{{orderDetail.remark}}</text>
-				</view>
+		<view v-else-if="!loading" class="padding-sm">
+			<view class="card-ui flex-row align-center padding-tb">
+				<image class="svg-icon large" src="/static/images/productionReport/待完成.svg"></image>
+				<text class="text-title h1">{{orderDetail.productionTechnologyName}}{{orderDetail.uStatusDesc}}</text>
 			</view>
 
-			<view v-if="!isFinished" class="order-num-wrap margin-top">
-				<text class="un-complete-count">待完成数量({{orderDetail.unCompleteCount}})</text>
-				<uv-line margin="30rpx 0"></uv-line>
+
+
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/数量.svg"></image>
+						<text class="text-title h2">填写本次完成数量</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
 				<view class="number-box">
-					<text class="number-box-title">本次完成数量</text>
+					<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
 					<view class="number-counter">
 						<uv-button @click="decrement" :disabled="orderDetail.unCompleteCount === 0"><uv-icon
 								name="minus"></uv-icon></uv-button>
@@ -63,14 +27,95 @@
 					</view>
 				</view>
 			</view>
+
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
+						<text class="text-title h2">上传图片(选填)</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
+				<view class="flex-column align-center padding">
+					<uv-icon name="camera" size="80rpx"></uv-icon>
+					<text class="text-sm text-info">点击上传图片</text>
+				</view>
+			</view>
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
+						<text class="text-title h2">工艺预览</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
+				<view class="cover-list">
+
+				</view>
+			</view>
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/编辑.svg"></image>
+						<text class="text-title h2">制作备注</text>
+						<text class="text-tips text-bold">（下单的时候没有填就不显示）</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
+				<view class="text-sm">
+					{{orderDetail.remark || '备注备注备注'}}
+				</view>
+			</view>
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/基础信息.svg"></image>
+						<text class="text-title h2">订单信息</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
+				<view class="label-item">
+					<text class="order-label">业务类型：</text>
+					<text class="order-label-info">喷墨胶装</text>
+				</view>
+				<view class="label-item">
+					<text class="order-label">订购内容：</text>
+					<text class="order-label-info">{{orderDetail.productName}}</text>
+				</view>
+			</view>
+			<view class="card-ui">
+				<view class="card-ui-head">
+					<view class="flex-row align-center">
+						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
+						<text class="text-title h2">文件预览</text>
+					</view>
+					<uv-icon name="arrow-up"></uv-icon>
+				</view>
+				<view class="preview-wrap">
+					<text class="text-sm text-info">原文件预览(封面)：</text>
+					<view class="cover-list padding-top-sm">
+
+					</view>
+					<uv-line margin="30rpx 0"></uv-line>
+					<text class="text-sm text-info">原文件预览(内页)：</text>
+					<view class="file-wrap padding-top-sm">
+						<image class="svg-icon large" src="/static/images/productionReport/file.svg"></image>
+						<view class="flex-column">
+							<text class="">文件名称.pdf</text>
+							<text class="text-sm text-info">35.15MB</text>
+						</view>
+						<image class="svg-icon" src="/static/images/productionReport/下载.svg"></image>
+					</view>
+				</view>
+			</view>
 		</view>
 		<template v-if="!isFinished&&!isEmpty">
 			<view class="footer-height"></view>
 			<view class="page-footer">
-				<view class="flex-row justify-end padding-sm">
-					<button class="list-button" @click="onConfirm()">
+				<view class="padding-sm">
+					<button type="default" class="list-button" @click="onConfirm()">
 						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
-						<text class="button-text">完成任务</text>
+						<text class="button-text">完成报工</text>
 					</button>
 				</view>
 			</view>
@@ -83,8 +128,12 @@
 <script>
 	import {
 		ScanResult,
+		GetOrderItemAndTrackings,
 		GetTechnologyOrderItemDetail
-	} from '@/apis/production.js'
+	} from '@/apis/production'
+	import {
+		UploadFile
+	} from '@/apis/fileUpload'
 	export default {
 		data() {
 			return {
@@ -111,6 +160,7 @@
 					productionTechnologyId: params.technologyId
 				}).then(res => {
 					if (res.code === 0) {
+						// productionTechnologyName
 						this.orderDetail = res.data
 						this.isFinished = this.orderDetail.uStatus === 1
 						uni.setNavigationBarTitle({
@@ -182,12 +232,28 @@
 <style lang="scss" scoped>
 	$footerHeight: 120rpx;
 	$radius: 15rpx;
-	$shadow: 0rpx 8rpx 46rpx 0rpx #EBEDF5;
+
 
 	.page-container {
 		background-color: #F0F1F5;
 		min-height: 100%;
 		box-sizing: border-box;
+	}
+
+	.card-ui {
+		background-color: #fff;
+		border-radius: $radius;
+		padding: 20rpx;
+
+		&-head {
+			@include flex;
+			justify-content: space-between;
+			padding-bottom: 20rpx;
+		}
+	}
+
+	.card-ui+.card-ui {
+		margin-top: 20rpx;
 	}
 
 	.footer-height {
@@ -204,90 +270,76 @@
 		right: 0;
 		height: $footerHeight;
 		background-color: #fff;
-		display: flex;
-		align-items: center;
-		justify-content: flex-end;
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
+		border: 2rpx solid #F2F3F5;
 	}
 
-	.order-card {
-		box-shadow: $shadow;
+	.svg-icon {
+		width: 45rpx;
+		height: 45rpx;
+		margin-right: 10rpx;
 
-		&-head {
-			background-color: #333;
-			border-radius: $radius $radius 0 0;
-			padding: 30rpx;
-			display: flex;
-			flex-direction: column;
-
-			.order-status {
-				display: flex;
-				align-items: center;
-				line-height: 69rpx;
-			}
-
-			.icon-status {
-				width: 46rpx;
-				height: 46rpx;
-			}
-
-			.text-status {
-				font-size: 46rpx;
-				color: rgba(255, 255, 255, 0.9);
-			}
-
-			.sale-order-no {
-				font-size: 31rpx;
-				color: rgba(255, 255, 255, 0.9);
-				line-height: 46rpx;
-			}
-
-			.order-company {
-				font-size: 27rpx;
-				color: rgba(255, 255, 255, 0.6);
-				line-height: 38rpx;
-			}
-		}
-
-		&-content {
-			background-color: #fff;
-			border-radius: 0 0 $radius $radius ;
-			padding: 30rpx;
-
-			.product-wrap {
-				display: flex;
-			}
-
-			.product-photo {
-				width: 153rpx;
-				height: 153rpx;
-			}
-
-			.product-info {
-				flex: 1;
-				margin-left: 15rpx;
-			}
-
-			.product-name {
-				font-size: 27rpx;
-				color: #333333;
-				line-height: 38rpx;
-			}
-
-			.product-count {
-				font-size: 27rpx;
-				color: #333333;
-				line-height: 42rpx;
-			}
+		&.large {
+			width: 50rpx;
+			height: 50rpx;
 		}
 	}
 
-	.order-intro-title {
-		font-size: 34rpx;
-		font-weight: bold;
-		color: #333333;
-		line-height: 53rpx;
+	.text-title {
+		color: #333;
+		font-weight: 600;
+
+		&.h1 {
+			font-size: 46rpx;
+		}
+
+		&.h2 {
+			font-size: 34rpx;
+		}
+	}
+
+	.text-tips {
+		color: #FF6F1E;
+		font-size: 26rpx;
+	}
+
+	.number-box {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		align-items: center;
+
+		&-title {
+			font-size: 27rpx;
+			color: #333333;
+			line-height: 42rpx;
+		}
+
+		.number-counter {
+			display: grid;
+			grid-template-columns: 1fr 2fr 1fr;
+			grid-auto-rows: 60rpx;
+			column-gap: 10rpx;
+		}
+	}
+
+	.cover-list {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(180rpx, 1fr));
+		gap: 10rpx;
+	}
+
+
+	.preview-wrap {
+		background: #F5F6F8;
+		border-radius: $radius;
+		padding: 30rpx;
+
+		.file-wrap {
+			display: grid;
+			grid-template-columns: auto 1fr auto;
+			align-items: center;
+		}
 	}
 
 	.label-item {
@@ -299,84 +351,34 @@
 
 	.order-label {
 		font-size: 27rpx;
-		color: #333333;
+		color: #808080;
 		margin-right: 20rpx;
 	}
 
 	.order-label-info {
 		flex: 1;
 		font-size: 27rpx;
-		color: #808080;
 		text-align: right;
-	}
-
-	.copy-tag {
-		background: #F5F6F8;
-		border-radius: 100px;
-		width: 92rpx;
-		height: 46rpx;
-		display: flex;
-		justify-content: center;
-		text-align: center;
-		margin-left: 10rpx;
-
-		.copy-text {
-			font-size: 27rpx;
-			color: #808080;
-		}
-	}
-
-	.order-num-wrap {
-		background-color: #fff;
-		box-shadow: $shadow;
-		border-radius: $radius;
-		padding: 30rpx;
-
-		.un-complete-count {
-			font-size: 34rpx;
-			color: #333333;
-			line-height: 42rpx;
-		}
-
-		.number-box {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
-			align-items: center;
-
-			&-title {
-				font-size: 27rpx;
-				color: #333333;
-				line-height: 42rpx;
-			}
-
-			.number-counter {
-				display: grid;
-				grid-template-columns: 1fr 2fr 1fr;
-				column-gap: 10rpx;
-			}
-		}
-
 	}
 
 	/* 此按钮样式可作为公共样式 */
 	.list-button {
-		height: 69rpx;
-		margin-right: 0;
-		margin-left: 15rpx;
-		background: #333333;
-		border-radius: 191rpx;
+		height: 90rpx;
+		background: #2FB7DF;
+		border-radius: 15rpx;
 		display: flex;
 		align-items: center;
+		justify-content: center;
 	}
 
 	.list-image {
-		max-width: 45.8rpx;
-		max-height: 45.8rpx;
+		width: 50rpx;
+		height: 50rpx;
 	}
 
 	.button-text {
 		font-weight: 500;
-		font-size: 27rpx;
+		font-size: 34rpx;
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;

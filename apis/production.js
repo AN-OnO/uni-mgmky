@@ -28,6 +28,16 @@ export function ListTechnologyOrderItems(params) {
 }
 
 /**
+ * 获取某生产单及其报工情况
+ * @param params 
+ * @return 
+ */
+export function GetOrderItemAndTrackings(params) {
+	return request.post('/api/Production/GetOrderItemAndTrackings', params);
+}
+
+
+/**
  * 获取工艺下生产单详情
  * @param params 
  * @return 

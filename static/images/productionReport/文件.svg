@@ -1,0 +1,21 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="&#230;&#150;&#135;&#228;&#187;&#182;">
+<g id="Frame 427320647">
+<g id="Group 427320882">
+<path id="Rectangle 1046" d="M3.11133 5.77803C3.11133 4.79618 3.90727 4.00024 4.88911 4.00024H8.32598C8.88991 4.00024 9.4204 4.2678 9.75561 4.7213L10.5786 5.83467C10.9138 6.28816 11.4443 6.55572 12.0082 6.55572H19.1118C20.0936 6.55572 20.8896 7.35166 20.8896 8.3335V18.2221C20.8896 19.2039 20.0936 19.9999 19.1118 19.9999H4.88911C3.90727 19.9999 3.11133 19.2039 3.11133 18.2221V5.77803Z" fill="url(#paint0_linear_4194_42030)"/>
+</g>
+<g id="Group 1857">
+<g id="Group 427320883">
+<rect id="Rectangle 486" width="7" height="1.4" rx="0.7" transform="matrix(-1 0 0 1 15.6113 12.5)" fill="#EEF0F7"/>
+<rect id="Rectangle 487" width="7" height="1.4" rx="0.7" transform="matrix(0 -1 -1 0 12.8105 16.5)" fill="#EEF0F7"/>
+</g>
+</g>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4194_42030" x1="12.0005" y1="4.00024" x2="12.0005" y2="31.9996" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2FB7DF"/>
+<stop offset="1" stop-color="#70CEEA"/>
+</linearGradient>
+</defs>
+</svg>

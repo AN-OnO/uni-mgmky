@@ -1,0 +1,14 @@
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="&#230;&#149;&#176;&#233;&#135;&#143;">
+<g id="Group 427320628">
+<path id="Union" fill-rule="evenodd" clip-rule="evenodd" d="M6 5C4.89543 5 4 5.89543 4 7V15C4 16.1046 4.89543 17 6 17H10.7083L11.6536 18.6373C11.8075 18.904 12.1924 18.904 12.3464 18.6373L13.2917 17H18C19.1046 17 20 16.1046 20 15V7C20 5.89543 19.1046 5 18 5H6Z" fill="url(#paint0_linear_4194_17022)"/>
+<path id="Vector 126" d="M10 13.3889V8.5L14 13.3889V8.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_4194_17022" x1="12" y1="5" x2="12" y2="29.2153" gradientUnits="userSpaceOnUse">
+<stop stop-color="#2FB7DF"/>
+<stop offset="1" stop-color="#70CEEA"/>
+</linearGradient>
+</defs>
+</svg>
