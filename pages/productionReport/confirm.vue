@@ -6,108 +6,91 @@
 				<image class="svg-icon large" src="/static/images/productionReport/待完成.svg"></image>
 				<text class="text-title h1">{{orderDetail.productionTechnologyName}}{{orderDetail.uStatusDesc}}</text>
 			</view>
-
-
-
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/数量.svg"></image>
-						<text class="text-title h2">填写本次完成数量</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="number-box">
-					<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
-					<view class="number-counter">
-						<uv-button @click="decrement" :disabled="orderDetail.unCompleteCount === 0"><uv-icon
-								name="minus"></uv-icon></uv-button>
-						<uv-input type="number" v-model="orderDetail.unCompleteCount"></uv-input>
-						<uv-button @click="increment"><uv-icon name="plus"></uv-icon></uv-button>
-					</view>
-				</view>
-			</view>
-
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
-						<text class="text-title h2">上传图片(选填)</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="flex-column align-center padding">
-					<uv-icon name="camera" size="80rpx"></uv-icon>
-					<text class="text-sm text-info">点击上传图片</text>
-				</view>
-			</view>
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
-						<text class="text-title h2">工艺预览</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="cover-list">
-
-				</view>
-			</view>
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/编辑.svg"></image>
-						<text class="text-title h2">制作备注</text>
-						<text class="text-tips text-bold">（下单的时候没有填就不显示）</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="text-sm">
-					{{orderDetail.remark || '备注备注备注'}}
-				</view>
-			</view>
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/基础信息.svg"></image>
-						<text class="text-title h2">订单信息</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="label-item">
-					<text class="order-label">业务类型：</text>
-					<text class="order-label-info">喷墨胶装</text>
-				</view>
-				<view class="label-item">
-					<text class="order-label">订购内容：</text>
-					<text class="order-label-info">{{orderDetail.productName}}</text>
-				</view>
-			</view>
-			<view class="card-ui">
-				<view class="card-ui-head">
-					<view class="flex-row align-center">
-						<image class="svg-icon" src="/static/images/productionReport/文件.svg"></image>
-						<text class="text-title h2">文件预览</text>
-					</view>
-					<uv-icon name="arrow-up"></uv-icon>
-				</view>
-				<view class="preview-wrap">
-					<text class="text-sm text-info">原文件预览(封面)：</text>
-					<view class="cover-list padding-top-sm">
-
-					</view>
-					<uv-line margin="30rpx 0"></uv-line>
-					<text class="text-sm text-info">原文件预览(内页)：</text>
-					<view class="file-wrap padding-top-sm">
-						<image class="svg-icon large" src="/static/images/productionReport/file.svg"></image>
-						<view class="flex-column">
-							<text class="">文件名称.pdf</text>
-							<text class="text-sm text-info">35.15MB</text>
+			<block v-for="item in detailCardList" :key="item.type">
+				<view class="card-ui">
+					<view class="card-ui-head">
+						<view class="flex-row align-center">
+							<image class="svg-icon" :src="item.icon"></image>
+							<text class="text-title h2">{{item.label}}</text>
+							<text v-if="item.remark" class="text-tips text-bold">{{item.remark}}</text>
 						</view>
-						<image class="svg-icon" src="/static/images/productionReport/下载.svg"></image>
+						<uv-icon @click="item.display = !item.display"
+							:name="item.display?'arrow-up':'arrow-down'"></uv-icon>
 					</view>
+					<template v-if="item.display && item.type==='orderCount'">
+						<view class="number-box">
+							<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
+							<view class="number-counter">
+								<uv-button @click="decrement" :disabled="orderDetail.unCompleteCount === 0"><uv-icon
+										name="minus"></uv-icon></uv-button>
+								<uv-input type="number" v-model="orderDetail.unCompleteCount"></uv-input>
+								<uv-button @click="increment"><uv-icon name="plus"></uv-icon></uv-button>
+							</view>
+						</view>
+					</template>
+					<template v-if="item.display && item.type==='upload'">
+						<view class="flex-column align-center padding" @click="onUploadFile">
+							<uv-icon name="camera" size="80rpx"></uv-icon>
+							<text class="text-sm text-info">点击上传图片</text>
+						</view>
+					</template>
+					<template v-if="item.display && item.type==='preview'">
+						<view class="cover-list">
+
+						</view>
+					</template>
+					<template v-if="item.display && item.type==='remark'">
+						<view class="svg-offset text-sm">
+							{{orderDetail.remark}}
+						</view>
+					</template>
+					<template v-if="item.display && item.type==='orderInfo'">
+						<view class="order-info-wrap">
+							<view class="order-item">
+								<text class="order-label">生成信息 ：</text>
+								<text class="order-label-info">{{orderDetail.productName}}</text>
+							</view>
+							<template v-if="showMore">
+								<view class="order-item">
+									<text class="order-label">订单号 ：</text>
+									<text class="order-label-info">{{orderDetail.saleOrderNo}}</text>
+								</view>
+								<view class="order-item">
+									<text class="order-label">生产单号 ：</text>
+									<text class="order-label-info">{{orderDetail.orderItemNo}}</text>
+								</view>
+								<view class="order-item">
+									<text class="order-label">下单信息 ：</text>
+									<text class="order-label-info">{{orderDetail.checkintime}}</text>
+								</view>
+							</template>
+							<view class="flex-row justify-end">
+								<uv-icon @click="showMore = !showMore" :name="showMore?'arrow-up':'arrow-down'"
+									:label="showMore?'收起':'展开'" label-size="27rpx" label-pos="left" color="#808080"
+									label-color="#808080"></uv-icon>
+							</view>
+						</view>
+					</template>
+					<template v-if="item.display && item.type==='previewFiles'">
+						<view class="preview-wrap">
+							<text class="text-sm text-info">原文件预览(封面)：</text>
+							<view class="cover-list padding-top-sm">
+
+							</view>
+							<uv-line margin="30rpx 0"></uv-line>
+							<text class="text-sm text-info">原文件预览(内页)：</text>
+							<view class="file-wrap padding-top-sm">
+								<image class="svg-icon large" src="/static/images/productionReport/file.svg"></image>
+								<view class="flex-column">
+									<text class="">文件名称.pdf</text>
+									<text class="text-sm text-info">35.15MB</text>
+								</view>
+								<image class="svg-icon" src="/static/images/productionReport/下载.svg"></image>
+							</view>
+						</view>
+					</template>
 				</view>
-			</view>
+			</block>
 		</view>
 		<template v-if="!isFinished&&!isEmpty">
 			<view class="footer-height"></view>
@@ -132,15 +115,54 @@
 		GetTechnologyOrderItemDetail
 	} from '@/apis/production'
 	import {
-		UploadFile
-	} from '@/apis/fileUpload'
+		baseURL
+	} from '@/common/config'
+
 	export default {
 		data() {
 			return {
 				orderDetail: null,
 				isEmpty: false,
 				loading: true,
-				isFinished: false
+				isFinished: false,
+				detailCardList: [{
+					label: '填写本次完成数量',
+					icon: '/static/images/productionReport/数量.svg',
+					remark: '',
+					type: 'orderCount',
+					display: true
+				}, {
+					label: '上传图片(选填)',
+					icon: '/static/images/productionReport/文件.svg',
+					remark: '',
+					type: 'upload',
+					display: true
+				}, {
+					label: '工艺预览',
+					icon: '/static/images/productionReport/文件.svg',
+					remark: '',
+					type: 'preview',
+					display: true
+				}, {
+					label: '制作备注',
+					icon: '/static/images/productionReport/编辑.svg',
+					remark: '(下单的时候没有填就不显示)',
+					type: 'remark',
+					display: true
+				}, {
+					label: '订单信息',
+					icon: '/static/images/productionReport/基础信息.svg',
+					remark: '',
+					type: 'orderInfo',
+					display: true
+				}, {
+					label: '文件预览',
+					icon: '/static/images/productionReport/文件.svg',
+					remark: '',
+					type: 'previewFiles',
+					display: true
+				}],
+				showMore: false
 			}
 		},
 		onLoad(options) {
@@ -160,12 +182,8 @@
 					productionTechnologyId: params.technologyId
 				}).then(res => {
 					if (res.code === 0) {
-						// productionTechnologyName
 						this.orderDetail = res.data
 						this.isFinished = this.orderDetail.uStatus === 1
-						uni.setNavigationBarTitle({
-							title: `订单详情(${this.orderDetail.productionTechnologyName})`
-						})
 					} else {
 						uni.$uv.toast('订单详情加载失败')
 					}
@@ -179,6 +197,26 @@
 			},
 			decrement() {
 				this.orderDetail.unCompleteCount--;
+			},
+			onUploadFile() {
+				uni.chooseMedia({
+					count: 1,
+					mediaType: ['image'],
+					sourceType: ['album', 'camera'],
+					camera: 'back',
+					success(res) {
+						const tempFilePaths = res.tempFiles
+						uni.uploadFile({
+							url: baseURL + '/api/FileUpload/UploadFile',
+							filePath: tempFilePaths[0].tempFilePath,
+							name: 'file',
+							success: (uploadFileRes) => {
+								console.log(uploadFileRes.data);
+								// {"code":0,"message":"请求成功","data":[{"originalFileName":"0WLdKe4vBg3L84ca42e2ec1e7f2145a19bd2e6468607.png","savedFileName":"98a6bb06-63d4-4528-86f4-f942cc31294c.png","filePath":"/uploads/98a6bb06-63d4-4528-86f4-f942cc31294c.png","fileSize":3144,"extension":".png"}]}
+							}
+						});
+					}
+				})
 			},
 			onConfirm() {
 				uni.showModal({
@@ -233,7 +271,6 @@
 	$footerHeight: 120rpx;
 	$radius: 15rpx;
 
-
 	.page-container {
 		background-color: #F0F1F5;
 		min-height: 100%;
@@ -249,6 +286,12 @@
 			@include flex;
 			justify-content: space-between;
 			padding-bottom: 20rpx;
+		}
+
+		.hidden {
+			height: 0;
+			overflow: hidden;
+			transition: height 10s ease;
 		}
 	}
 
@@ -284,6 +327,10 @@
 			width: 50rpx;
 			height: 50rpx;
 		}
+	}
+
+	.svg-offset {
+		padding-left: 55rpx;
 	}
 
 	.text-title {
@@ -329,11 +376,11 @@
 		gap: 10rpx;
 	}
 
-
 	.preview-wrap {
 		background: #F5F6F8;
 		border-radius: $radius;
 		padding: 30rpx;
+		@extend .svg-offset;
 
 		.file-wrap {
 			display: grid;
@@ -342,23 +389,27 @@
 		}
 	}
 
-	.label-item {
-		display: flex;
-		align-items: flex-start;
-		margin: 20rpx 0;
-		line-height: 46rpx;
-	}
+	.order-info-wrap {
+		@extend .svg-offset;
 
-	.order-label {
-		font-size: 27rpx;
-		color: #808080;
-		margin-right: 20rpx;
-	}
+		.order-item {
+			display: flex;
+			align-items: flex-start;
+			margin: 15rpx 0;
+			line-height: 46rpx;
+		}
 
-	.order-label-info {
-		flex: 1;
-		font-size: 27rpx;
-		text-align: right;
+		.order-label {
+			font-size: 27rpx;
+			color: #808080;
+			margin-right: 20rpx;
+		}
+
+		.order-label-info {
+			flex: 1;
+			font-size: 27rpx;
+			text-align: right;
+		}
 	}
 
 	/* 此按钮样式可作为公共样式 */
