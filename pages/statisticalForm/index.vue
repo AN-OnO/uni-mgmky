@@ -69,40 +69,37 @@
 					:list="['下单人', '归属人', '设计人']" :current="currentPerson" @change="changePerson"></uv-subsection>
 			</view>
 			<view style="padding: 0rpx 30rpx; margin-bottom: 61rpx;">
-				<uni-table>
-					<!-- 表头行 -->
-					<uni-tr style="background: #FAFAFA;">
-						<uni-th align="left">{{currentPersonName}}</uni-th>
-						<uni-th align="right"><text class="quantity">应收</text></uni-th>
-						<uni-th align="right"><text class="quantity">已收</text></uni-th>
-						<uni-th align="right"><text class="amount">未收</text></uni-th>
-					</uni-tr>
-					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in personData" :key="index">
-						<uni-td>
-							<uni-tooltip placement="right">
-								<text class="index-text line-clamp-name">{{item.employeeName}}</text>
-								<template v-slot:content>
-									<view style="width: 200rpx;">
-										{{item.employeeName}}
-									</view>
-								</template>
-							</uni-tooltip>
-						</uni-td>
-						<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
-						<uni-td align="right">{{formatNumber(item.orderPaiedAmt)}}</uni-td>
-						<uni-td align="right">{{formatNumber(item.orderUnpaiedAmt)}}</uni-td>
-					</uni-tr>
-					<uni-tr style="background: #FAFAFA;">
-						<uni-td><text class="total-text">合计</text></uni-td>
-						<uni-td align="right"><text
-								class="total-text">{{rankTotal(personData, 'orderAmountStat')}}</text></uni-td>
-						<uni-td align="right"><text
-								class="total-text">{{rankTotal(personData, 'orderPaiedAmt')}}</text></uni-td>
-						<uni-td align="right"><text
-								class="total-text">{{rankTotal(personData, 'orderUnpaiedAmt')}}</text></uni-td>
-					</uni-tr>
-				</uni-table>
+				<scroll-view class="table" :show-scrollbar="true" :scroll-x="true">
+					<uni-table>
+						<!-- 表头行 -->
+						<uni-tr style=" background: #FAFAFA;">
+							<uni-th align="left">{{currentPersonName}}</uni-th>
+							<uni-th align="right"><text class="quantity">应收</text></uni-th>
+							<uni-th align="right"><text class="quantity">已收</text></uni-th>
+							<uni-th align="right"><text class="amount">未收</text></uni-th>
+						</uni-tr>
+						<!-- 表格数据行 -->
+						<uni-tr v-for="(item, index) in personData" :key="index">
+							<uni-td>
+								<view>
+									{{item.employeeName}}
+								</view>
+							</uni-td>
+							<uni-td align="right">{{formatNumber(item.orderAmountStat)}}</uni-td>
+							<uni-td align="right">{{formatNumber(item.orderPaiedAmt)}}</uni-td>
+							<uni-td align="right">{{formatNumber(item.orderUnpaiedAmt)}}</uni-td>
+						</uni-tr>
+						<uni-tr style="background: #FAFAFA;">
+							<uni-td><text class="total-text">合计</text></uni-td>
+							<uni-td align="right"><text
+									class="total-text">{{rankTotal(personData, 'orderAmountStat')}}</text></uni-td>
+							<uni-td align="right"><text
+									class="total-text">{{rankTotal(personData, 'orderPaiedAmt')}}</text></uni-td>
+							<uni-td align="right"><text
+									class="total-text">{{rankTotal(personData, 'orderUnpaiedAmt')}}</text></uni-td>
+						</uni-tr>
+					</uni-table>
+				</scroll-view>
 			</view>
 			<view class="bottom-line"></view>
 		</view>
@@ -566,17 +563,23 @@
 					},
 					legend: {
 						orient: 'horizontal',
-						width: '90%',
+						width: '100%',
 						selectedMode: false,
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
-						itemGap: 8, // 修改间距
 						textStyle: {
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
+							rich: {
+								a: {
+									width: 110,
+									backgroundColor: "transparent", // 一定要设置，不然不生效
+								},
+							},
 						},
-						top: '65%',
+						top: '61%',
+						left: '3%',
 						formatter: function(name) {
-							return `${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(0)}%`;
+							return `{a|${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(0)}%}`;
 						}
 					},
 					series: [{
@@ -606,15 +609,24 @@
 					legend: {
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
-						itemGap: 8, // 修改间距
+						left: '0%',
 						textStyle: {
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
+							rich: {
+								a: {
+									width: 60,
+									backgroundColor: "transparent", // 一定要设置，不然不生效
+								},
+							},
+						},
+						formatter: function(name) {
+							return `{a|${name}}`
 						},
 						selectedMode: false,
 					},
 					grid: {
-						top: '25%', // 顶部距离
-						left: '17%'
+						top: '30%', // 顶部距离
+						left: '0%'
 					},
 					xAxis: {
 						type: 'category',
@@ -636,7 +648,8 @@
 						name: key,
 						type: 'line',
 						data: yCategory[key],
-						showSymbol: false // 显示节点
+						showSymbol: false, // 显示节点
+
 					}))
 				};
 				chart.setOption(option);
@@ -904,5 +917,24 @@
 		max-width: 30.53rpx;
 		max-height: 30.53rpx;
 		margin: auto;
+	}
+
+	.table {
+		& ::-webkit-scrollbar {
+			width: 4rpx !important;
+			height: 8rpx !important;
+			background-color: #f5f5f5 !important;
+			border-top: 2rpx solid #fff;
+			display: block;
+		}
+
+		& ::-webkit-scrollbar-thumb {
+			background: rgba(20, 20, 20, 0.4) !important;
+			border-radius: 6rpx !important;
+		}
+
+		& ::-webkit-scrollbar-track {
+			background-color: #d9e5e5 !important;
+		}
 	}
 </style>

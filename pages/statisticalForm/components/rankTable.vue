@@ -20,15 +20,11 @@
 							class='medal-img'></image>
 						<text class="index-text" v-else>{{index + 1}}</text>
 					</uni-td>
-					<uni-td><uni-tooltip placement="right">
-							<text
-								class="line-clamp-name">{{item.productCategoryName || item.customerName || item.employeeName}}</text>
-							<template v-slot:content>
-								<view style="width: 200rpx;">
-									{{item.productCategoryName || item.customerName || item.employeeName}}
-								</view>
-							</template>
-						</uni-tooltip></uni-td>
+					<uni-td>
+						<view style="width: 200rpx;">
+							{{item.productCategoryName || item.customerName || item.employeeName}}
+						</view>
+					</uni-td>
 					<uni-td align="right">{{item.orderCountStat}}</uni-td>
 					<uni-td align="right">{{item.orderAmountStat}}</uni-td>
 				</uni-tr>
