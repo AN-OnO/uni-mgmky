@@ -3,7 +3,9 @@
 		<uv-empty v-if="isEmpty" mode="data" icon="https://cdn.uviewui.com/uview/empty/data.png"></uv-empty>
 		<view v-else-if="!loading" class="padding-sm">
 			<view class="card-ui flex-row align-center padding-tb">
-				<image class="svg-icon large" src="/static/images/productionReport/待完成.svg"></image>
+				<image class="svg-icon large"
+					:src="isFinished?'/static/images/productionReport/已完成.svg':'/static/images/productionReport/待完成.svg'">
+				</image>
 				<text class="text-title h1">{{orderDetail.productionTechnologyName}}{{orderDetail.uStatusDesc}}</text>
 			</view>
 			<block v-for="item in detailCardList" :key="item.type">
@@ -36,7 +38,8 @@
 					</template>
 					<template v-if="item.display && item.type==='preview'">
 						<view class="cover-list">
-
+							<image class="image-cover" v-for="(item,index) in orderDetail.sourcePreviewUrls"
+								:key="index" :src="item.imageUrl"></image>
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='remark'">
@@ -72,7 +75,16 @@
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='previewFiles'">
-						<view class="preview-wrap">
+						<view class="preview-wrap" v-for="(item,index) in orderDetail.sourceFileUrls" :key="index">
+							<text class="text-sm text-info">原文件预览：</text>
+							<view class="file-wrap padding-top-sm">
+								<image class="svg-icon" src="/static/images/productionReport/file.svg"></image>
+								<text class="text-sm">{{item.fileName}}</text>
+								<image class="svg-icon" src="../../static/images/productionReport/下载.svg"
+									@click="downloadFile(item.imageUrl)"></image>
+							</view>
+						</view>
+						<!-- <view class="preview-wrap">
 							<text class="text-sm text-info">原文件预览(封面)：</text>
 							<view class="cover-list padding-top-sm">
 
@@ -82,12 +94,12 @@
 							<view class="file-wrap padding-top-sm">
 								<image class="svg-icon large" src="/static/images/productionReport/file.svg"></image>
 								<view class="flex-column">
-									<text class="">文件名称.pdf</text>
+									<text class="text-sm">文件名称.pdf</text>
 									<text class="text-sm text-info">35.15MB</text>
 								</view>
 								<image class="svg-icon" src="/static/images/productionReport/下载.svg"></image>
 							</view>
-						</view>
+						</view> -->
 					</template>
 				</view>
 			</block>
@@ -125,6 +137,7 @@
 				isEmpty: false,
 				loading: true,
 				isFinished: false,
+				attachmentInfos: [], // 附件
 				detailCardList: [{
 					label: '填写本次完成数量',
 					icon: '/static/images/productionReport/数量.svg',
@@ -198,6 +211,7 @@
 			decrement() {
 				this.orderDetail.unCompleteCount--;
 			},
+			// 上传图片
 			onUploadFile() {
 				uni.chooseMedia({
 					count: 1,
@@ -212,12 +226,50 @@
 							name: 'file',
 							success: (uploadFileRes) => {
 								console.log(uploadFileRes.data);
+								const {
+									code,
+									data,
+									message
+								} = uploadFileRes.data
+								if (code === 0) {
+
+								} else {
+									uni.$uv.toast(message)
+								}
 								// {"code":0,"message":"请求成功","data":[{"originalFileName":"0WLdKe4vBg3L84ca42e2ec1e7f2145a19bd2e6468607.png","savedFileName":"98a6bb06-63d4-4528-86f4-f942cc31294c.png","filePath":"/uploads/98a6bb06-63d4-4528-86f4-f942cc31294c.png","fileSize":3144,"extension":".png"}]}
 							}
 						});
 					}
 				})
 			},
+			// 移除上传图片
+			removeFile() {
+
+			},
+			downloadFile(fileUrl) {
+				const downloadTask = uni.downloadFile({
+					url: fileUrl,
+					success: (res) => {
+						console.log('下载结果', res);
+						if (res.statusCode === 200) {
+							uni.$uv.toast('下载成功')
+						} else {
+							uni.$uv.toast('下载失败')
+						}
+					},
+					fail: (err) => {
+						console.error('下载失败', err);
+					}
+				});
+
+				downloadTask.onProgressUpdate((res) => {
+					console.log('下载进度' + res.progress);
+					console.log('已经下载的数据长度' + res.totalBytesWritten);
+					console.log('预期需要下载的数据总长度' + res.totalBytesExpectedToWrite);
+				});
+
+			},
+			// 完成报工
 			onConfirm() {
 				uni.showModal({
 					title: '提示',
@@ -374,6 +426,11 @@
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(180rpx, 1fr));
 		gap: 10rpx;
+
+		.image-cover {
+			width: 180rpx;
+			height: 180rpx;
+		}
 	}
 
 	.preview-wrap {
@@ -387,6 +444,10 @@
 			grid-template-columns: auto 1fr auto;
 			align-items: center;
 		}
+	}
+
+	.preview-wrap+.preview-wrap {
+		margin-top: 20rpx;
 	}
 
 	.order-info-wrap {
