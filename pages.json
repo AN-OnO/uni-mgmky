@@ -67,6 +67,12 @@
 			{
 				"navigationBarTitleText" : "补卡记录"
 			}
+		},
+		{
+			"path": "pages/check/attendance",
+			"style": {
+				"navigationBarTitleText": "考勤记录"
+			}
 		}
 	],
 	"subPackages": [{
