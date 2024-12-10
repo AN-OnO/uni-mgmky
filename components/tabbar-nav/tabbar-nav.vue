@@ -29,6 +29,25 @@
 
 	const jump = (item, index) => {
 		if (current.value !== item.page) {
+			if (index == 1) {
+				const isLogin = uni.$Utils.getStorage('token')
+				if (!isLogin) {					
+					uni.showModal({
+						title: '提示',
+						content: '此功能需要登录后才能体验',
+						success(res) {
+							res.confirm && uni.navigateTo({
+								url: '/pages/index/login',
+								animationType: 'pop-in',
+								animationDuration: 300
+							})
+						},
+					})
+					
+					return
+				}
+			}
+			
 			current.value = item.page
 			uni.$Utils.setStorage('tabbar', item.page)
 			emits('change', index)

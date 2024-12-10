@@ -1,7 +1,7 @@
 <template>
 	<view class="page-container">
 		<view class="list-title">
-			请选择报工工艺
+			请选择工艺
 		</view>
 		<view class="data-list padding">
 			<view v-for="(item,index) in technologies" :key="index" class="data-contain">

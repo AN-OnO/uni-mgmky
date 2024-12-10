@@ -28,7 +28,7 @@ import config from './libs/config/config.js'
 // 平台
 import platform from './libs/function/platform'
 
-export const $uv = {
+const $uv = {
 	route,
 	config,
 	test,
@@ -45,7 +45,6 @@ export const $uv = {
 	mixin,
 	mpMixin
 }
-
 uni.$uv = $uv;
 const install = (Vue,options={}) => {
 		// #ifndef APP-NVUE
