@@ -3,7 +3,7 @@
 		<uv-navbar title="个人中心" bgColor="#D5F7FF" leftIcon=""></uv-navbar>
 		<view class="user-card">
 			<view class="user-info">
-				<image class="user-avatar" :src="userData?.head_image || '/static/images/tabbar/avatar.svg'"></image>
+				<image class="user-avatar" :src="userData?.head_image || '/static/images/tabbar/avatar.png'"></image>
 				<image src="/static/images/tabbar/edit.svg" class='editAvatar' @click="editAvatar"></image>
 				<view class="user-info-box">
 					<text class="text-h2">{{userData?.accountNo|| '匿名用户'}}</text>
@@ -58,7 +58,9 @@
 		console.log('编辑头像')
 	}
 	const goEarning = () => {
-		console.log('我的收益')
+		uni.navigateTo({
+			url: '/pages/tabbar/earning'
+		})
 	}
 	const exit = () => {
 		uni.$Utils.removeAllStorage()
@@ -101,7 +103,7 @@
 	.user-info {
 		display: flex;
 		align-items: center;
-		padding: 30rpx 0;
+		padding: 50rpx 0 22rpx;
 		position: relative;
 
 		.user-avatar {
@@ -151,7 +153,7 @@
 		.arrow-contain {
 			position: absolute;
 			right: 3%;
-			top: 5%;
+			top: 3%;
 			display: flex;
 			align-items: center;
 

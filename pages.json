@@ -67,6 +67,14 @@
 			{
 				"navigationBarTitleText" : "补卡记录"
 			}
+		},
+		{
+			"path" : "pages/tabbar/earning",
+			"style" : 
+			{
+				"navigationBarTitleText" : "我的收益",
+				"navigationBarBackgroundColor": "#D5E8FF"
+			}
 		}
 	],
 	"subPackages": [{

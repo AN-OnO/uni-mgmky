@@ -307,14 +307,12 @@
 				this.updateData(date[0], date[1])
 			},
 			confirm(e) {
-				const year = dayjs(e.value).year();
-
 				if (e.mode == 'year') {
+					const year = dayjs(e.value).year();
 					this.modeTitle = year
 					this.updateData(`${year}-01-01`, `${year}-12-31`)
 				} else {
-					const month = dayjs(e.value).month() + 1;
-					this.modeTitle = `${year}/${month < 10 ? '0' + month : month}`
+					this.modeTitle = dayjs(e.value).format('YYYY/MM')
 					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
 						.format('YYYY-MM-DD'))
 				}
