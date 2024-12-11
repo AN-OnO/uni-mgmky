@@ -129,7 +129,7 @@
 			},
 			goToPunchRecord() {
 				uni.navigateTo({
-					url: '/pages/check/list',
+					url: '/pages/check/attendance',
 				});
 			},
 			makeUpCard() {

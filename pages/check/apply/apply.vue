@@ -68,7 +68,10 @@
 
 				try {
 					// 调用API接口提交补卡申请
-					await Mend(fullDateTime, this.reason);
+					await Mend({
+						mendTime:fullDateTime,
+						reason:this.reason,
+					});
 					// 提交成功后提示
 					uni.showToast({
 						title: '提交成功',

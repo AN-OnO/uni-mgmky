@@ -21,14 +21,14 @@ export function GetLatestAttendances(params) {
  * 补卡
  * @return 
  */
-export function Mend() {
-	return request.post('/api/Attendance/Mend');
+export function Mend(params) {
+	return request.post('/api/Attendance/Mend',params);
 }
 
 /**
  * 查询考勤记录
  * @return 
  */
-export function GetAttendanceRecords() {
-	return request.post('/api/Attendance/GetAttendanceRecords');
+export function GetAttendanceRecords(params) {
+	return request.post('/api/Attendance/GetAttendanceRecords',params);
 }

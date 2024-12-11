@@ -723,7 +723,7 @@
 	}
 </script>
 
-<style>
+<style lang="scss">
 	.banner-img {
 		position: absolute;
 		top: -150rpx;

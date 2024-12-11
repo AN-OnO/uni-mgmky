@@ -1,5 +1,4 @@
 import { hex_md5 } from '@/utils/md5.js'
-import { $uv } from '@/uni_modules/uv-ui-tools/index.js'
 import type { ModalParams, CallbackFunction } from "types/utils";
 // 工具类
 class Utils {
@@ -75,12 +74,12 @@ class Utils {
 		return hex_md5(value)
 	}
 	static getUuid() : string {
-		return $uv.guid()
+		return uni.$uv.guid()
 	}
 	static getSessionId() : string {
 		let sessionId = uni.getStorageSync('sessionId')
 		if (!sessionId) {
-			sessionId = $uv.guid()
+			sessionId = uni.$uv.guid()
 			uni.setStorageSync('sessionId', sessionId)
 		}
 		return sessionId
