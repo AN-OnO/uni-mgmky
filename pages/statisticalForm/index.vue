@@ -2,7 +2,7 @@
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
 			<image v-if="showBanner" :src="$IMG_URL+'/statisticalForm/banner.svg'" mode="" class="banner-img"></image>
-			<view class="flex-between" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
+			<view class="flex-between padding-lr" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
 					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
@@ -45,7 +45,7 @@
 		</view>
 		<view>
 			<view class="padding-30">
-				<text class="section-title">品类变化趋势</text>
+				<text class="section-title">各品类销售额变化</text>
 			</view>
 			<view style=" padding: 0 30rpx;">
 				<l-echart ref="lineRef" @finished="getLineEcharts"></l-echart>
@@ -607,6 +607,7 @@
 					legend: {
 						icon: 'circle',
 						itemHeight: 8, // 修改icon图形大小
+						itemGap: 20,
 						left: '0%',
 						textStyle: {
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
@@ -623,8 +624,9 @@
 						selectedMode: false,
 					},
 					grid: {
-						top: '30%', // 顶部距离
-						left: '0%'
+						top: '40%', // 顶部距离
+						left: '0%',
+						right: '0%'
 					},
 					xAxis: {
 						type: 'category',
@@ -749,7 +751,6 @@
 
 	.sub-section {
 		width: 300rpx;
-		margin-right: 28rpx;
 	}
 
 	.section-title {

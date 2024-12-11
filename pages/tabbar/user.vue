@@ -1,6 +1,6 @@
 <template>
 	<view class="page-contain">
-		<uv-navbar title="个人中心" bgColor="#D5F7FF" leftIcon=""></uv-navbar>
+		<uv-navbar title="个人中心" bgColor="#D5E8FF" leftIcon=""></uv-navbar>
 		<view class="user-card">
 			<view class="user-info">
 				<image class="user-avatar" :src="userData?.head_image || '/static/images/tabbar/avatar.png'"></image>
@@ -87,7 +87,7 @@
 			right: 0;
 			width: 100%;
 			height: 100%;
-			background:  linear-gradient( 180deg, #D5F7FF 0%, #F3F6FA 100%), linear-gradient( 180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;;
+			background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
 		}
 	}
 

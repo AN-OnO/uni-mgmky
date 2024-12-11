@@ -242,8 +242,9 @@
 		.time-content {
 			background: #F4F5F7;
 			border-radius: 8rpx;
-			width: 171rpx;
+			width: 35%;
 			padding: 16rpx;
+			text-align: center;
 		}
 	}
 
