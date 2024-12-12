@@ -96,7 +96,7 @@
 			},
 			goSearch() {
 				uni.navigateTo({
-					url: `/pages/productionReport/search`
+					url: `/pages/productionReport/search?technologyId=${this.technologyId}`
 				})
 			},
 			refresh() {
