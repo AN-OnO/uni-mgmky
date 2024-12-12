@@ -4,29 +4,35 @@
 		<view v-else-if="!loading" class="padding-sm">
 			<view class="card-ui flex-row align-center padding-tb">
 				<image class="svg-icon large"
-					:src="isFinished?'/static/images/productionReport/已完成.svg':'/static/images/productionReport/待完成.svg'">
+					:src="isFinished?'/static/images/productionReport/finished.svg':'/static/images/productionReport/待完成.svg'">
 				</image>
 				<text class="text-title h1">{{orderDetail.productionTechnologyName}}{{orderDetail.uStatusDesc}}</text>
 			</view>
 			<block v-for="item in detailCardList" :key="item.type">
-				<view class="card-ui">
+				<view v-if="item.enabled" class="card-ui">
 					<view class="card-ui-head">
 						<view class="flex-row align-center">
 							<image class="svg-icon" :src="item.icon"></image>
 							<text class="text-title h2">{{item.label}}</text>
-							<text v-if="item.remark" class="text-tips text-bold">{{item.remark}}</text>
 						</view>
 						<uv-icon @click="item.display = !item.display"
 							:name="item.display?'arrow-up':'arrow-down'"></uv-icon>
 					</view>
+					<template v-if="item.display && item.type==='finished'">
+						<view class="svg-offset">
+
+						</view>
+					</template>
 					<template v-if="item.display && item.type==='orderCount'">
 						<view class="number-box">
 							<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
 							<view class="number-counter">
-								<uv-button @click="decrement" :disabled="orderDetail.unCompleteCount === 0"><uv-icon
+								<uv-button @click="decrement" :disabled="orderCount === 1"><uv-icon
 										name="minus"></uv-icon></uv-button>
-								<uv-input type="number" v-model="orderDetail.unCompleteCount"></uv-input>
-								<uv-button @click="increment"><uv-icon name="plus"></uv-icon></uv-button>
+								<uv-input type="number" v-model="orderCount"></uv-input>
+								<uv-button @click="increment"
+									:disabled="orderCount === orderDetail.unCompleteCount"><uv-icon
+										name="plus"></uv-icon></uv-button>
 							</view>
 						</view>
 					</template>
@@ -50,7 +56,7 @@
 					<template v-if="item.display && item.type==='orderInfo'">
 						<view class="order-info-wrap">
 							<view class="order-item">
-								<text class="order-label">生成信息 ：</text>
+								<text class="order-label">生产信息 ：</text>
 								<text class="order-label-info">{{orderDetail.productName}}</text>
 							</view>
 							<template v-if="showMore">
@@ -75,40 +81,30 @@
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='previewFiles'">
-						<view class="preview-wrap" v-for="(item,index) in orderDetail.sourceFileUrls" :key="index">
-							<text class="text-sm text-info">原文件预览：</text>
-							<view class="file-wrap padding-top-sm">
-								<image class="svg-icon" src="/static/images/productionReport/file.svg"></image>
-								<text class="text-sm">{{item.fileName}}</text>
-								<image class="svg-icon" src="../../static/images/productionReport/下载.svg"
-									@click="downloadFile(item.imageUrl)"></image>
-							</view>
-						</view>
-						<!-- <view class="preview-wrap">
-							<text class="text-sm text-info">原文件预览(封面)：</text>
-							<view class="cover-list padding-top-sm">
-
-							</view>
-							<uv-line margin="30rpx 0"></uv-line>
-							<text class="text-sm text-info">原文件预览(内页)：</text>
-							<view class="file-wrap padding-top-sm">
-								<image class="svg-icon large" src="/static/images/productionReport/file.svg"></image>
-								<view class="flex-column">
-									<text class="text-sm">文件名称.pdf</text>
-									<text class="text-sm text-info">35.15MB</text>
+						<block v-for="(item,index) in orderDetail.sourceFileUrls" :key="index">
+							<view class="preview-wrap">
+								<text class="text-sm text-info">原文件预览：</text>
+								<view class="file-wrap padding-top-sm">
+									<image class="svg-icon" src="/static/images/productionReport/file.svg"></image>
+									<text class="text-sm">{{item.fileName}}</text>
+									<image class="svg-icon" src="/static/images/productionReport/download.svg"
+										@click="downloadFile(item.imageUrl)"></image>
 								</view>
-								<image class="svg-icon" src="/static/images/productionReport/下载.svg"></image>
 							</view>
-						</view> -->
+						</block>
 					</template>
 				</view>
 			</block>
 		</view>
-		<template v-if="!isFinished&&!isEmpty">
+		<template v-if="!isEmpty">
 			<view class="footer-height"></view>
 			<view class="page-footer">
 				<view class="padding-sm">
-					<button type="default" class="list-button" @click="onConfirm()">
+					<button v-if="isFinished" type="default" class="list-button" @click="navigateBack()">
+						<image class="list-image" src="/static/images/productionReport/箭头.svg"></image>
+						<text class="button-text">回到工艺选择页</text>
+					</button>
+					<button v-else type="default" class="list-button" @click="onConfirm()">
 						<image class="list-image" src="/static/images/logistics/完成.svg"></image>
 						<text class="button-text">完成报工</text>
 					</button>
@@ -134,45 +130,52 @@
 		data() {
 			return {
 				orderDetail: null,
+				orderCount: 0,
 				isEmpty: false,
 				loading: true,
 				isFinished: false,
 				attachmentInfos: [], // 附件
 				detailCardList: [{
+					label: '完工信息',
+					icon: '/static/images/productionReport/finished.svg',
+					type: 'finished',
+					enabled: true,
+					display: true
+				}, {
 					label: '填写本次完成数量',
 					icon: '/static/images/productionReport/数量.svg',
-					remark: '',
 					type: 'orderCount',
+					enabled: true,
 					display: true
 				}, {
 					label: '上传图片(选填)',
 					icon: '/static/images/productionReport/文件.svg',
-					remark: '',
 					type: 'upload',
+					enabled: true,
 					display: true
 				}, {
 					label: '工艺预览',
 					icon: '/static/images/productionReport/文件.svg',
-					remark: '',
 					type: 'preview',
+					enabled: true,
 					display: true
 				}, {
 					label: '制作备注',
 					icon: '/static/images/productionReport/编辑.svg',
-					remark: '(下单的时候没有填就不显示)',
 					type: 'remark',
+					enabled: true,
 					display: true
 				}, {
 					label: '订单信息',
 					icon: '/static/images/productionReport/基础信息.svg',
-					remark: '',
 					type: 'orderInfo',
+					enabled: true,
 					display: true
 				}, {
 					label: '文件预览',
 					icon: '/static/images/productionReport/文件.svg',
-					remark: '',
 					type: 'previewFiles',
+					enabled: true,
 					display: true
 				}],
 				showMore: false
@@ -196,7 +199,9 @@
 				}).then(res => {
 					if (res.code === 0) {
 						this.orderDetail = res.data
+						this.orderCount = this.orderDetail.unCompleteCount
 						this.isFinished = this.orderDetail.uStatus === 1
+						this.updateDetailCardList()
 					} else {
 						uni.$uv.toast('订单详情加载失败')
 					}
@@ -205,11 +210,28 @@
 					this.isEmpty = this.orderDetail === null
 				})
 			},
+			updateDetailCardList() {
+				const conditions = {
+					finished: () => this.isFinished,
+					orderCount: () => !this.isFinished,
+					upload: () => !this.isFinished,
+					preview: () => this.orderDetail.sourcePreviewUrls.length > 0,
+					remark: () => this.orderDetail.remark
+				};
+
+				this.detailCardList.forEach(card => {
+					const condition = conditions[card.type];
+					if (condition) {
+						card.enabled = condition();
+						card.display = condition();
+					}
+				});
+			},
 			increment() {
-				this.orderDetail.unCompleteCount++;
+				this.orderCount++;
 			},
 			decrement() {
-				this.orderDetail.unCompleteCount--;
+				this.orderCount--;
 			},
 			// 上传图片
 			onUploadFile() {
@@ -225,7 +247,7 @@
 							filePath: tempFilePaths[0].tempFilePath,
 							name: 'file',
 							success: (uploadFileRes) => {
-								console.log(uploadFileRes.data);
+								console.log('uploadFile success',uploadFileRes);
 								const {
 									code,
 									data,
@@ -278,6 +300,9 @@
 						confirm
 					}) => confirm && this.completeTask()
 				})
+			},
+			navigateBack() {
+				uni.$Utils.navigateBack()
 			},
 			completeTask(order) {
 				if (this.orderDetail.unCompleteCount > this.orderDetail.orderCount) {
@@ -376,8 +401,8 @@
 		margin-right: 10rpx;
 
 		&.large {
-			width: 50rpx;
-			height: 50rpx;
+			width: 62rpx;
+			height: 62rpx;
 		}
 	}
 
