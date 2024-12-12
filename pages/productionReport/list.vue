@@ -91,13 +91,14 @@
 								if (scanRes.code == 0) {
 									uni.showToast({
 										title: '报工成功',
-										duration: 3000
+										duration: 3000,
+										image: '/static/images/productionReport/success.png'
 									})
 								} else {
-									uni.showToast({
-										title: scanRes.message.slice(8),
-										icon: 'error',
-										duration: 5000
+									uni.showModal({
+										title: '提示',
+										content: scanRes.message.slice(8),
+										showCancel: false,
 									})
 								}
 							}).finally(() => this.loading = false)
