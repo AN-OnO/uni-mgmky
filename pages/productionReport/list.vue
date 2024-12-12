@@ -95,7 +95,8 @@
 									})
 								} else {
 									uni.showToast({
-										title: scanRes.message,
+										title: scanRes.message.slice(8),
+										icon: 'error',
 										duration: 5000
 									})
 								}
