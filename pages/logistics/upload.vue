@@ -108,8 +108,8 @@
 						url: baseURL + '/api/FileUpload/UploadFile', // 开发者服务器的上传接口地址
 						filePath: url, // 要上传的文件资源路径
 						name: 'file', // 必填，后台用来解析的文件名
-						formData: {
-							'user': 'test' // 额外的formdata
+						header: {
+							Authorization: `Bearer ${uni.getStorageSync('token')}`,
 						},
 						success: function(res) {
 							console.log('上传成功', JSON.parse(res.data));
