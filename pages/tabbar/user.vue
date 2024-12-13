@@ -3,11 +3,11 @@
 		<uv-navbar title="个人中心" bgColor="#D5E8FF" leftIcon=""></uv-navbar>
 		<view class="user-card">
 			<view class="user-info">
-				<image class="user-avatar" :src="userData?.head_image || '/static/images/tabbar/avatar.png'"></image>
+				<image class="user-avatar" :src="head_image || '/static/images/tabbar/avatar.png'"></image>
 				<image src="/static/images/tabbar/edit.svg" class='editAvatar' @click="editAvatar"></image>
 				<view class="user-info-box">
-					<text class="text-h2">{{userData?.accountNo|| '匿名用户'}}</text>
-					<text class="text-label">{{userData?.name || '个性签名'}}</text>
+					<text class="text-h2">{{accountNo|| '匿名用户'}}</text>
+					<text class="text-label">{{name || '个性签名'}}</text>
 				</view>
 			</view>
 		</view>
@@ -17,14 +17,14 @@
 				<image class="detail-arrow" src="/static/images/tabbar/detail-arrow.svg"></image>
 			</view>
 			<view class="total-text">累计收益(元)</view>
-			<view class="total-income">198680.40</view>
+			<view class="total-income">{{totalIncome}}</view>
 			<view class="contain">
 				<view class="flex-column">
-					<text class="income">299.0</text>
+					<text class="income">{{todayIncome}}</text>
 					<text class="text">今日收益(元)</text>
 				</view>
 				<view class="flex-column">
-					<text class="income">10058.00</text>
+					<text class="income">{{curMonthIncome}}</text>
 					<text class="text">本月收益(元)</text>
 				</view>
 			</view>
@@ -44,16 +44,29 @@
 
 <script setup>
 	import {
+		onMounted,
 		ref,
 		toRefs
 	} from "vue";
-	import {
-		useUserStore
-	} from "../../store/user";
-	const {
-		userData
-	} = toRefs(useUserStore())
-
+import { MyStatInfo } from "../../apis/member";
+	const todayIncome = ref('0')
+	const curMonthIncome = ref('0')
+	const totalIncome = ref('0')
+	const head_image = ref('')
+	const accountNo = ref('')
+	const name = ref('')
+	
+	onMounted(() => {
+		MyStatInfo().then((res) => {
+			todayIncome.value = res.data?.todayIncome 
+			curMonthIncome.value = res.data?.curMonthIncome 
+			totalIncome.value = res.data?.totalIncome 
+			head_image.value = res.data?.userInfo?.headImage
+			accountNo.value = res.data?.userInfo?.accountNo
+			name.value = res.data?.userInfo?.name
+		})
+	})
+	
 	const editAvatar = () => {
 		console.log('编辑头像')
 	}

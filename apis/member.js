@@ -126,4 +126,20 @@ export function CancelDeliveryByPSP(params) {
 	return request.post('/api/Delivery/CancelDeliveryByPSP', params)
 }
 
+/**
+ * 个人首页统计
+ * @param params 
+ * @return 
+ */
+export function MyStatInfo(params) {
+	return request.post('/api/Profile/MyStatInfo', params)
+}
 
+/**
+ * 我的收益列表
+ * @param params 
+ * @return 
+ */
+export function ListMyPerformances(params) {
+	return request.post('/api/Profile/ListMyPerformances', params)
+}

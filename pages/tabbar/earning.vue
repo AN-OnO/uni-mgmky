@@ -5,8 +5,9 @@
 				<view class="content-wrap" :style="{maxHeight: wrapHeight}">
 					<view class="btn-contain">
 						<button v-for="(item, index) in btnList" :key="index"
-							:class="selectedIndex == index ? 'selected-btn' : 'other-btn'" @click="clickBtn(index)">
-							<text class="text">{{item}}</text>
+							:class="selectedIndex == index ? 'selected-btn' : 'other-btn'"
+							@click="clickBtn(item, index)">
+							<text class="text">{{item.name}}</text>
 						</button>
 					</view>
 				</view>
@@ -27,50 +28,50 @@
 						@change="change"></uv-subsection></view>
 			</view>
 			<view class="total-earning">
-				完成56单，收益322.56元
+				完成{{completedOrderItemCount}}次报工，收益{{statPerformanceAmount}}元
 			</view>
 		</uv-sticky>
-		<view class="earning-card">
+		<view v-for="(item, index) in dataList" :key="index" class="earning-card">
 			<view style="display: flex;">
 				<view class="tag-contain">
-					<text class="card-number">240820000041478</text>
-					<view class="tag"><text class="tag-text">拼版</text></view>
+					<text class="card-number">{{item.saleOrderNo}}</text>
+					<view class="tag"><text class="tag-text">{{item.technologyName}}</text></view>
 				</view>
-				<text class="earning-value">+24.50</text>
+				<text class="earning-value">{{item.rewardValue > 0 ? `+${item.rewardValue}` : item.rewardValue}}</text>
 			</view>
 			<view class="companyName">
-				TO63226 汝河路-永昌广告印务
+				{{item.orderItemNo}} {{item.companyName}}
 			</view>
 			<view class="earning-time">
-				2024-11-08 03:05:20
+				{{item.checkinTime}}
 			</view>
 		</view>
-		<view class="earning-card">
-			<view style="display: flex;">
-				<view class="tag-contain">
-					<text class="card-number">240820000041478</text>
-					<view class="tag"><text class="tag-text">拼版</text></view>
-				</view>
-				<text class="earning-value">+24.50</text>
-			</view>
-			<view class="companyName">
-				TO63226 汝河路-永昌广告印务
-			</view>
-			<view class="earning-time">
-				2024-11-08 03:05:20
-			</view>
-		</view>
+		<uv-load-more :status="status" @loadmore='loadMore' />
 	</view>
 </template>
 
 <script>
 	import dayjs from 'dayjs';
+	import {
+		ListMyPerformances
+	} from '../../apis/member';
+	import {
+		ListMyProductionTechnology
+	} from '../../apis/production';
 	export default {
 		data() {
 			const date = dayjs().subtract(1, 'day');
 
 			return {
+				pageIndex: 1,
+				count: 0,
+				status: 'loadmore',
+				productionTechnologyId: '',
 				modeTitle: date.format('YYYY/MM/DD'),
+				beginDate: date.format('YYYY-MM-DD'),
+				endDate: date.format('YYYY-MM-DD'),
+				completedOrderItemCount: 0,
+				statPerformanceAmount: 0,
 				value: Number(date),
 				mode: 'date',
 				current: 0,
@@ -78,12 +79,16 @@
 				showOpen: false,
 				showClose: false,
 				wrapHeight: '80rpx',
-				btnList: ['全部', '快递', '制作', '审核', '拼版', '其他']
+				dataList: [],
+				btnList: []
 			}
 		},
-		onReady() {
-			this.change(0)
-			
+		onReachBottom() {
+			this.loadMore()
+		},
+		async onReady() {
+			await this.getBtnList()
+			this.change(0);
 			let wrapHeight = 0;
 			let spaceHeight = 0;
 			uni.createSelectorQuery().select('.content-wrap').boundingClientRect(data => {
@@ -111,35 +116,100 @@
 				const date = dayjs(e.value);
 
 				if (e.mode == 'year-month') {
-					this.modeTitle = date.format('YYYY/MM')
+					this.getListByMode('year-month', date)
 				} else {
-					this.modeTitle = date.format('YYYY/MM/DD')
+					this.getListByMode('date', date)
 				}
 			},
 			change(index) {
 				const date = dayjs().subtract(1, 'day')
+				this.pageIndex = 1
+				uni.pageScrollTo({
+					scrollTop: 0,
+					duration: 300
+				});
 
 				if (index == 0) {
 					this.mode = 'date';
-					this.modeTitle = date.format('YYYY/MM/DD');
+					this.getListByMode('date', date)
 				} else if (index == 1) {
 					this.mode = 'year-month';
-					this.modeTitle = dayjs().format('YYYY/MM')
+					this.getListByMode('year-month', date)
 				} else {
-					this.modeTitle = '累计'
+					this.getListByMode()
 				}
 
 				this.current = index;
 				this.value = Number(date)
+			},
+			getListByMode(mode, date) {
+				if (mode == 'date') {
+					this.modeTitle = date.format('YYYY/MM/DD');
+					this.beginDate = date.format('YYYY-MM-DD');
+					this.endDate = date.format('YYYY-MM-DD');
+				} else if (mode == 'year-month') {
+					this.modeTitle = date.format('YYYY/MM');
+					this.beginDate = date.startOf('month').format('YYYY-MM-DD');
+					this.endDate = date.endOf('month').format('YYYY-MM-DD');
+				} else {
+					this.modeTitle = '累计';
+					this.beginDate = null;
+					this.endDate = null;
+				}
+
+				this.getList()
 			},
 			openTitle() {
 				if (this.modeTitle != '累计') {
 					this.$refs.datetimePicker.open();
 				}
 			},
-			clickBtn(index) {
-				this.selectedIndex = index
-			}
+			clickBtn(item, index) {
+				this.selectedIndex = index;
+				this.productionTechnologyId = item.technologyId
+				this.getList()
+			},
+			getList() {
+				ListMyPerformances({
+					pageSize: 10,
+					pageIndex: this.pageIndex,
+					beginDate: this.beginDate,
+					endDate: this.endDate,
+					productionTechnologyId: this.productionTechnologyId,
+				}).then((res) => {
+					const {
+						completedOrderItemCount,
+						statPerformanceAmount,
+						count,
+						pageEntities
+					} = res.data
+
+					this.completedOrderItemCount = completedOrderItemCount
+					this.statPerformanceAmount = statPerformanceAmount
+					this.count = count
+
+					if (this.pageIndex === 1) {
+						this.dataList = pageEntities
+					} else {
+						this.dataList = [...this.dataList, ...pageEntities]
+					}
+
+					this.status = this.dataList.length < this.count ? 'loadmore' : 'nomore';
+				})
+			},
+			async getBtnList() {
+				const res = await ListMyProductionTechnology()
+				this.btnList = [{
+					name: '全部'
+				}, ...res.data.technologies]
+			},
+			loadMore() {
+				if (this.dataList.length < this.count) {
+					this.status = 'loading';
+					this.pageIndex++;
+					this.getList();
+				}
+			},
 		}
 	}
 </script>
@@ -147,7 +217,7 @@
 <style lang="scss">
 	.earning-contain {
 		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
-		height: 100%;
+		min-height: 100%;
 		padding: 30rpx;
 	}
 
