@@ -39,12 +39,12 @@
 					<template v-if="item.display && item.type==='upload'">
 						<view class="cover-list padding-sm">
 							<view class="image-wrap" v-for="(file,index) in attachmentInfos" :key="index">
-								<uv-image :src="file.filePath" width="100%" height="100%" radius="10rpx"></uv-image>
+								<uv-image :src="file.fullPath" width="100%" height="100%" radius="10rpx"></uv-image>
 								<view class="close-icon-wrap" @click="removeFile(index)">
 									<uv-icon name="close"></uv-icon>
 								</view>
 							</view>
-							<view class="image-wrap flex-column align-center justify-center" @click="onUploadFile">
+							<view :class="['flex-column align-center justify-center',attachmentInfos.length>0?'image-wrap':'flex-1']" @click="onUploadFile">
 								<uv-icon name="camera" size="80rpx"></uv-icon>
 								<text class="text-sm text-info">点击上传图片</text>
 							</view>
