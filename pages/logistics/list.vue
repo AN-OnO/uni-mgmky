@@ -15,7 +15,7 @@
 		</view>
 		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
-				<view class="flex-between" >
+				<view class="flex-between">
 					<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab"></uv-tabs>
 					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 				</view>
@@ -23,7 +23,7 @@
 					<view v-for="(item, index) in listData" :key="index" style="margin-top: 15rpx;">
 						<uni-swipe-action-item :right-options="options"
 							:disabled="deliveryMethod != 3 || searchType != 2"
-							@click="cancelDelivery(item.orderItemNo)" >
+							@click="cancelDelivery(item.orderItemNo)">
 							<view @click="jumpToInfo(item)" class="list-contain">
 								<view class="flex-between">
 									<text class="list-companyName">{{item.companyName}}</text>
@@ -117,8 +117,12 @@
 			});
 		},
 		onShow() {
-			// 每次显示页面时重新获取数据
-			this.reFresh()
+			const flag = uni.$Utils.getStorage('backbutton')
+			if (flag) {
+				uni.$Utils.removeStorage('backbutton')
+			} else {
+				this.reFresh()
+			}
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
@@ -405,9 +409,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		position: fixed; 
-		right: 20rpx; 
-		bottom: 70rpx; 
+		position: fixed;
+		right: 20rpx;
+		bottom: 70rpx;
 		z-index: 999
 	}
 

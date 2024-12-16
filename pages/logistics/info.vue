@@ -24,7 +24,8 @@
 					</view>
 					<view class='flex-center'>
 						<image class="image" src="/static/images/logistics/infoLocal (已定位).svg" mode=""></image>
-						<text class="local-text">{{`${data.linkMan } ${data.contactMobile }`}}</text>
+						<text
+							class="local-text">{{`${data.linkMan } ${data.contactMobile?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') }`}}</text>
 					</view>
 					<div class="address">{{data.address}}</div>
 				</view>
@@ -164,6 +165,11 @@
 			this.orderItemNo = options.orderItemNo;
 			this.getData()
 		},
+		onBackPress(options) {
+			if (options.from === 'backbutton') {
+				uni.$Utils.setStorage('backbutton', true)
+			}
+		},
 		methods: {
 			getData() {
 				GetDeliveryDetail({
@@ -179,9 +185,7 @@
 					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					})
-					uni.navigateBack({
-						delta: 1
-					});
+					uni.navigateBack();
 				}
 			},
 			closeModal(key) {

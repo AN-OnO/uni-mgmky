@@ -93,7 +93,13 @@
 		},
 		onShow() {
 			if (this.keywords) {
-				this.search()
+				const flag = uni.$Utils.getStorage('backbutton')
+				
+				if (flag) {
+					uni.$Utils.removeStorage('backbutton')
+				} else {
+					this.search()
+				}
 			}
 		},
 		methods: {
