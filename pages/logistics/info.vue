@@ -286,7 +286,7 @@
 	}
 
 	.order-status {
-		font-weight: 500;
+		font-weight: bold;
 		font-size: 46rpx;
 		color: #333333;
 		line-height: 69rpx;

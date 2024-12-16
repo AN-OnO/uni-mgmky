@@ -3,7 +3,7 @@
 		<view class="upload-title">{{uploadType == 4 ? '请上传寄件信息' : '请上传配送信息'}}</view>
 		<uv-form>
 			<uv-form-item v-if="uploadType == 4" label="快递单号" labelPosition='top' labelWidth="200rpx"
-				leftIcon='/static/images/logistics/1.svg'>
+				>
 				<uv-input placeholder="请输入快递单号" v-model="formValue.number" style="margin-top: 15rpx;">
 					<template v-slot:suffix>
 						<uv-icon name="scan" @click="onScanTap"></uv-icon>
@@ -11,18 +11,18 @@
 				</uv-input>
 			</uv-form-item>
 			<uv-form-item v-if="uploadType == 4" label="快递公司" labelPosition='top' labelWidth="200rpx"
-				leftIcon='/static/images/logistics/2.svg'>
+				>
 				<uv-input placeholder="请选择快递公司" v-model="formValue.company" style="margin-top: 15rpx;" />
 			</uv-form-item>
 			<uv-form-item label="请上传快递图片(至少一张)" labelPosition='top' labelWidth="500rpx"
-				:leftIcon="uploadType == 4? '/static/images/logistics/3.svg' : '/static/images/logistics/1.svg'">
+				>
 				<uv-upload :fileList="fileList" @afterRead="afterRead" @delete="deletePic" name="1" multiple
 					:maxCount="10" style="margin-top: 15rpx;">
 					<image src="/static/images/logistics/Group 427319118.svg" class="upload-image"></image>
 				</uv-upload>
 			</uv-form-item>
 			<uv-form-item v-if="uploadType !== 4" label="备注(选填)" labelPosition='top' labelWidth="500rpx"
-				leftIcon='/static/images/logistics/2.svg'>
+				>
 				<uv-textarea v-model="formValue.remark" placeholder="备注内容" style="margin-top: 15rpx;"></uv-textarea>
 			</uv-form-item>
 			<button class="upload-button" @click="submit"><text class="text-upload">确认提交</text></button>
@@ -142,7 +142,7 @@
 
 	.upload-button {
 		height: 92rpx;
-		background: #333333;
+		background: #2FB7DF;
 		border-radius: 31rpx;
 		margin-top: 61rpx;
 	}
