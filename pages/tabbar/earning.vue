@@ -103,7 +103,7 @@
 		},
 		methods: {
 			open() {
-				this.wrapHeight = '999rpx'
+				this.wrapHeight = '9999rpx'
 				this.showOpen = false;
 				this.showClose = true
 			},
@@ -120,14 +120,11 @@
 				} else {
 					this.getListByMode('date', date)
 				}
+				
+				this.refresh()
 			},
 			change(index) {
 				const date = dayjs().subtract(1, 'day')
-				this.pageIndex = 1
-				uni.pageScrollTo({
-					scrollTop: 0,
-					duration: 300
-				});
 
 				if (index == 0) {
 					this.mode = 'date';
@@ -141,6 +138,7 @@
 
 				this.current = index;
 				this.value = Number(date)
+				this.refresh()
 			},
 			getListByMode(mode, date) {
 				if (mode == 'date') {
@@ -156,8 +154,6 @@
 					this.beginDate = null;
 					this.endDate = null;
 				}
-
-				this.getList()
 			},
 			openTitle() {
 				if (this.modeTitle != '累计') {
@@ -167,7 +163,12 @@
 			clickBtn(item, index) {
 				this.selectedIndex = index;
 				this.productionTechnologyId = item.technologyId
-				this.getList()
+				
+				if (this.showClose) {
+					this.close()
+				}
+				
+				this.refresh()
 			},
 			getList() {
 				ListMyPerformances({
@@ -195,6 +196,8 @@
 					}
 
 					this.status = this.dataList.length < this.count ? 'loadmore' : 'nomore';
+				}).finally(() => {
+					if (this.status === 'loading') this.status = 'nomore'
 				})
 			},
 			async getBtnList() {
@@ -210,6 +213,11 @@
 					this.getList();
 				}
 			},
+			refresh() {
+				this.pageIndex = 1
+				this.dataList = []
+				this.getList()
+			}
 		}
 	}
 </script>
