@@ -37,15 +37,23 @@
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='upload'">
-						<view class="flex-column align-center padding" @click="onUploadFile">
-							<uv-icon name="camera" size="80rpx"></uv-icon>
-							<text class="text-sm text-info">点击上传图片</text>
+						<view class="cover-list padding-sm">
+							<view class="image-wrap" v-for="(file,index) in attachmentInfos" :key="index">
+								<uv-image :src="file.fullPath" width="100%" height="100%" radius="10rpx"></uv-image>
+								<view class="close-icon-wrap" @click="removeFile(index)">
+									<uv-icon name="close"></uv-icon>
+								</view>
+							</view>
+							<view :class="['flex-column align-center justify-center',attachmentInfos.length>0?'image-wrap':'flex-1']" @click="onUploadFile">
+								<uv-icon name="camera" size="80rpx"></uv-icon>
+								<text class="text-sm text-info">点击上传图片</text>
+							</view>
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='preview'">
 						<view class="cover-list">
-							<image class="image-cover" v-for="(item,index) in orderDetail.sourcePreviewUrls"
-								:key="index" :src="item.imageUrl"></image>
+							<image class="image-wrap" v-for="(item,index) in orderDetail.sourcePreviewUrls" :key="index"
+								:src="item.imageUrl"></image>
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='remark'">
@@ -235,6 +243,7 @@
 			},
 			// 上传图片
 			onUploadFile() {
+				const self = this
 				uni.chooseMedia({
 					count: 1,
 					mediaType: ['image'],
@@ -246,27 +255,29 @@
 							url: baseURL + '/api/FileUpload/UploadFile',
 							filePath: tempFilePaths[0].tempFilePath,
 							name: 'file',
+							header: {
+								Authorization: `Bearer ${uni.getStorageSync('token')}`,
+							},
 							success: (uploadFileRes) => {
-								console.log('uploadFile success',uploadFileRes);
 								const {
 									code,
 									data,
 									message
-								} = uploadFileRes.data
+								} = JSON.parse(uploadFileRes.data)
 								if (code === 0) {
-
+									self.attachmentInfos = [...self.attachmentInfos, ...data]
+									console.log('uploadFile success file', self.attachmentInfos);
 								} else {
 									uni.$uv.toast(message)
 								}
-								// {"code":0,"message":"请求成功","data":[{"originalFileName":"0WLdKe4vBg3L84ca42e2ec1e7f2145a19bd2e6468607.png","savedFileName":"98a6bb06-63d4-4528-86f4-f942cc31294c.png","filePath":"/uploads/98a6bb06-63d4-4528-86f4-f942cc31294c.png","fileSize":3144,"extension":".png"}]}
 							}
 						});
 					}
 				})
 			},
 			// 移除上传图片
-			removeFile() {
-
+			removeFile(index) {
+				this.attachmentInfos.splice(index, 1)
 			},
 			downloadFile(fileUrl) {
 				const downloadTask = uni.downloadFile({
@@ -316,7 +327,8 @@
 					technologyid: this.orderDetail.productionTechnologyId,
 					// checkinType: 0, // 1：切换 2：覆盖 3：新增
 					// employeeId: "",
-					makeQuantity: this.orderDetail.unCompleteCount // 完成件数
+					makeQuantity: this.orderDetail.unCompleteCount, // 完成件数
+					attachmentInfos: this.attachmentInfos
 				}).then(res => {
 					const success = res.code === 0
 					let message = success ? '任务已完成！' : (res.message || '任务完成失败！')
@@ -449,12 +461,29 @@
 
 	.cover-list {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(180rpx, 1fr));
+		grid-template-columns: repeat(auto-fit, minmax(190rpx, 1fr));
 		gap: 10rpx;
 
+		.image-wrap {
+			position: relative;
+			width: 190rpx;
+			height: 190rpx;
+			border-radius: 10rpx;
+		}
+
 		.image-cover {
-			width: 180rpx;
-			height: 180rpx;
+			width: 100%;
+			height: 100%;
+			border-radius: 10rpx;
+		}
+
+		.close-icon-wrap {
+			position: absolute;
+			top: 0;
+			right: 0;
+			background-color: #ccc;
+			padding: 5rpx 10rpx;
+			border-radius: 0rpx 10rpx 0rpx 12rpx;
 		}
 	}
 
