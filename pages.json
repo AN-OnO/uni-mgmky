@@ -141,7 +141,7 @@
 					"path": "info",
 					"style": {
 						"navigationBarTitleText": "详情",
-						"navigationBarBackgroundColor": "#F2F2F2"
+						"navigationBarBackgroundColor": "#F0F0F0"
 					}
 				},
 				{

@@ -1,13 +1,11 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="&#233;&#133;&#141;&#233;&#128;&#129;&#228;&#184;&#173;">
-<g id="Group 2305">
-<path id="Rectangle 654" d="M12 19.7012H3.55556C3.24873 19.7012 3 19.4524 3 19.1456V19.1456C3 15.3103 6.10913 12.2012 9.94444 12.2012H12" stroke="#D9D9D9" stroke-width="1.4" stroke-linecap="round"/>
-<g id="Group 2304">
-<path id="Ellipse 101" d="M16 9.20117C16 10.858 14.433 12.2012 12.5 12.2012C10.567 12.2012 9 10.858 9 9.20117" stroke="white" stroke-opacity="0.9" stroke-width="1.4" stroke-linejoin="round"/>
-<path id="Ellipse 102" d="M16.6335 7.76403C16.6335 5.35406 14.6799 3.40039 12.2699 3.40039C9.85992 3.40039 7.90625 5.35406 7.90625 7.76403" stroke="#D9D9D9" stroke-width="1.4" stroke-linejoin="round"/>
-<path id="Vector 79" d="M4.99609 7.76367H16.6325" stroke="#D9D9D9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<rect id="Rectangle 655" x="12.2695" y="15.0371" width="8.72727" height="5.81818" stroke="#D9D9D9" stroke-width="1.4" stroke-linejoin="round"/>
-</g>
+<g id="Group 427321036">
+<path id="Ellipse 219" d="M14.6667 16.1211C9.22626 16.1211 4.73715 20.194 4.0822 25.4571C3.99126 26.1878 4.59695 26.7878 5.33333 26.7878H24C24.7364 26.7878 25.3421 26.1878 25.2511 25.4571C24.5962 20.194 20.1071 16.1211 14.6667 16.1211Z" fill="#2FB7DF"/>
+<rect id="Rectangle 655" x="16" y="21.4531" width="11.6364" height="7.75758" rx="1.33333" fill="#2FB7DF" stroke="white" stroke-width="2" stroke-linejoin="round"/>
+<path id="Ellipse 101" d="M14.6673 15.9035C17.6128 15.9035 20.0007 13.8568 20.0007 11.332H9.33398C9.33398 13.8568 11.7218 15.9035 14.6673 15.9035Z" fill="#2FB7DF"/>
+<path id="Ellipse 102" d="M14.6667 2.78711C10.9848 2.78711 8 5.77188 8 9.45378H20C20.7364 9.45378 21.3472 8.85081 21.2017 8.12896C20.5873 5.08173 17.8949 2.78711 14.6667 2.78711Z" fill="#2FB7DF"/>
+<path id="Vector 79" d="M5.33398 8.60547H20.2673" stroke="#2FB7DF" stroke-width="1.86667" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </g>
 </svg>

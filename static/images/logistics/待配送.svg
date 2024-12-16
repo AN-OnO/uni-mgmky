@@ -1,12 +1,10 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="&#229;&#190;&#133;&#233;&#133;&#141;&#233;&#128;&#129;">
-<g id="Group 2303">
-<rect id="Rectangle 652" x="3" y="4" width="17.9985" height="5.14287" rx="1.28566" stroke="white" stroke-opacity="0.9" stroke-width="1.4"/>
-<path id="Rectangle 653" d="M18.4283 9.78544V9.14258H5.57227V16.8569C5.57227 17.567 6.14788 18.1426 6.85793 18.1426H12.0003" stroke="white" stroke-opacity="0.9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-<ellipse id="Ellipse 101" cx="17.1439" cy="15.572" rx="3.85682" ry="3.85715" stroke="white" stroke-opacity="0.9" stroke-width="1.4"/>
-<g id="Group 2303_2">
-<path id="Rectangle 652_2" d="M16.502 14.0293V15.9579H18.4304" stroke="white" stroke-opacity="0.9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
+<g id="Group 427321030">
+<rect id="Rectangle 652" x="3.99805" y="5.69141" width="23.998" height="6.66667" rx="1.33333" fill="#2FB7DF"/>
+<path id="Rectangle 1140" d="M6.66211 14.3086H25.3288V24.9753C25.3288 25.7116 24.7318 26.3086 23.9954 26.3086H7.99544C7.25906 26.3086 6.66211 25.7116 6.66211 24.9753V14.3086Z" fill="#2FB7DF"/>
+<ellipse id="Ellipse 101" cx="22.8592" cy="21.1194" rx="5.14243" ry="5.14287" fill="#2FB7DF" stroke="white" stroke-width="2"/>
+<path id="Rectangle 652_2" d="M21.998 19.0625V21.6339H24.5693" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </g>
 </svg>

@@ -2,7 +2,7 @@
 	<view class="container-background" style="height: 100%;overflow: scroll;">
 		<view class="container">
 			<view>
-				<view style="background: #333333;border-radius: 15rpx;">
+				<view style="background: #FFFFFF;border-radius: 15rpx;">
 					<view class='flex-center'>
 						<image class="image"
 							:src="data.status == 1? '/static/images/logistics/配送中.svg': '/static/images/logistics/待配送.svg'"
@@ -251,7 +251,7 @@
 	}
 
 	.container-background {
-		background: #F2F2F2;
+		background: #F0F0F0;
 	}
 
 	.container {
@@ -288,20 +288,20 @@
 	.order-status {
 		font-weight: 500;
 		font-size: 46rpx;
-		color: rgba(255, 255, 255, 0.9);
+		color: #333333;
 		line-height: 69rpx;
 	}
 
 	.local-text {
 		font-weight: 500;
 		font-size: 31rpx;
-		color: rgba(255, 255, 255, 0.9);
+		color: #333333;
 		line-height: 46rpx;
 	}
 
 	.address {
 		font-size: 27rpx;
-		color: rgba(255, 255, 255, 0.6);
+		color: #333333;;
 		line-height: 38rpx;
 		margin-left: 85.8rpx;
 		padding-bottom: 30rpx;
@@ -357,7 +357,7 @@
 
 	.button-operation {
 		height: 69rpx;
-		background: #333333;
+		background: #2FB7DF;
 		border-radius: 191rpx;
 		margin-right: 0;
 		margin-left: 15rpx;
