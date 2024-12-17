@@ -1,38 +1,42 @@
 <template>
 	<view class="page-container">
-		<view class="data-list padding">
-			<view v-for="(item,index) in technologies" :key="index" class="data-contain">
-				<view :class="['list-item',{'active':hasSelection(item.code)}]" @click="handleSelect(item)">
-					<image class="item-image" :src="item.photo" mode="aspectFit" />
+		<template v-if="orderInfo">
+			<view class="data-list padding">
+				<view v-for="(item,index) in orderInfo.orderItemTrackings" :key="index" class="data-contain">
+					<view :class="['list-item',{'active':hasSelection(item.code)}]" @click="handleSelect(item)">
+						<image class="item-image" :src="item.photo" mode="aspectFit" />
+					</view>
+					<text class="item-name">{{ item.name }}</text>
 				</view>
-				<text class="item-name">{{ item.name }}</text>
 			</view>
-		</view>
 
-		<view class="order-modal">
-			<text class="order-no">240820000041478</text>
-			<view class="order-company">
-				<text class="margin-right-sm">TO63226</text>
-				<text>汝河路-永昌广告印务</text>
-			</view>
-			<view class="order-info">
-				<text
-					:class="[{'uv-line-2':!showMore}]">特价喷墨画册【喷墨画册】：260x185mm-封面：200g铜版纸-单面彩色-封面哑膜-内页,200g铜版纸-单面彩色-封面哑膜-内页</text>
-				<view class="flex-row justify-end padding-top-xs">
-					<view class="tag-wrap">
-						<uv-icon @click="showMore = !showMore" :name="showMore?'arrow-up':'arrow-down'"
-							:label="showMore?'收起':'展开'" label-size="23rpx" size="28rpx" label-pos="left" color="#808080"
-							label-color="#808080"></uv-icon>
+			<view class="order-modal">
+				<text class="order-no">{{orderInfo.saleOrderNo}}</text>
+				<view class="order-company">
+					<text class="margin-right-sm">{{orderInfo.orderItemNo}}</text>
+					<text>{{orderInfo.companyName}}</text>
+				</view>
+				<view class="order-info">
+					<text :class="[{'uv-line-2':!showMore}]">{{orderInfo.productName}}</text>
+					<view class="flex-row justify-end padding-top-xs">
+						<view class="tag-wrap">
+							<uv-icon @click="showMore = !showMore" :name="showMore?'arrow-up':'arrow-down'"
+								:label="showMore?'收起':'展开'" label-size="23rpx" size="28rpx" label-pos="left"
+								color="#808080" label-color="#808080"></uv-icon>
+						</view>
 					</view>
 				</view>
+				<view class="padding-top-lg">
+					<button type="default" class="list-button">
+						<text class="button-text">确认</text>
+					</button>
+				</view>
+				<uv-safe-bottom></uv-safe-bottom>
 			</view>
-			<view class="padding-top-lg">
-				<button type="default" class="list-button">
-					<text class="button-text">确认</text>
-				</button>
-			</view>
-			<uv-safe-bottom></uv-safe-bottom>
-		</view>
+		</template>
+		<template v-else>
+			<uv-empty mode="order" icon="https://cdn.uviewui.com/uview/empty/order.png"></uv-empty>
+		</template>
 
 		<uv-popup ref="popup" mode="bottom" round="31rpx" closeable>
 			<view style="width: 600rpx;">
@@ -55,12 +59,13 @@
 
 <script>
 	import {
-		ListMyProductionTechnology
+		GetOrderItemAndTrackings
 	} from '@/apis/production.js'
 	export default {
 		data() {
 			return {
 				technologies: [],
+				orderInfo: null,
 				showMore: false,
 				loading: true,
 				selection: []
@@ -79,16 +84,13 @@
 		methods: {
 			init() {
 				this.loading = true
-				ListMyProductionTechnology().then(res => {
-					console.log('ListMyProductionTechnology api result:', res)
+
+				GetOrderItemAndTrackings({
+					orderItemNo: 'T097194'  
+				}).then(res => {
+					console.log('GetOrderItemAndTrackings api result:', res)
 					if (res.code === 0) {
-						const {
-							employeeId,
-							employeeName,
-							purchaseSupplierInfos,
-							technologies
-						} = res.data
-						this.technologies = technologies
+						this.orderInfo = res.data
 					}
 				}).finally(() => this.loading = false)
 			},
@@ -110,6 +112,7 @@
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
+		justify-content: space-between;
 	}
 
 	.data-list {
