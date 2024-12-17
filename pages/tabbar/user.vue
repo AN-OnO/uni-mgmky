@@ -48,7 +48,7 @@
 		ref,
 		toRefs
 	} from "vue";
-import { MyStatInfo } from "../../apis/member";
+import { LogOut, MyStatInfo } from "../../apis/member";
 	const todayIncome = ref('0')
 	const curMonthIncome = ref('0')
 	const totalIncome = ref('0')
@@ -76,9 +76,12 @@ import { MyStatInfo } from "../../apis/member";
 		})
 	}
 	const exit = () => {
-		uni.$Utils.removeAllStorage()
-		uni.navigateTo({
-			url: '/pages/tabbar/index'
+		LogOut().then(res => {
+			console.log('退出登录', res)
+			uni.$Utils.removeAllStorage()
+			uni.navigateTo({
+				url: '/pages/tabbar/index'
+			})
 		})
 	}
 </script>

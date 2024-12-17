@@ -143,3 +143,12 @@ export function MyStatInfo(params) {
 export function ListMyPerformances(params) {
 	return request.post('/api/Profile/ListMyPerformances', params)
 }
+
+/**
+ * 退出登录
+ * @param params 
+ * @return 
+ */
+export function LogOut(params) {
+	return request.post('/api/UserMgr/LogOut', params)
+}
