@@ -109,6 +109,13 @@
 						"navigationBarTitleText": "报工",
 						"navigationBarBackgroundColor": "#D5E8FF"
 					}
+				},
+				{
+					"path": "batch",
+					"style": {
+						"navigationBarTitleText": "选择报工工艺",
+						"backgroundColor": "#F0F1F5"
+					}
 				}
 			]
 		},
