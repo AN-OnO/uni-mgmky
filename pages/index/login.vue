@@ -11,8 +11,12 @@
 					</uv-input>
 				</uv-form-item>
 				<uv-form-item prop="password" :custom-style="formItemStyle">
-					<uv-input type="password" v-model="loginForm.password" placeholder="请输入密码" fontSize="16"
-						border="none">
+					<uv-input v-model="loginForm.password" placeholder="请输入密码" fontSize="16"
+						border="none" :type="showPassword ? 'text' : 'password'">
+						<template v-slot:suffix>
+							<image :src="showPassword ? '/static/images/tabbar/unlocked.svg' : '/static/images/tabbar/locked.svg'"
+								style="max-width: 45.8rpx;max-height: 45.8rpx;" @click="handlePassword"></image>
+						</template>
 					</uv-input>
 				</uv-form-item>
 			</uv-form>
@@ -38,10 +42,19 @@
 	const userStore = useUserStore()
 	const appName = '多普智能工厂' // 应用名称
 	const form = ref(null)
+	const showPassword = ref(false)
+	
+	const handlePassword = () => {
+		if (showPassword.value) {
+			showPassword.value = false
+		} else {
+			showPassword.value = true
+		}
+	}
 	// 表单实体
 	const loginForm = reactive({
-		userName: '',
-		password: ''
+		userName: '18949822407',
+		password: 'ops18949822407'
 	})
 	// 表单验证规则
 	const loginFormRules = reactive({
