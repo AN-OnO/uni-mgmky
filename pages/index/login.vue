@@ -53,8 +53,8 @@
 	}
 	// 表单实体
 	const loginForm = reactive({
-		userName: '18949822407',
-		password: 'ops18949822407'
+		userName: '',
+		password: ''
 	})
 	// 表单验证规则
 	const loginFormRules = reactive({
