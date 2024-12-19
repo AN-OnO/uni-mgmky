@@ -99,8 +99,8 @@
 				{
 					"path": "search",
 					"style": {
-						"navigationBarTitleText": "",
-						"navigationStyle": "custom"
+						"navigationBarTitleText": "搜索",
+						"navigationBarBackgroundColor": "#D5E8FF"
 					}
 				},
 				{

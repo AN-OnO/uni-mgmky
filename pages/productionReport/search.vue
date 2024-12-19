@@ -1,10 +1,7 @@
 <template>
-	<view>
-		<uv-status-bar></uv-status-bar>
-		<view style="display: flex; margin: 30rpx 30rpx 0;">
-			<uv-icon name="arrow-left" size="20" @click="goback"></uv-icon>
-			<uv-search v-model="keyWords" :showAction='false' @search='search' placeholder="搜索单号/名称/客户名"></uv-search>
-		</view>
+	<view class="search-contain">
+		<uv-search bgColor="#ffffff" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='search'
+			placeholder="搜索单号/名称/客户名"></uv-search>
 		<view class="data-list padding-sm">
 			<view class="list-item" v-for="(item,index) in listData" :key="index"
 				@click="jumpToConfirm(item.orderItemNo)">
@@ -103,6 +100,11 @@
 </script>
 
 <style lang="scss">
+	.search-contain {
+		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		height: 100%;
+	}
+
 	.data-list {
 		display: grid;
 		row-gap: 20rpx;
