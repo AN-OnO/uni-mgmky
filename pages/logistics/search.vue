@@ -1,13 +1,11 @@
 <template>
-	<view>
-		<view style="height: calc(var(--status-bar-height) + 44px)"></view>
-		<view style="display: flex; ">
-			<uv-icon name="arrow-left" size="20" @click="goback"></uv-icon>
-			<uv-search v-model="keywords" placeholder="单号/产品名/客户号" :showAction='false' @search='search'></uv-search>
-		</view>
+	<view class="search-contain">
+		<uv-search bgColor="#ffffff" margin="0 30rpx 45rpx" v-model="keywords" placeholder="单号/产品名/客户号"
+			:showAction='false' @search='search'></uv-search>
 		<uni-swipe-action>
 			<uni-swipe-action-item v-for="(item, index) in listData" :key="index" :right-options="options"
-				:disabled="item.deliveryMethod != 3 || item.delivryStatus != 2" @click="cancelDelivery(item.orderItemNo)" >
+				:disabled="item.deliveryMethod != 3 || item.delivryStatus != 2"
+				@click="cancelDelivery(item.orderItemNo)">
 				<view class="data-contain" @click="jumpToInfo(item)">
 					<view class="flex-between">
 						<text class="list-companyName">{{item.companyName}}</text>
@@ -94,7 +92,7 @@
 		onShow() {
 			if (this.keywords) {
 				const flag = uni.$Utils.getStorage('backbutton')
-				
+
 				if (flag) {
 					uni.$Utils.removeStorage('backbutton')
 				} else {
@@ -210,6 +208,11 @@
 </script>
 
 <style>
+	.search-contain {
+		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		height: 100%;
+	}
+
 	.logistics-method {
 		font-weight: 500;
 		font-size: 27rpx;
