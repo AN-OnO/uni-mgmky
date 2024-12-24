@@ -35,60 +35,61 @@
 					<image class="image" src="/static/images/logistics/baseInfo.svg" mode=""></image>
 					<text class="text">订单信息</text>
 				</view>
-				<view class="margin-left-xl" style="display: flex;">
-					<image class="order-img" :src='data.productImage'></image>
-					<view>
-						<uni-tooltip>
-							<view class="uv-line-3 info-productName">{{data.productName}}</view>
-							<template v-slot:content>
-								<view>
-									{{data.productName}}
-								</view>
-							</template>
-						</uni-tooltip>
-						<text class="orderCount">X{{data.orderCount}}</text>
+				<view class="margin-left-xl">
+					<view style="display: flex;">
+						<image class="order-img" :src='data.productImage'></image>
+						<view>
+							<uni-tooltip>
+								<view class="uv-line-3 info-productName">{{data.productName}}</view>
+								<template v-slot:content>
+									<view>
+										{{data.productName}}
+									</view>
+								</template>
+							</uni-tooltip>
+							<text class="orderCount">X{{data.orderCount}}</text>
+						</view>
 					</view>
+					<view class="info-divider"></view>
+					<uv-form labelStyle="font-size: 27rpx;color: #808080;line-height: 38rpx;">
+						<uv-form-item class="align-right " label="订单编号:" labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.orderNo}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item class="align-right " label="生产单号:" labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.orderItemNo}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item class="align-right " label="下单时间:" labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.orderTime}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.deliveryType}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item v-if="data.status == 2" class="align-right " label="完成时间:" labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.finishTime}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right " label="寄件单号:"
+							labelWidth='250rpx'>
+							<template v-slot:right>
+								<text class="form-text">{{data.express_fee}}</text>
+							</template>
+						</uv-form-item>
+						<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right " label="寄件图片:"
+							labelWidth='250rpx' labelPosition='top'>
+							<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item" width="145.04rpx"
+								height="145.04rpx" style="margin: 8rpx;"></uv-image>
+						</uv-form-item>
+					</uv-form>
 				</view>
-				<view class="info-divider"></view>
-				<uv-form class="font-style margin-left-xl"
-					labelStyle="font-size: 27rpx;color: #808080;line-height: 38rpx;">
-					<uv-form-item class="align-right " label="订单编号:" labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.orderNo}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item class="align-right " label="生产单号:" labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.orderItemNo}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item class="align-right " label="下单时间:" labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.orderTime}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item v-if="deliveryMethod == 4" class="align-right " label="邮寄方式:" labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.deliveryType}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item v-if="data.status == 2" class="align-right " label="完成时间:" labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.finishTime}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right " label="寄件单号:"
-						labelWidth='250rpx'>
-						<template v-slot:right>
-							<text>{{data.express_fee}}</text>
-						</template>
-					</uv-form-item>
-					<uv-form-item v-if="deliveryMethod == 4 && data.status == 2" class="align-right " label="寄件图片:"
-						labelWidth='250rpx' labelPosition='top'>
-						<uv-image v-for="(item, index) in data.photoList" :key="index" :src="item" width="145.04rpx"
-							height="145.04rpx" style="margin: 8rpx;"></uv-image>
-					</uv-form-item>
-				</uv-form>
 			</view>
 			<view v-if="data.orderRemark?.length > 0" class="card">
 				<view class='flex-center'>
@@ -239,7 +240,7 @@
 
 
 	.info-divider {
-		margin: 15rpx 0 15rpx 50rpx;
+		margin: 15rpx 0;
 		border: 2rpx solid #F2F3F5;
 	}
 
@@ -305,15 +306,9 @@
 		line-height: 42rpx;
 	}
 
-	.uv-form.font-style .uv-form-item {
+	.form-text {
 		font-size: 27rpx;
 		color: #333333;
-		line-height: 38rpx;
-	}
-
-	.uv-form.font-style .uv-form-item__body__left__content__label {
-		font-size: 27rpx;
-		color: #808080;
 		line-height: 38rpx;
 	}
 
