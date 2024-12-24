@@ -3,10 +3,12 @@
 		<template v-if="orderInfo">
 			<view class="data-list padding">
 				<view v-for="(item,index) in orderInfo.orderItemTrackings" :key="index" class="data-contain">
-					<view :class="['list-item',{'active':hasSelection(item.code)}]" @click="handleSelect(item)">
-						<image class="item-image" :src="item.photo" mode="aspectFit" />
+					<view :class="['list-item',{'active':hasSelection(item.productTechnologyId)}]"
+						@click="handleSelect(item)">
+						<!-- <image class="item-image" :src="item.photo" mode="aspectFit" /> -->
+						<text :class="[iconClass(item.productTechnologyName),{'active': item.uStatus === 1}]"></text>
 					</view>
-					<text class="item-name">{{ item.name }}</text>
+					<text class="item-name">{{ item.productTechnologyName }}</text>
 				</view>
 			</view>
 
@@ -58,6 +60,7 @@
 </template>
 
 <script>
+	import iconMapping from '@/common/icon-alias';
 	import {
 		GetOrderItemAndTrackings
 	} from '@/apis/production.js'
@@ -71,22 +74,27 @@
 				selection: []
 			}
 		},
-		onLoad() {
-			this.init()
+		onLoad(option) {
+			if (option.orderItemNo) {
+				this.init(option.orderItemNo)
+			}
 		},
 		computed: {
 			hasSelection() {
-				return (code) => {
-					return this.selection.map(x => x.code).includes(code)
+				return (id) => {
+					return this.selection.map(x => x.productTechnologyId).includes(id)
 				}
 			}
 		},
 		methods: {
-			init() {
+			iconClass(iconName) {
+				return `iconfont ${iconMapping[iconName]}`;
+			},
+			init(orderItemNo) {
 				this.loading = true
 
 				GetOrderItemAndTrackings({
-					orderItemNo: 'T097194'  
+					orderItemNo: orderItemNo
 				}).then(res => {
 					console.log('GetOrderItemAndTrackings api result:', res)
 					if (res.code === 0) {
@@ -95,9 +103,12 @@
 				}).finally(() => this.loading = false)
 			},
 			handleSelect(item) {
-				const existCode = this.hasSelection(item.code)
-				if (existCode) {
-					this.selection = this.selection.filter(x => x.code !== item.code)
+				if (item.uStatus !== 1) {
+					return uni.$uv.toast('未完成工艺无法选择')
+				}
+				const existItem = this.hasSelection(item.productTechnologyId)
+				if (existItem) {
+					this.selection = this.selection.filter(x => x.productTechnologyId !== item.productTechnologyId)
 				} else {
 					this.selection.push(item)
 				}
@@ -107,6 +118,8 @@
 </script>
 
 <style lang="scss" scoped>
+	@import "@/static/font/iconfont.css";
+
 	.page-container {
 		background: linear-gradient(180deg, #D5E8FF 0%, #FFFFFF 100%), #F2F2F2;
 		height: 100vh;
@@ -212,5 +225,14 @@
 		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;
+	}
+
+	.iconfont {
+		font-size: 76.34rpx;
+		color: #808080;
+
+		&.active {
+			color: #2FB7DF;
+		}
 	}
 </style>
