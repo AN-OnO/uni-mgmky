@@ -126,6 +126,7 @@
 						}}</text>
 			</button>
 		</view>
+		<uv-loading-page :loading="loading"></uv-loading-page>
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
 			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo" />
 		</uv-modal>
@@ -147,6 +148,7 @@
 				deliveryMethod: 3,
 				data: {},
 				orderItemNo: '',
+				loading: true,
 			}
 		},
 		onLoad(options) {
@@ -165,7 +167,7 @@
 					orderItemNo: this.orderItemNo
 				}).then(res => {
 					this.data = res.data
-				})
+				}).finally(() => this.loading = false)
 			},
 			async confirm(orderItemNo) {
 				if (this.data.status == 1) {
