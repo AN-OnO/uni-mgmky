@@ -66,7 +66,7 @@
 							console.log('扫码结果：', res);
 							uni.navigateTo({
 								// 批量报工工艺选择
-								url: `/pages/productionReport/batch`
+								url: `/pages/productionReport/batch?orderItemNo=${res.result}`
 							})
 						}
 					});

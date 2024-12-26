@@ -10,6 +10,14 @@ function checkWhite(url) {
 	return whitePage.includes(path)
 }
 
+const blackPages = []
+// 拦截黑名单
+function checkBlack(url) {
+	if (!url) return true
+	const path = url.split('?')[0]
+	return blackPages.some(page => path.includes(page))
+}
+
 // 要拦截的跳转方式
 let arr = ["navigateTo", "switchTab", "redirectTo", "reLaunch"];
 arr.forEach(value => {

@@ -3,10 +3,11 @@
 		<template v-if="orderInfo">
 			<view class="data-list padding">
 				<view v-for="(item,index) in orderInfo.orderItemTrackings" :key="index" class="data-contain">
-					<view :class="['list-item',{'active':hasSelection(item.code)}]" @click="handleSelect(item)">
-						<image class="item-image" :src="item.photo" mode="aspectFit" />
+					<view :class="['list-item',{'active':hasSelection(item.productTechnologyId)}]"
+						@click="handleSelect(item)">
+						<text :class="[iconClass(item.productTechnologyName),{'active': item.uStatus === 1}]"></text>
 					</view>
-					<text class="item-name">{{ item.name }}</text>
+					<text class="item-name">{{ item.productTechnologyName }}</text>
 				</view>
 			</view>
 
@@ -17,18 +18,19 @@
 					<text>{{orderInfo.companyName}}</text>
 				</view>
 				<view class="order-info">
-					<text :class="[{'uv-line-2':!showMore}]">{{orderInfo.productName}}</text>
-					<view class="flex-row justify-end padding-top-xs">
+					<text id="productName" ref="productName"
+						:class="[{'uv-line-2':showMoreIcon&&!readMore}]">{{orderInfo.productName}}</text>
+					<view class="flex-row justify-end padding-top-xs" v-if="showMoreIcon">
 						<view class="tag-wrap">
-							<uv-icon @click="showMore = !showMore" :name="showMore?'arrow-up':'arrow-down'"
-								:label="showMore?'收起':'展开'" label-size="23rpx" size="28rpx" label-pos="left"
+							<uv-icon @click="readMore = !readMore" :name="readMore?'arrow-up':'arrow-down'"
+								:label="readMore?'收起':'更多'" label-size="23rpx" size="28rpx" label-pos="left"
 								color="#808080" label-color="#808080"></uv-icon>
 						</view>
 					</view>
 				</view>
 				<view class="padding-top-lg">
-					<button type="default" class="list-button">
-						<text class="button-text">确认</text>
+					<button type="default" class="list-button" @click="onConfirm">
+						<text class="button-text text-white">确认</text>
 					</button>
 				</view>
 				<uv-safe-bottom></uv-safe-bottom>
@@ -39,15 +41,22 @@
 		</template>
 
 		<uv-popup ref="popup" mode="bottom" round="31rpx" closeable>
-			<view style="width: 600rpx;">
-
-
-				<view>
-					<button type="default" class="list-button">
-						<text class="button-text">取消</text>
+			<view>
+				<view class="popup-title text-center"><text class="text-xl text-bold">您将完成以下工艺</text></view>
+				<view class="data-list padding">
+					<view v-for="(item,index) in selection" :key="index" class="data-contain">
+						<view class="list-item small">
+							<text :class="[iconClass(item.productTechnologyName),'active']"></text>
+						</view>
+						<text class="item-name">{{ item.productTechnologyName }}</text>
+					</view>
+				</view>
+				<view class="flex-row padding-lr">
+					<button type="default" class="list-button default margin-right-sm" @click="onCancel">
+						<text class="button-text text-dark">取消</text>
 					</button>
-					<button type="default" class="list-button">
-						<text class="button-text">确认</text>
+					<button type="default" class="list-button" @click="onFinish">
+						<text class="button-text text-white">确认</text>
 					</button>
 				</view>
 			</view>
@@ -58,7 +67,9 @@
 </template>
 
 <script>
+	import iconMapping from '@/common/icon-alias';
 	import {
+		BatchScanResult,
 		GetOrderItemAndTrackings
 	} from '@/apis/production.js'
 	export default {
@@ -66,47 +77,120 @@
 			return {
 				technologies: [],
 				orderInfo: null,
-				showMore: false,
+				readMore: false,
+				showMoreIcon: false,
 				loading: true,
 				selection: []
 			}
 		},
-		onLoad() {
-			this.init()
+		onLoad(option) {
+			if (option.orderItemNo) {
+				this.init(option.orderItemNo)
+			}
 		},
 		computed: {
 			hasSelection() {
-				return (code) => {
-					return this.selection.map(x => x.code).includes(code)
+				return (id) => {
+					return this.selection.map(x => x.productTechnologyId).includes(id)
 				}
 			}
 		},
 		methods: {
-			init() {
+			iconClass(iconName) {
+				return `iconfont ${iconMapping[iconName]}`;
+			},
+			init(orderItemNo) {
 				this.loading = true
 
 				GetOrderItemAndTrackings({
-					orderItemNo: 'T097194'  
+					orderItemNo: orderItemNo
 				}).then(res => {
-					console.log('GetOrderItemAndTrackings api result:', res)
+
 					if (res.code === 0) {
 						this.orderInfo = res.data
+
+						this.getContentHeight().then(height => {
+							console.log('getContentHeight height', height)
+							this.showMoreIcon = height > 50
+						})
 					}
 				}).finally(() => this.loading = false)
 			},
+			uvGetRect(selector) {
+				return new Promise((resolve) => {
+					uni.createSelectorQuery()
+						.in(this).select(selector)
+						.boundingClientRect((rect) => {
+							console.log(selector, rect)
+							if (rect) {
+								resolve(rect)
+							}
+						})
+						.exec()
+				})
+			},
+			// 获取内容的高度
+			async getContentHeight() {
+				// 延时一定时间再获取节点
+				await uni.$uv.sleep(30)
+				return new Promise(resolve => {
+					// #ifndef APP-NVUE
+
+					this.uvGetRect('#productName').then(res => {
+						console.log('uvGetRect res', res)
+						resolve(res.height)
+					})
+					// #endif
+
+					// #ifdef APP-NVUE
+					const ref = this.$refs.productName
+					dom.getComponentRect(ref, (res) => {
+						resolve(res.size.height)
+					})
+					// #endif
+				})
+			},
 			handleSelect(item) {
-				const existCode = this.hasSelection(item.code)
-				if (existCode) {
-					this.selection = this.selection.filter(x => x.code !== item.code)
+				if (item.uStatus !== 1) {
+					return uni.$uv.toast('未完成工艺无法选择')
+				}
+				const existItem = this.hasSelection(item.productTechnologyId)
+				if (existItem) {
+					this.selection = this.selection.filter(x => x.productTechnologyId !== item.productTechnologyId)
 				} else {
 					this.selection.push(item)
 				}
+			},
+			onConfirm() {
+				if (this.selection.length === 0) {
+					return uni.$uv.toast('请选择报工工艺')
+				}
+				this.$refs.popup.open();
+			},
+			onCancel() {
+				this.$refs.popup.close();
+			},
+			onFinish() {
+				// BatchScanResult({
+				// 	scanResult: "string",
+				// 	technologyids: [
+				// 		"3fa85f64-5717-4562-b3fc-2c963f66afa6"
+				// 	],
+				// 	checkinType: 0,
+				// 	employeeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+				// 	makeQuantity: 0,
+				// 	attachmentInfos: [
+
+				// 	]
+				// })
 			}
 		}
 	}
 </script>
 
 <style lang="scss" scoped>
+	@import "@/static/font/iconfont.css";
+
 	.page-container {
 		background: linear-gradient(180deg, #D5E8FF 0%, #FFFFFF 100%), #F2F2F2;
 		height: 100vh;
@@ -135,6 +219,10 @@
 		padding: 38rpx;
 		border-radius: 23rpx;
 		border: 6rpx solid #F2F2F2;
+
+		&.small {
+			padding: 28rpx;
+		}
 
 		&.active {
 			border-color: #FF6F1E;
@@ -197,20 +285,38 @@
 		}
 	}
 
+	.popup-title {
+		padding-top: 100rpx;
+		padding-bottom: 50rpx;
+	}
+
 	.list-button {
+		flex: 1;
 		height: 90rpx;
-		background: #2FB7DF;
+		background-color: #2FB7DF;
 		border-radius: 15rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+
+		&.default {
+			background-color: #F0F0F0;
+		}
 	}
 
 	.button-text {
 		font-weight: 500;
 		font-size: 34rpx;
-		color: rgba(255, 255, 255, 0.9);
 		line-height: 42rpx;
 		vertical-align: super;
+	}
+
+	.iconfont {
+		font-size: 76.34rpx;
+		color: #808080;
+
+		&.active {
+			color: #2FB7DF;
+		}
 	}
 </style>

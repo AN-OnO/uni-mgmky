@@ -54,3 +54,12 @@ export function GetTechnologyOrderItemDetail(params) {
 export function ScanResult(params) {
 	return request.post('/api/Production/ScanResult', params);
 }
+
+/**
+ * 批量扫码
+ * @param params 
+ * @return 
+ */
+export function BatchScanResult(params) {
+	return request.post('/api/Production/BatchScanResult', params);
+}
