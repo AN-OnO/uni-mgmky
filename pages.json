@@ -139,9 +139,10 @@
 			"pages": [{
 					"path": "list",
 					"style": {
-						"navigationBarTitleText": "",
-						"navigationBarTextStyle": "white",
-						"navigationBarBackgroundColor": "#2FB7DF"
+						"navigationStyle": "custom"
+						// "navigationBarTitleText": "",
+						// "navigationBarTextStyle": "white",
+						// "navigationBarBackgroundColor": "#2FB7DF"
 					}
 				},
 				{

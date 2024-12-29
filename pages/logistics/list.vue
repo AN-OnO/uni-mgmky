@@ -1,6 +1,19 @@
 <template>
 	<view class="page-container">
-		<view style="background-color: #2FB7DF; padding-bottom: 30rpx;">
+		<view class="navbar-wrap">
+
+			<uv-status-bar></uv-status-bar>
+			<!-- <view class="flex-row align-center"> -->
+			<view class="navbar-wrap-title">
+				<view class="left-icon">
+					<uv-icon name="arrow-left" color="#fff" @click="navigateBack"></uv-icon>
+				</view>
+				<view class="flex-1 text-center">
+					<text class="text-white">{{pageTitle}}</text>
+				</view>
+			</view>
+			<!-- </view> -->
+
 			<view style="display: flex; justify-content: space-around;">
 				<view>
 					<view class="amount">{{amount}}</view>
@@ -12,7 +25,9 @@
 					<view class="today-info">今日收益(元)</view>
 				</view>
 			</view>
+
 		</view>
+
 		<view style="background-color: #F0F1F5;">
 			<view style="width: 92%; margin: auto; ">
 				<view class="flex-between">
@@ -84,6 +99,7 @@
 		},
 		data() {
 			return {
+				pageTitle: '',
 				deliveryMethod: 3,
 				buttonText: '开始取送',
 				list: [{
@@ -112,9 +128,10 @@
 		onLoad(options) {
 			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.buttonText = options.deliveryMethod == 3 ? '开始配送' : '开始取送';
-			uni.setNavigationBarTitle({
-				title: this.deliveryMethod == 3 ? '配送' : '物流'
-			});
+			// uni.setNavigationBarTitle({
+			// 	title: this.deliveryMethod == 3 ? '配送' : '物流'
+			// });
+			this.pageTitle = this.deliveryMethod == 3 ? '配送' : '物流'
 		},
 		onShow() {
 			const flag = uni.$Utils.getStorage('backbutton')
@@ -267,14 +284,40 @@
 					}
 				})
 			},
+			navigateBack() {
+				uni.navigateBack()
+			}
 		}
 	}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 	.page-container {
 		background-color: #F0F1F5;
-		height: 100%;
+	}
+
+	.navbar-wrap {
+		background-image: linear-gradient(to bottom, #a7ecff, #2FB7DF);
+		padding-bottom: 30rpx;
+		position: sticky;
+		left: 0;
+		right: 0;
+		top: 0;
+		z-index: 110;
+
+		&-title {
+			position: relative;
+			height: 44px;
+			line-height: 44px;
+		}
+
+		.left-icon {
+			position: absolute;
+			top: 50%;
+			left: 20rpx;
+			padding: 10rpx;
+			transform: translateY(-50%);
+		}
 	}
 
 	.amount {
