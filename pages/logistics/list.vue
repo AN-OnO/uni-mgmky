@@ -294,6 +294,7 @@
 <style lang="scss" scoped>
 	.page-container {
 		background-color: #F0F1F5;
+		height: 100%;
 	}
 
 	.navbar-wrap {
