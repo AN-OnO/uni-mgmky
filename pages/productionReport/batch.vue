@@ -75,6 +75,7 @@
 	export default {
 		data() {
 			return {
+				scanResult: '',
 				technologies: [],
 				orderInfo: null,
 				readMore: false,
@@ -84,8 +85,9 @@
 			}
 		},
 		onLoad(option) {
-			if (option.orderItemNo) {
-				this.init(option.orderItemNo)
+			this.scanResult = option.orderItemNo
+			if (this.scanResult) {
+				this.init()
 			}
 		},
 		computed: {
@@ -99,11 +101,11 @@
 			iconClass(iconName) {
 				return `iconfont ${iconMapping[iconName]}`;
 			},
-			init(orderItemNo) {
+			init() {
 				this.loading = true
 
 				GetOrderItemAndTrackings({
-					orderItemNo: orderItemNo
+					orderItemNo: this.scanResult
 				}).then(res => {
 
 					if (res.code === 0) {
@@ -171,18 +173,22 @@
 				this.$refs.popup.close();
 			},
 			onFinish() {
-				// BatchScanResult({
-				// 	scanResult: "string",
-				// 	technologyids: [
-				// 		"3fa85f64-5717-4562-b3fc-2c963f66afa6"
-				// 	],
-				// 	checkinType: 0,
-				// 	employeeId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-				// 	makeQuantity: 0,
-				// 	attachmentInfos: [
+				BatchScanResult({
+					scanResult: this.scanResult,
+					technologyids: technologyids
+				}).then(res => {
+					const success = res.code === 0
+					let message = success ? '任务已完成！' : (res.message || '任务完成失败！')
 
-				// 	]
-				// })
+					uni.showModal({
+						title: '提示',
+						content: message,
+						showCancel: false,
+						success: ({
+							confirm
+						}) => confirm && navigateBack(success)
+					})
+				})
 			}
 		}
 	}
