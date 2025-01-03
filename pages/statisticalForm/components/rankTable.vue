@@ -130,15 +130,6 @@
 		line-height: 34rpx;
 	}
 
-	.line-clamp-name {
-		height: 36rpx;
-		display: -webkit-box;
-		overflow: hidden;
-		text-overflow: ellipsis;
-		-webkit-line-clamp: 1;
-		-webkit-box-orient: vertical;
-	}
-
 	.bottom-line {
 		width: 100%;
 		background: #F0F0F0;
