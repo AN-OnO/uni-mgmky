@@ -71,6 +71,13 @@
 				"navigationBarTitleText": "我的收益",
 				"navigationBarBackgroundColor": "#D5E8FF"
 			}
+		},
+		{
+			"path" : "pages/performanceGain/index",
+			"style": {
+				"navigationBarTitleText": "",
+				"navigationBarBackgroundColor": "#E6F1FF"
+			}
 		}
 	],
 	"subPackages": [{

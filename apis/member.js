@@ -152,3 +152,12 @@ export function ListMyPerformances(params) {
 export function LogOut(params) {
 	return request.post('/api/UserMgr/LogOut', params)
 }
+
+/**
+ * 获取绩效排名
+ * @param params 
+ * @return 
+ */
+export function GetPerformanceRank(params) {
+	return request.post('/api/CalcPerformance/GetPerformanceRank', params)
+}

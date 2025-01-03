@@ -5,9 +5,9 @@
 			<text class="app-description margin-top-sm">轻松掌握每一步</text>
 		</view>
 		<view class="flex-row margin-top-lg margin-bottom-sm">
-			<view class="flex-row flex-1 align-center card margin-right-sm" @click="handleToolEvent(tools[0])">
-				<image class="image-icon" :src="$IMG_URL +'/app/考勤打卡1.png'"></image>
-				<text>考勤打卡</text>
+			<view class="flex-row flex-1 align-center card margin-right-sm" @click="handleToolEvent({event: '/pages/performanceGain/index'})">
+				<image class="image-icon" src="/static/images/tabbar/gain.svg"></image>
+				<text>绩效收益</text>
 			</view>
 			<view class="flex-row flex-1 align-center card relative" @click="handleToolEvent(tools[1])">
 				<image class="image-icon" :src="$IMG_URL +'/app/统计报表1.png'"></image>

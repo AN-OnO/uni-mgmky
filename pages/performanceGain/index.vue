@@ -1,0 +1,240 @@
+<template>
+	<view>
+		<uv-sticky bgColor='#FFFFFF'>
+			<image v-if="showBanner" src="/static/images/gain/绩效收益banner.png" mode="" class="banner-img"></image>
+			<view class="flex-row align-center justify-between padding-lr"
+				:style="{'margin-top': showBanner ? '200rpx' : '0'}">
+				<view @click="open" class="mode-title">
+					{{modeTitle}}
+					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+				</view>
+				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
+					@confirm="confirm"></uv-datetime-picker>
+				<term-picker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
+				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
+						:current="current" @change="change"></uv-subsection></view>
+			</view>
+		</uv-sticky>
+		<view>
+			<view class="flex-row align-center justify-between padding">
+				<text class="section-title">员工绩效排名</text>
+				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['前台', '后道']"
+						:current="currentSource" @change="changeSource"></uv-subsection></view>
+			</view>
+			<view class="padding-lr">
+				<uni-table>
+					<!-- 表头行 -->
+					<uni-tr style="background: #F5F6F8;">
+						<uni-th width="50" align="left"><text class="table-head">排名</text></uni-th>
+						<uni-th width="100" align="left"><text class="table-head">员工姓名</text></uni-th>
+						<uni-th width="100" align="right"><text class="table-head">完成数量</text></uni-th>
+						<uni-th width="100" align="right"><text class="table-head">总收益</text></uni-th>
+					</uni-tr>
+					<!-- 表格数据行 -->
+					<uni-tr v-for="(item, index) in renderRank" :key="index">
+						<uni-td align="center">
+							<image v-if="index < 3"
+								:src="$IMG_URL+ (index == 0 ? '/statisticalForm/gold.svg' : index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
+								class='medal-img'></image>
+							<text class="index-text" v-else>{{index + 1}}</text>
+						</uni-td>
+						<uni-td>
+							{{item.employeeName}}
+						</uni-td>
+						<uni-td align="right">{{formatNumber(item.completedOrderCount)}}</uni-td>
+						<uni-td align="right">{{formatNumber(item.totalAmount)}}</uni-td>
+					</uni-tr>
+				</uni-table>
+				<uv-icon v-if="performanceRank.length > 10 && showMore" @click="showMore = !showMore" class="margin-top-sm justify-center" name="arrow-down"
+					label="查看更多" labelPos="left"></uv-icon>
+			</view>
+		</view>
+	</view>
+</template>
+
+<script>
+	import dayjs from 'dayjs';
+	import TermPicker from '@/components/term-picker/term-picker.vue'
+import { GetPerformanceRank } from '../../apis/member';
+	export default {
+		data() {
+			const date = dayjs().subtract(1, 'day');
+
+			return {
+				value: Number(new Date()),
+				mode: 'date',
+				showBanner: true,
+				showMore: true,
+				pickerVisable: false,
+				current: 0,
+				currentSource: 0,
+				modeTitle: date.format('YYYY/MM/DD'),
+				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
+				performanceRank: []
+			}
+		},
+		onLoad() {
+			this.change(0)
+		},
+		onPageScroll(e) {
+			if (e.scrollTop > 0) {
+				this.showBanner = false
+				uni.setNavigationBarColor({
+					frontColor: '#000000',
+					backgroundColor: '#ffffff'
+				});
+			}
+		},
+		computed: {
+			renderRank() {
+				return this.showMore ? this.performanceRank.slice(0, 10) : this.performanceRank
+			}
+		},
+		methods: {
+			change(index) {
+				if (index == 0) {
+					this.mode = 'date';
+					const date = dayjs().subtract(1, 'day').format('YYYY/MM/DD');
+					this.modeTitle = date;
+					this.updateData(date, date)
+				} else if (index == 1) {
+					this.mode = 'year-month';
+					this.modeTitle = dayjs().format('YYYY/MM')
+					this.updateData(dayjs().startOf('month').format('YYYY-MM-DD'), dayjs().endOf('month').format(
+						'YYYY-MM-DD'))
+				} else {
+					this.mode = 'year';
+					this.modeTitle = dayjs().format('YYYY')
+					const year = dayjs().year()
+					this.updateData(`${year}-01-01`, `${year}-12-31`)
+				}
+				this.current = index;
+				this.value = Number(new Date())
+			},
+			open() {
+				if (this.mode == 'date') {
+					this.pickerVisable = true
+				} else {
+					this.$refs.datetimePicker.open();
+				}
+			},
+			confirmRange(date) {
+				this.modeTitle = date[0] == date[1] ? dayjs(date[0]).format('YYYY/MM/DD') :
+					`${dayjs(date[0]).format('YYYY/MM/DD')}-${dayjs(date[1]).format('YYYY/MM/DD')}`
+				this.updateData(date[0], date[1])
+			},
+			confirm(e) {
+				if (e.mode == 'year') {
+					const year = dayjs(e.value).year();
+					this.modeTitle = year
+					this.updateData(`${year}-01-01`, `${year}-12-31`)
+				} else {
+					this.modeTitle = dayjs(e.value).format('YYYY/MM')
+					this.updateData(dayjs(e.value).startOf('month').format('YYYY-MM-DD'), dayjs(e.value).endOf('month')
+						.format('YYYY-MM-DD'))
+				}
+			},
+			changeSource(index) {
+				this.currentSource = index;
+				
+				const currentTime = this.modeTitle
+				if (this.mode == 'year') {
+					this.updateData(`${currentTime}-01-01`, `${currentTime}-12-31`)
+				} else if (this.mode == 'year-month') {
+					this.updateData(dayjs(currentTime).startOf('month').format('YYYY-MM-DD'), dayjs(currentTime).endOf('month')
+						.format('YYYY-MM-DD'))
+				} else {
+					const date = currentTime.split('-')
+					this.updateData(date[0], date[1] || date[0])
+				}
+			},
+			updateData(beginDate, endDate) {
+				GetPerformanceRank({
+					beginDate,
+					endDate,
+					positionType: this.currentSource + 1
+				}).then(res => {
+					this.performanceRank = res.data
+				})
+			},
+			formatNumber(num) {
+				// 将数字转换为字符串
+				const numStr = num.toString();
+			
+				// 使用正则表达式添加千分符
+				const [integerPart, decimalPart] = numStr.split('.');
+				const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+			
+				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
+			},
+		}
+	}
+</script>
+
+<style lang="scss">
+	.banner-img {
+		position: absolute;
+		top: -150rpx;
+		height: 429rpx;
+		width: 100%;
+		z-index: -1;
+	}
+
+	.mode-title {
+		display: flex;
+		font-weight: 500;
+		font-size: 31rpx;
+		color: #333333;
+		line-height: 46rpx;
+	}
+
+	.arrow-img {
+		max-width: 30.53rpx;
+		max-height: 30.53rpx;
+		margin: auto;
+	}
+
+	.sub-section {
+		width: 300rpx;
+	}
+
+	.section-title {
+		position: relative;
+		padding-left: 0.7em;
+		font-weight: bold;
+		font-size: 34rpx;
+		color: #333333;
+		line-height: 53rpx;
+	}
+
+	.section-title::before {
+		content: '';
+		position: absolute;
+		left: 0;
+		height: 1em;
+		width: 0.25em;
+		border-radius: 10px;
+		background-color: #7BC7FC;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.table-head {
+		font-weight: bold;
+		font-size: 27rpx;
+		color: #333333;
+		line-height: 34rpx;
+	}
+
+	.medal-img {
+		max-width: 45.8rpx;
+		max-height: 45.8rpx;
+	}
+
+	.index-text {
+		font-weight: bold;
+		font-size: 23rpx;
+		color: #333333;
+		line-height: 34rpx;
+	}
+</style>
