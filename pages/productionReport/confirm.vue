@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<uv-empty v-if="isEmpty" mode="data" icon="https://cdn.uviewui.com/uview/empty/data.png"></uv-empty>
+		<uv-empty v-if="isEmpty" mode="data" ></uv-empty>
 		<view v-else-if="!loading" class="padding-sm">
 			<view class="card-ui flex-row align-center padding-tb">
 				<image class="svg-icon large"

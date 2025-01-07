@@ -1,11 +1,19 @@
 <template>
 	<view class="page-container">
+		<uv-sticky bg-color="#F0F1F5">
+			<view class="status-wrap">
+				<view class="status-item" v-for="s in statusList" :key="s.status">
+					<text class="status-icon" :style="{'backgroundColor':s.color}"></text>
+					<text class="text-ss">{{s.type}}</text>
+				</view>
+			</view>
+		</uv-sticky>
 		<template v-if="orderInfo">
-			<view class="data-list padding">
+			<view class="data-list flex-1 align-start padding">
 				<view v-for="(item,index) in orderInfo.orderItemTrackings" :key="index" class="data-contain">
 					<view :class="['list-item',{'active':hasSelection(item.productTechnologyId)}]"
 						@click="handleSelect(item)">
-						<text :class="[iconClass(item.productTechnologyName),{'active': item.uStatus === 1}]"></text>
+						<text :class="[iconClass(item.productTechnologyName),`active-${item.uStatus}`]"></text>
 					</view>
 					<text class="item-name">{{ item.productTechnologyName }}</text>
 				</view>
@@ -37,7 +45,7 @@
 			</view>
 		</template>
 		<template v-else>
-			<uv-empty mode="order" icon="https://cdn.uviewui.com/uview/empty/order.png"></uv-empty>
+			<uv-empty mode="order"></uv-empty>
 		</template>
 
 		<uv-popup ref="popup" mode="bottom" round="31rpx" closeable>
@@ -81,7 +89,20 @@
 				readMore: false,
 				showMoreIcon: false,
 				loading: true,
-				selection: []
+				selection: [],
+				statusList: [{
+					status: 0,
+					type: '未完成',
+					color: '#838d99'
+				}, {
+					status: 1,
+					type: '已完成',
+					color: '#73bd72'
+				}, {
+					status: 2,
+					type: '跳过',
+					color: '#fda038'
+				}]
 			}
 		},
 		onLoad(option) {
@@ -153,8 +174,8 @@
 				})
 			},
 			handleSelect(item) {
-				if (item.uStatus !== 1) {
-					return uni.$uv.toast('未完成工艺无法选择')
+				if (item.uStatus !== 0) {
+					return uni.$uv.toast('请选择未完成工艺')
 				}
 				const existItem = this.hasSelection(item.productTechnologyId)
 				if (existItem) {
@@ -173,6 +194,7 @@
 				this.$refs.popup.close();
 			},
 			onFinish() {
+				const technologyids = this.selection.map(x => x.productTechnologyId)
 				BatchScanResult({
 					scanResult: this.scanResult,
 					technologyids: technologyids
@@ -203,6 +225,41 @@
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
+	}
+
+	.status-wrap {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		height: 60rpx;
+		line-height: 60rpx;
+
+		.status-item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			margin: 0 30rpx;
+		}
+
+		.status-icon {
+			display: inline-block;
+			height: 18rpx;
+			width: 18rpx;
+			margin-right: 20rpx;
+			position: relative;
+
+			&::after {
+				content: '';
+				position: absolute;
+				top: -8rpx;
+				left: -8rpx;
+				background-color: transparent;
+				height: 18rpx;
+				width: 18rpx;
+				padding: 6rpx;
+				border: 1rpx solid #ddd;
+			}
+		}
 	}
 
 	.data-list {
@@ -321,8 +378,16 @@
 		font-size: 76.34rpx;
 		color: #808080;
 
-		&.active {
-			color: #2FB7DF;
+		&.active-0 {
+			color: #838d99;
+		}
+
+		&.active-1 {
+			color: #73bd72;
+		}
+
+		&.active-2 {
+			color: #fda038;
 		}
 	}
 </style>
