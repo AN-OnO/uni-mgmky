@@ -22,8 +22,7 @@
 				</view>
 			</view>
 
-			<uv-empty v-if="!listData.length&& loadStatus === 'nomore'" mode="order"
-				icon="https://cdn.uviewui.com/uview/empty/order.png"></uv-empty>
+			<uv-empty v-if="!listData.length&& loadStatus === 'nomore'" mode="order"></uv-empty>
 			<uv-load-more v-else :status="loadStatus" />
 		</view>
 		<uv-loading-page :loading="loading"></uv-loading-page>
