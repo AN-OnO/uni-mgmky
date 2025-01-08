@@ -45,17 +45,22 @@
 						<uni-td align="right">{{formatNumber(item.totalAmount)}}</uni-td>
 					</uni-tr>
 				</uni-table>
-				<uv-icon v-if="performanceRank.length > 10 && showMore" @click="showMore = !showMore" class="margin-top-sm justify-center" name="arrow-down"
-					label="查看更多" labelPos="left"></uv-icon>
+				<view class="margin-top-sm flex-row justify-center">
+					<uv-icon v-if="performanceRank.length > 10 && showMore" @click="showMore = !showMore"
+						name="arrow-down" label="查看更多" labelPos="left"></uv-icon>
+				</view>
 			</view>
 		</view>
+		<uv-safe-bottom></uv-safe-bottom>
 	</view>
 </template>
 
 <script>
 	import dayjs from 'dayjs';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
-import { GetPerformanceRank } from '../../apis/member';
+	import {
+		GetPerformanceRank
+	} from '../../apis/member';
 	export default {
 		data() {
 			const date = dayjs().subtract(1, 'day');
@@ -136,12 +141,13 @@ import { GetPerformanceRank } from '../../apis/member';
 			},
 			changeSource(index) {
 				this.currentSource = index;
-				
+
 				const currentTime = this.modeTitle
 				if (this.mode == 'year') {
 					this.updateData(`${currentTime}-01-01`, `${currentTime}-12-31`)
 				} else if (this.mode == 'year-month') {
-					this.updateData(dayjs(currentTime).startOf('month').format('YYYY-MM-DD'), dayjs(currentTime).endOf('month')
+					this.updateData(dayjs(currentTime).startOf('month').format('YYYY-MM-DD'), dayjs(currentTime).endOf(
+							'month')
 						.format('YYYY-MM-DD'))
 				} else {
 					const date = currentTime.split('-')
@@ -160,11 +166,11 @@ import { GetPerformanceRank } from '../../apis/member';
 			formatNumber(num) {
 				// 将数字转换为字符串
 				const numStr = num.toString();
-			
+
 				// 使用正则表达式添加千分符
 				const [integerPart, decimalPart] = numStr.split('.');
 				const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-			
+
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
 		}
