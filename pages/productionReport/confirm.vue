@@ -327,7 +327,7 @@
 					technologyid: this.orderDetail.productionTechnologyId,
 					// checkinType: 0, // 1：切换 2：覆盖 3：新增
 					// employeeId: "",
-					makeQuantity: this.orderDetail.unCompleteCount, // 完成件数
+					makeQuantity: this.orderCount, // 完成件数
 					attachmentInfos: this.attachmentInfos
 				}).then(res => {
 					const success = res.code === 0
