@@ -53,13 +53,13 @@
 				<view class="popup-title text-center"><text class="text-xl text-bold">您将完成以下工艺</text></view>
 				<view class="data-list padding">
 					<view v-for="(item,index) in selection" :key="index" class="data-contain">
-						<view class="list-item small">
-							<text :class="[iconClass(item.productTechnologyName),'active']"></text>
+						<view class="list-item actived small">
+							<text :class="[iconClass(item.productTechnologyName)]"></text>
 						</view>
 						<text class="item-name">{{ item.productTechnologyName }}</text>
 					</view>
 				</view>
-				<view class="flex-row padding-lr">
+				<view class="flex-row padding">
 					<button type="default" class="list-button default margin-right-sm" @click="onCancel">
 						<text class="button-text text-dark">取消</text>
 					</button>
@@ -91,10 +91,6 @@
 				loading: true,
 				selection: [],
 				statusList: [{
-					status: 0,
-					type: '未完成',
-					color: '#838d99'
-				}, {
 					status: 1,
 					type: '已完成',
 					color: '#73bd72'
@@ -102,6 +98,10 @@
 					status: 2,
 					type: '跳过',
 					color: '#fda038'
+				}, {
+					status: 0,
+					type: '待完成',
+					color: '#838d99'
 				}]
 			}
 		},
@@ -265,7 +265,8 @@
 	.data-list {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		gap: 40rpx 10rpx;
+		grid-auto-rows:220rpx;
+		gap: 20rpx 10rpx;
 		overflow-y: auto;
 
 		.data-contain {
@@ -279,7 +280,7 @@
 
 	.list-item {
 		background-color: #fff;
-		padding: 38rpx;
+		padding: 30rpx;
 		border-radius: 23rpx;
 		border: 6rpx solid #F2F2F2;
 
@@ -289,6 +290,14 @@
 
 		&.active {
 			border-color: #FF6F1E;
+
+			.iconfont {
+				color: #73bd72;
+			}
+		}
+
+		&.actived .iconfont {
+			color: #73bd72;
 		}
 	}
 
