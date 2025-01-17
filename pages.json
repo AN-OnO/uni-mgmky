@@ -78,6 +78,14 @@
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#E6F1FF"
 			}
+		},
+		{
+			"path" : "pages/performanceGain/detail",
+			"style" : 
+			{
+				"navigationBarTitleText" : "",
+				"navigationBarBackgroundColor": "#D5E8FF"
+			}
 		}
 	],
 	"subPackages": [{

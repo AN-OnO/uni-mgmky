@@ -26,12 +26,13 @@
 					<!-- 表头行 -->
 					<uni-tr style="background: #F5F6F8;">
 						<uni-th width="50" align="left"><text class="table-head">排名</text></uni-th>
-						<uni-th width="100" align="left"><text class="table-head">员工姓名</text></uni-th>
-						<uni-th width="100" align="right"><text class="table-head">完成数量</text></uni-th>
+						<uni-th width="80" align="left"><text class="table-head">员工姓名</text></uni-th>
+						<uni-th width="80" align="right"><text class="table-head">完成数量</text></uni-th>
 						<uni-th width="100" align="right"><text class="table-head">总收益</text></uni-th>
+						<uni-th width="50" align="right"><text class="table-head">详情</text></uni-th>
 					</uni-tr>
 					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in renderRank" :key="index">
+					<uni-tr v-for="(item, index) in renderRank" :key="index" @tap="goDetail(item.employeeId)">
 						<uni-td align="center">
 							<image v-if="index < 3"
 								:src="$IMG_URL+ (index == 0 ? '/statisticalForm/gold.svg' : index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
@@ -43,11 +44,17 @@
 						</uni-td>
 						<uni-td align="right">{{formatNumber(item.completedOrderCount)}}</uni-td>
 						<uni-td align="right">{{formatNumber(item.totalAmount)}}</uni-td>
+						<uni-td align="right">
+							<view class="flex-row justify-end">
+								<uv-icon name="arrow-right"></uv-icon>
+							</view>
+						</uni-td>
 					</uni-tr>
 				</uni-table>
 				<view class="margin-top-sm flex-row justify-center">
-					<uv-icon v-if="performanceRank.length > 10 && showMore" @click="showMore = !showMore"
-						name="arrow-down" label="查看更多" labelPos="left"></uv-icon>
+					<uv-icon v-if="performanceRank.length > 10" @click="showMore = !showMore"
+						:name="showMore ? 'arrow-down' : 'arrow-up'" :label="showMore ? '查看更多' : '收起'"
+						labelPos="left"></uv-icon>
 				</view>
 			</view>
 		</view>
@@ -73,6 +80,8 @@
 				pickerVisable: false,
 				current: 0,
 				currentSource: 0,
+				beginDate: '',
+				endDate: '',
 				modeTitle: date.format('YYYY/MM/DD'),
 				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
 				performanceRank: []
@@ -161,6 +170,8 @@
 					positionType: this.currentSource + 1
 				}).then(res => {
 					this.performanceRank = res.data
+					this.beginDate = beginDate
+					this.endDate = endDate
 				})
 			},
 			formatNumber(num) {
@@ -173,6 +184,11 @@
 
 				return decimalPart ? `${formattedInteger}.${decimalPart}` : formattedInteger;
 			},
+			goDetail(id) {
+				uni.navigateTo({
+					url: `/pages/performanceGain/detail?employeeId=${id}&beginDate=${this.beginDate}&endDate=${this.endDate}&current=${this.current}&positionType=${this.currentSource + 1}`
+				})
+			}
 		}
 	}
 </script>
