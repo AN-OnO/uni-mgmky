@@ -12,7 +12,7 @@
 				</uv-form-item>
 				<uv-form-item prop="password" :custom-style="formItemStyle">
 					<uv-input v-model="loginForm.password" placeholder="请输入密码" fontSize="16"
-						border="none" :type="showPassword ? 'text' : 'password'">
+						border="none" :password="!showPassword">
 						<template v-slot:suffix>
 							<image :src="showPassword ? '/static/images/tabbar/unlocked.svg' : '/static/images/tabbar/locked.svg'"
 								style="max-width: 45.8rpx;max-height: 45.8rpx;" @click="handlePassword"></image>
