@@ -70,7 +70,7 @@
 	} from '../../apis/member';
 	export default {
 		data() {
-			const date = dayjs().subtract(1, 'day');
+			const date = dayjs();
 
 			return {
 				value: Number(new Date()),
@@ -108,7 +108,7 @@
 			change(index) {
 				if (index == 0) {
 					this.mode = 'date';
-					const date = dayjs().subtract(1, 'day').format('YYYY/MM/DD');
+					const date = dayjs().format('YYYY/MM/DD');
 					this.modeTitle = date;
 					this.updateData(date, date)
 				} else if (index == 1) {

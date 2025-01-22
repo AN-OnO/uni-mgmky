@@ -42,7 +42,7 @@
 	} from '../../apis/member';
 	export default {
 		data() {
-			const date = dayjs().subtract(1, 'day');
+			const date = dayjs();
 
 			return {
 				pageIndex: 1,
@@ -90,7 +90,7 @@
 				this.refresh()
 			},
 			change(index) {
-				const date = dayjs().subtract(1, 'day')
+				const date = dayjs()
 
 				if (index == 0) {
 					this.mode = 'date';
