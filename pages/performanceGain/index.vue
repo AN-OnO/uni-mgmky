@@ -25,11 +25,11 @@
 				<uni-table>
 					<!-- 表头行 -->
 					<uni-tr style="background: #F5F6F8;">
-						<uni-th width="50" align="left"><text class="table-head">排名</text></uni-th>
-						<uni-th width="80" align="left"><text class="table-head">员工姓名</text></uni-th>
-						<uni-th width="80" align="right"><text class="table-head">完成数量</text></uni-th>
-						<uni-th width="100" align="right"><text class="table-head">总收益</text></uni-th>
-						<uni-th width="50" align="right"><text class="table-head">详情</text></uni-th>
+						<uni-th width="80rpx" align="left"><text class="table-head">排名</text></uni-th>
+						<uni-th width="130rpx" align="left"><text class="table-head">员工姓名</text></uni-th>
+						<uni-th width="145rpx" align="right"><text class="table-head">完成数量</text></uni-th>
+						<uni-th width="155rpx" align="right"><text class="table-head">总收益</text></uni-th>
+						<uni-th width="80rpx" align="right"><text class="table-head">详情</text></uni-th>
 					</uni-tr>
 					<!-- 表格数据行 -->
 					<uni-tr v-for="(item, index) in renderRank" :key="index" @tap="goDetail(item.employeeId)">
