@@ -8,10 +8,15 @@
 			</view>
 		</uv-sticky>
 		<view class="data-list padding-sm">
-			<view class="list-item" v-for="(item,index) in listData" :key="index" @click="jumpToConfirm(item.orderItemNo)">
+			<view class="list-item" v-for="(item,index) in listData" :key="index"
+				@click="jumpToConfirm(item.orderItemNo)">
 				<view class="flex-row justify-between">
 					<text class="order-no">{{item.saleOrderNo}}</text>
-					<text class="checktime">{{item.checkintime}}</text>
+					<view class="tag" @click.stop="spread(item.orderItemNo)">
+						<text class="tag-text">{{item.curProductionTechnologyName}}</text>
+						<uv-icon :name="spreadArr.includes(item.orderItemNo) ? 'arrow-up' : 'arrow-down'"
+							color="#ffffff" size="12"></uv-icon>
+					</view>
 				</view>
 				<view class="order-company">
 					<text class="margin-right-sm">{{item.orderItemNo}}</text>
@@ -19,6 +24,23 @@
 				</view>
 				<view class="order-info uv-line-2">
 					{{item.productName}}
+				</view>
+				<view v-if="spreadArr.includes(item.orderItemNo)">
+					<view v-for="(comp, index) in item.orderItemAllTechs" :key="index">
+						<view class="component-name margin-left-sm">{{comp.componentName}}</view>
+						<uv-steps
+							:customStyle="{width: `${Math.min(comp.technologyStatuses.length / 10 * 100, 100)}%`}">
+							<uv-steps-item v-for="(tech, indx) in comp.technologyStatuses" :key="indx">
+								<template v-slot:title>
+									<text class="steps-title">{{tech.technologyName}}</text>
+								</template>
+								<template v-slot:icon>
+									<image class="steps-icon" :src="getProcessImg(item, tech, index)">
+									</image>
+								</template>
+							</uv-steps-item>
+						</uv-steps>
+					</view>
 				</view>
 			</view>
 
@@ -62,7 +84,8 @@
 				},
 				sortField: 'saleOrderNo',
 				sortDirection: 'desc', // asc 、desc
-				technologyId: '' // 产品工艺编号（页参）				 
+				technologyId: '', // 产品工艺编号（页参）
+				spreadArr: []
 			}
 		},
 		onLoad(options) {
@@ -170,6 +193,31 @@
 					animationType: 'pop-in',
 					animationDuration: 300
 				})
+			},
+			spread(id) {
+				if (this.spreadArr.includes(id)) {
+					this.spreadArr = this.spreadArr.filter(item => item != id)
+				} else {
+					this.spreadArr.push(id)
+				}
+			},
+			maxTechnolgiesIndex(item, index) {
+				return Math.max(
+					...item.orderItemAllTechs[index].technologyStatuses
+					.filter((item) => item.status == 1)
+					.map((d) => d.cIndex)
+				);
+			},
+			getProcessImg(item, tech, index) {
+				if (tech.cIndex < this.maxTechnolgiesIndex(item, index) + 1) {
+					if (tech.status == 0) {
+						return '/static/images/productionReport/skip.svg'
+					}
+
+					return '/static/images/productionReport/finished.svg'
+				}
+
+				return '/static/images/productionReport/start.svg'
 			}
 		}
 	}
@@ -209,10 +257,18 @@
 			line-height: 61rpx;
 		}
 
-		.checktime {
-			color: #808080;
-			font-size: 27rpx;
-			line-height: 38rpx;
+		.tag {
+			display: flex;
+			padding: 15rpx;
+			background: #2FB7DF;
+			border-radius: 8rpx;
+		}
+
+		.tag-text {
+			font-weight: 500;
+			font-size: 23rpx;
+			color: #FFFFFF;
+			margin-right: 8rpx;
 		}
 
 		.order-company {
@@ -227,6 +283,27 @@
 			color: #808080;
 			line-height: 38rpx;
 
+		}
+
+		.component-name {
+			font-weight: 800;
+			font-size: 27rpx;
+			line-height: 42rpx;
+			margin-top: 10rpx;
+			padding-top: 10rpx;
+			border-top: 1rpx solid #E7E7E7;
+		}
+
+		.steps-title {
+			font-weight: 400;
+			font-size: 23rpx;
+			color: #808080;
+			line-height: 34rpx;
+		}
+
+		.steps-icon {
+			max-width: 45.8rpx;
+			max-height: 45.8rpx;
 		}
 	}
 

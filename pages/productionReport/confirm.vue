@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<uv-empty v-if="isEmpty" mode="data" ></uv-empty>
+		<uv-empty v-if="isEmpty" mode="data"></uv-empty>
 		<view v-else-if="!loading" class="padding-sm">
 			<view class="card-ui flex-row align-center padding-tb">
 				<image class="svg-icon large"
@@ -44,7 +44,9 @@
 									<uv-icon name="close"></uv-icon>
 								</view>
 							</view>
-							<view :class="['flex-column align-center justify-center',attachmentInfos.length>0?'image-wrap':'flex-1']" @click="onUploadFile">
+							<view
+								:class="['flex-column align-center justify-center',attachmentInfos.length>0?'image-wrap':'flex-1']"
+								@click="onUploadFile">
 								<uv-icon name="camera" size="80rpx"></uv-icon>
 								<text class="text-sm text-info">点击上传图片</text>
 							</view>
@@ -61,13 +63,41 @@
 							{{orderDetail.remark}}
 						</view>
 					</template>
+					<template v-if="item.display && item.type==='productProgress'">
+						<view class="flex-row align-center">
+							<text class="process-latest">
+									【当前进度】：{{orderDetail.curProductionTechnologyName}}
+							</text>
+							<button class="process-btn" @click="item.showMore = !item.showMore">
+								{{item.showMore? '收起' : '所有流程'}}
+								<uv-icon :name="item.showMore? 'arrow-up' : 'arrow-down'"></uv-icon>
+							</button>
+						</view>
+						<view v-if="item.showMore">
+							<view v-for="(item, index) in orderDetail.orderItemAllTechs" :key="index">
+								<view class="component-name">{{item.componentName}}</view>
+								<uv-steps
+									:customStyle="{width: `${Math.min(item.technologyStatuses.length / 10 * 100, 100)}%`}">
+									<uv-steps-item v-for="(tech, indx) in item.technologyStatuses" :key="indx">
+										<template v-slot:title>
+											<text class="steps-title">{{tech.technologyName}}</text>
+										</template>
+										<template v-slot:icon>
+											<image class="steps-icon" :src="getProcessImg(tech, index)">
+											</image>
+										</template>
+									</uv-steps-item>
+								</uv-steps>
+							</view>
+						</view>
+					</template>
 					<template v-if="item.display && item.type==='orderInfo'">
 						<view class="order-info-wrap">
 							<view class="order-item">
 								<text class="order-label">生产信息 ：</text>
 								<text class="order-label-info">{{orderDetail.productName}}</text>
 							</view>
-							<template v-if="showMore">
+							<template v-if="item.showMore">
 								<view class="order-item">
 									<text class="order-label">订单号 ：</text>
 									<text class="order-label-info">{{orderDetail.saleOrderNo}}</text>
@@ -82,9 +112,9 @@
 								</view>
 							</template>
 							<view class="flex-row justify-end">
-								<uv-icon @click="showMore = !showMore" :name="showMore?'arrow-up':'arrow-down'"
-									:label="showMore?'收起':'展开'" label-size="27rpx" label-pos="left" color="#808080"
-									label-color="#808080"></uv-icon>
+								<uv-icon @click="item.showMore = !item.showMore"
+									:name="item.showMore?'arrow-up':'arrow-down'" :label="item.showMore?'收起':'展开'"
+									label-size="27rpx" label-pos="left" color="#808080" label-color="#808080"></uv-icon>
 							</view>
 						</view>
 					</template>
@@ -174,11 +204,19 @@
 					enabled: true,
 					display: true
 				}, {
+					label: '生产进度',
+					icon: '/static/images/productionReport/生产进度.svg',
+					type: 'productProgress',
+					enabled: true,
+					display: true,
+					showMore: false,
+				}, {
 					label: '订单信息',
 					icon: '/static/images/productionReport/基础信息.svg',
 					type: 'orderInfo',
 					enabled: true,
-					display: true
+					display: true,
+					showMore: false,
 				}, {
 					label: '文件预览',
 					icon: '/static/images/productionReport/文件.svg',
@@ -186,7 +224,7 @@
 					enabled: true,
 					display: true
 				}],
-				showMore: false
+
 			}
 		},
 		onLoad(options) {
@@ -351,6 +389,24 @@
 						uni.$uv.toast('复制成功')
 					}
 				});
+			},
+			maxTechnolgiesIndex(index) {
+				return Math.max(
+					...this.orderDetail.orderItemAllTechs[index].technologyStatuses
+					.filter((item) => item.status == 1)
+					.map((d) => d.cIndex)
+				);
+			},
+			getProcessImg(tech, index) {
+				if (tech.cIndex < this.maxTechnolgiesIndex(index) + 1) {
+					if (tech.status == 0) {
+						return '/static/images/productionReport/skip.svg'
+					}
+
+					return '/static/images/productionReport/finished.svg'
+				}
+
+				return '/static/images/productionReport/start.svg'
 			}
 		}
 	}
@@ -503,6 +559,44 @@
 	.preview-wrap+.preview-wrap {
 		margin-top: 20rpx;
 	}
+
+	.process-latest {
+		font-weight: 500;
+		font-size: 27rpx;
+		color: #333333;
+		line-height: 42rpx;
+		flex: 1;
+	}
+
+	.process-btn {
+		font-size: 23rpx;
+		color: #808080;
+		line-height: 34rpx;
+		background: #F7F7F7;
+		border-radius: 191rpx;
+		padding: 5rpx 15rpx;
+		display: flex;
+	}
+
+	.component-name {
+		font-weight: 800;
+		font-size: 27rpx;
+		line-height: 42rpx;
+		margin-left: 19rpx
+	}
+
+	.steps-title {
+		font-weight: 400;
+		font-size: 23rpx;
+		color: #808080;
+		line-height: 34rpx;
+	}
+
+	.steps-icon {
+		max-width: 45.8rpx;
+		max-height: 45.8rpx;
+	}
+
 
 	.order-info-wrap {
 		@extend .svg-offset;
