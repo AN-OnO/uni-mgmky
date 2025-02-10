@@ -156,10 +156,8 @@
 			this.orderItemNo = options.orderItemNo;
 			this.getData()
 		},
-		onBackPress(options) {
-			if (options.from === 'backbutton') {
-				uni.$Utils.setStorage('backbutton', true)
-			}
+		onUnload() {
+			uni.$Utils.setStorage('backbutton', true)
 		},
 		methods: {
 			getData() {
@@ -176,7 +174,9 @@
 					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					})
-					uni.navigateBack();
+					uni.navigateTo({
+						url: `/pages/logistics/list?deliveryMethod=${this.deliveryMethod}`
+					});
 				}
 			},
 			closeModal(key) {
