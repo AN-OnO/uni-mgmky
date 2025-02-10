@@ -259,15 +259,19 @@
 
 		.tag {
 			display: flex;
-			padding: 15rpx;
+			align-items: center;
+			justify-content: center;
+			width: 115rpx;
+			height: 46rpx;
 			background: #2FB7DF;
-			border-radius: 8rpx;
+			border-radius: 8rpx
 		}
 
 		.tag-text {
 			font-weight: 500;
 			font-size: 23rpx;
 			color: #FFFFFF;
+			line-height: 38rpx;
 			margin-right: 8rpx;
 		}
 
