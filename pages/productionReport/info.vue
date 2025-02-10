@@ -25,9 +25,9 @@
 				<view class="order-info uv-line-2">
 					{{item.productName}}
 				</view>
-				<view v-if="spreadArr.includes(item.orderItemNo)">
+				<view v-if="spreadArr.includes(item.orderItemNo)" class="techs-contain">
 					<view v-for="(comp, index) in item.orderItemAllTechs" :key="index">
-						<view class="component-name margin-left-sm">{{comp.componentName}}</view>
+						<view class="component-name">{{comp.componentName}}</view>
 						<uv-steps
 							:customStyle="{width: `${Math.min(comp.technologyStatuses.length / 10 * 100, 100)}%`}">
 							<uv-steps-item v-for="(tech, indx) in comp.technologyStatuses" :key="indx">
@@ -282,16 +282,16 @@
 			font-size: 27rpx;
 			color: #808080;
 			line-height: 38rpx;
-
+		}
+		
+		.techs-contain {
+			border-top: 1rpx solid #E7E7E7;
 		}
 
 		.component-name {
 			font-weight: 800;
 			font-size: 27rpx;
 			line-height: 42rpx;
-			margin-top: 10rpx;
-			padding-top: 10rpx;
-			border-top: 1rpx solid #E7E7E7;
 		}
 
 		.steps-title {
