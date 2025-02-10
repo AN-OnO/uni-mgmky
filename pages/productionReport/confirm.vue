@@ -351,7 +351,9 @@
 				})
 			},
 			navigateBack() {
-				uni.$Utils.navigateBack()
+				uni.navigateBack({
+					delta: 2
+				});
 			},
 			completeTask(order) {
 				if (this.orderDetail.unCompleteCount > this.orderDetail.orderCount) {
