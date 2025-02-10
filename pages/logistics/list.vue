@@ -1,87 +1,82 @@
 <template>
 	<view class="page-container">
-		<view class="navbar-wrap">
-
-			<uv-status-bar></uv-status-bar>
-			<!-- <view class="flex-row align-center"> -->
-			<view class="navbar-wrap-title">
-				<view class="left-icon">
-					<uv-icon name="arrow-left" color="#fff" @click="navigateBack"></uv-icon>
-				</view>
-				<view class="flex-1 text-center">
-					<text class="text-white">{{pageTitle}}</text>
-				</view>
-			</view>
-			<!-- </view> -->
-
-			<view style="display: flex; justify-content: space-around;">
-				<view>
-					<view class="amount">{{amount}}</view>
-					<view class="today-info">{{deliveryMethod == 4 ?'今日取送(单)':'今日配送(件)'}}</view>
-				</view>
-				<view class="list-divider"></view>
-				<view>
-					<view class="amount">0</view>
-					<view class="today-info">今日收益(元)</view>
-				</view>
-			</view>
-
-		</view>
-
-		<view style="background-color: #F0F1F5;">
-			<view style="width: 92%; margin: auto; ">
-				<view class="flex-between">
-					<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab"></uv-tabs>
-					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
-				</view>
-				<uni-swipe-action>
-					<view v-for="(item, index) in listData" :key="index" style="margin-top: 15rpx;">
-						<uni-swipe-action-item :right-options="options"
-							:disabled="deliveryMethod != 3 || searchType != 2"
-							@click="cancelDelivery(item.orderItemNo)">
-							<view @click="jumpToInfo(item)" class="list-contain">
-								<view class="flex-between">
-									<text class="list-companyName">{{item.companyName}}</text>
-									<text
-										:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
-								</view>
-								<view style="display: flex; align-items: center;">
-									<image src="/static/images/logistics/Local (已定位).svg" class="local-img" mode="">
-									</image>
-									<text class="line-clamp address-text">{{item.address}}</text>
-								</view>
-								<text class="line-clamp productName">{{item.productName}}</text>
-								<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
-									<button v-if="deliveryMethod == 3" class="list-button white-button"
-										@click.stop="callPhone(item.mobile)">
-										<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
-										<text class="button-text" style="color: #333333;">电话</text>
-									</button>
-									<button v-if="deliveryMethod == 3" class="list-button white-button"
-										@click.stop="goNavigation">
-										<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-										<text class="button-text" style="color: #333333;">导航</text>
-									</button>
-									<button class="list-button" @click.stop="confirm(item.orderItemNo)">
-										<image
-											:src="buttonText == '开始取送' ? '/static/images/logistics/开始取送.svg': buttonText == '开始配送' ? '/static/images/logistics/开始配送.svg' : '/static/images/logistics/完成.svg'"
-											class="list-image" mode=""></image><text
-											class="button-text">{{buttonText}}</text>
-									</button>
-								</view>
-								<view v-else class="finish-text">已完成</view>
-							</view>
-						</uni-swipe-action-item>
+		<uv-sticky  customNavHeight="0" bgColor="#F0F1F5">
+			<view class="navbar-wrap">
+				<uv-status-bar></uv-status-bar>
+				<view class="navbar-wrap-title">
+					<view class="left-icon">
+						<uv-icon name="arrow-left" color="#fff" @click="navigateBack"></uv-icon>
 					</view>
-				</uni-swipe-action>
-				<view class="scan-wrap" @click="onScanTap">
-					<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
+					<view class="flex-1 text-center">
+						<text class="text-white">{{pageTitle}}</text>
+					</view>
 				</view>
-				<uv-load-more :status="status" @loadmore='loadMore' />
-				<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-					<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo' />
-				</uv-modal>
+
+				<view class="flex-row justify-around">
+					<view>
+						<view class="amount">{{amount}}</view>
+						<view class="today-info">{{deliveryMethod == 4 ?'今日取送(单)':'今日配送(件)'}}</view>
+					</view>
+					<view class="list-divider"></view>
+					<view>
+						<view class="amount">0</view>
+						<view class="today-info">今日收益(元)</view>
+					</view>
+				</view>
 			</view>
+			<view class="padding-lr flex-between">
+				<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab"></uv-tabs>
+				<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
+			</view>
+		</uv-sticky>
+
+		<view class="padding-lr">
+			<uni-swipe-action>
+				<view v-for="(item, index) in listData" :key="index" style="margin-top: 15rpx;">
+					<uni-swipe-action-item :right-options="options" :disabled="deliveryMethod != 3 || searchType != 2"
+						@click="cancelDelivery(item.orderItemNo)">
+						<view @click="jumpToInfo(item)" class="list-contain">
+							<view class="flex-between">
+								<text class="list-companyName">{{item.companyName}}</text>
+								<text
+									:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
+							</view>
+							<view style="display: flex; align-items: center;">
+								<image src="/static/images/logistics/Local (已定位).svg" class="local-img" mode="">
+								</image>
+								<text class="line-clamp address-text">{{item.address}}</text>
+							</view>
+							<text class="line-clamp productName">{{item.productName}}</text>
+							<view v-if="buttonText" style="display: flex;justify-content: flex-end;">
+								<button v-if="deliveryMethod == 3" class="list-button white-button"
+									@click.stop="callPhone(item.mobile)">
+									<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
+									<text class="button-text" style="color: #333333;">电话</text>
+								</button>
+								<button v-if="deliveryMethod == 3" class="list-button white-button"
+									@click.stop="goNavigation">
+									<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
+									<text class="button-text" style="color: #333333;">导航</text>
+								</button>
+								<button class="list-button" @click.stop="confirm(item.orderItemNo)">
+									<image
+										:src="buttonText == '开始取送' ? '/static/images/logistics/开始取送.svg': buttonText == '开始配送' ? '/static/images/logistics/开始配送.svg' : '/static/images/logistics/完成.svg'"
+										class="list-image" mode=""></image><text
+										class="button-text">{{buttonText}}</text>
+								</button>
+							</view>
+							<view v-else class="finish-text">已完成</view>
+						</view>
+					</uni-swipe-action-item>
+				</view>
+			</uni-swipe-action>
+			<uv-load-more :status="status" @loadmore='loadMore' />
+			<view class="scan-wrap" @click="onScanTap">
+				<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
+			</view>
+			<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+				<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo' />
+			</uv-modal>
 		</view>
 	</view>
 </template>
@@ -294,17 +289,12 @@
 <style lang="scss" scoped>
 	.page-container {
 		background-color: #F0F1F5;
-		height: 100%;
+		min-height: 100%;
 	}
 
 	.navbar-wrap {
 		background-image: linear-gradient(to bottom, #a7ecff, #2FB7DF);
 		padding-bottom: 30rpx;
-		position: sticky;
-		left: 0;
-		right: 0;
-		top: 0;
-		z-index: 110;
 
 		&-title {
 			position: relative;
