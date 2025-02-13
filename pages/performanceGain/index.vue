@@ -23,6 +23,21 @@
 			</view>
 			<view class="padding-lr">
 				<uni-table>
+					<template v-if="selfData">
+						<uni-tr>
+							<uni-td align="center">
+								<image v-if="selfData.index < 3"
+									:src="$IMG_URL+ (selfData.index == 0 ? '/statisticalForm/gold.svg' : selfData.index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
+									class='medal-img'></image>
+								<text class="index-text" v-else>{{selfData.index + 1}}</text>
+							</uni-td>
+							<uni-td align="left">{{selfData.employeeName}}</uni-td>
+							<uni-td align="right">{{selfData.completedOrderCount}}</uni-td>
+							<uni-td align="right">{{selfData.totalAmount}}</uni-td>
+							<uni-td align="right"></uni-td>
+						</uni-tr>
+						<uni-tr></uni-tr>
+					</template>
 					<!-- 表头行 -->
 					<uni-tr style="background: #F5F6F8;">
 						<uni-th width="80rpx" align="left"><text class="table-head">排名</text></uni-th>
@@ -102,6 +117,12 @@
 		computed: {
 			renderRank() {
 				return this.showMore ? this.performanceRank.slice(0, 10) : this.performanceRank
+			},
+			selfData() {
+				const userData = uni.getStorageSync('user')
+				const index = this.performanceRank.findIndex((item) => item.employeeId == userData.userId)
+				
+				return index > 0 ? {...this.performanceRank[index], index} : null
 			}
 		},
 		methods: {
@@ -239,6 +260,26 @@
 		background-color: #7BC7FC;
 		top: 50%;
 		transform: translateY(-50%);
+	}
+
+	::v-deep .uni-table-tr:first-child {
+		background: linear-gradient(100deg, #D2E6FF 0%, #F8FBFF 100%);
+
+		.uni-table-td:first-child {
+			border-radius: 15rpx 0 0 15rpx;
+			font-weight: 600;
+			font-size: 27rpx;
+			color: #333333;
+			line-height: 34rpx;
+		}
+
+		.uni-table-td:last-child {
+			border-radius: 0 15rpx 15rpx 0;
+		}
+	}
+
+	::v-deep .uni-table-tr:nth-child(2) {
+		height: 30rpx;
 	}
 
 	.table-head {
