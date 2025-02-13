@@ -32,8 +32,8 @@
 								<text class="index-text" v-else>{{selfData.index + 1}}</text>
 							</uni-td>
 							<uni-td align="left">{{selfData.employeeName}}</uni-td>
-							<uni-td align="right">{{selfData.completedOrderCount}}</uni-td>
-							<uni-td align="right">{{selfData.totalAmount}}</uni-td>
+							<uni-td align="right">{{formatNumber(selfData.completedOrderCount)}}</uni-td>
+							<uni-td align="right">{{formatNumber(selfData.totalAmount)}}</uni-td>
 							<uni-td align="right"></uni-td>
 						</uni-tr>
 						<uni-tr></uni-tr>
