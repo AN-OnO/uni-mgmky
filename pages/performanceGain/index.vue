@@ -122,7 +122,7 @@
 				const userData = uni.getStorageSync('user')
 				const index = this.performanceRank.findIndex((item) => item.employeeId == userData.userId)
 				
-				return index > 0 ? {...this.performanceRank[index], index} : null
+				return index > -1 ? {...this.performanceRank[index], index} : null
 			}
 		},
 		methods: {
