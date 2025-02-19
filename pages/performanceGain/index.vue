@@ -22,50 +22,52 @@
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
 			<view class="padding-lr">
-				<uni-table>
-					<template v-if="selfData">
+				<view :class="{ 'self-table': selfData }">
+					<uni-table>
+						<template v-if="selfData">
+							<uni-tr>
+								<uni-td align="center">
+									<image v-if="selfData.index < 3"
+										:src="$IMG_URL+ (selfData.index == 0 ? '/statisticalForm/gold.svg' : selfData.index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
+										class='medal-img'></image>
+									<text class="index-text" v-else>{{selfData.index + 1}}</text>
+								</uni-td>
+								<uni-td align="left">{{selfData.employeeName}}</uni-td>
+								<uni-td align="right">{{formatNumber(selfData.completedOrderCount)}}</uni-td>
+								<uni-td align="right">{{formatNumber(selfData.totalAmount)}}</uni-td>
+								<uni-td align="right"></uni-td>
+							</uni-tr>
+							<uni-tr></uni-tr>
+						</template>
+						<!-- 表头行 -->
 						<uni-tr>
-							<uni-td align="center">
-								<image v-if="selfData.index < 3"
-									:src="$IMG_URL+ (selfData.index == 0 ? '/statisticalForm/gold.svg' : selfData.index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
-									class='medal-img'></image>
-								<text class="index-text" v-else>{{selfData.index + 1}}</text>
-							</uni-td>
-							<uni-td align="left">{{selfData.employeeName}}</uni-td>
-							<uni-td align="right">{{formatNumber(selfData.completedOrderCount)}}</uni-td>
-							<uni-td align="right">{{formatNumber(selfData.totalAmount)}}</uni-td>
-							<uni-td align="right"></uni-td>
+							<uni-th width="80rpx" align="left"><text class="table-head">排名</text></uni-th>
+							<uni-th width="130rpx" align="left"><text class="table-head">员工姓名</text></uni-th>
+							<uni-th width="145rpx" align="right"><text class="table-head">完成数量</text></uni-th>
+							<uni-th width="155rpx" align="right"><text class="table-head">总收益</text></uni-th>
+							<uni-th width="80rpx" align="right"><text class="table-head">详情</text></uni-th>
 						</uni-tr>
-						<uni-tr></uni-tr>
-					</template>
-					<!-- 表头行 -->
-					<uni-tr style="background: #F5F6F8;">
-						<uni-th width="80rpx" align="left"><text class="table-head">排名</text></uni-th>
-						<uni-th width="130rpx" align="left"><text class="table-head">员工姓名</text></uni-th>
-						<uni-th width="145rpx" align="right"><text class="table-head">完成数量</text></uni-th>
-						<uni-th width="155rpx" align="right"><text class="table-head">总收益</text></uni-th>
-						<uni-th width="80rpx" align="right"><text class="table-head">详情</text></uni-th>
-					</uni-tr>
-					<!-- 表格数据行 -->
-					<uni-tr v-for="(item, index) in renderRank" :key="index" @tap="goDetail(item.employeeId)">
-						<uni-td align="center">
-							<image v-if="index < 3"
-								:src="$IMG_URL+ (index == 0 ? '/statisticalForm/gold.svg' : index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
-								class='medal-img'></image>
-							<text class="index-text" v-else>{{index + 1}}</text>
-						</uni-td>
-						<uni-td>
-							{{item.employeeName}}
-						</uni-td>
-						<uni-td align="right">{{formatNumber(item.completedOrderCount)}}</uni-td>
-						<uni-td align="right">{{formatNumber(item.totalAmount)}}</uni-td>
-						<uni-td align="right">
-							<view class="flex-row justify-end">
-								<uv-icon name="arrow-right"></uv-icon>
-							</view>
-						</uni-td>
-					</uni-tr>
-				</uni-table>
+						<!-- 表格数据行 -->
+						<uni-tr v-for="(item, index) in renderRank" :key="index" @tap="goDetail(item.employeeId)">
+							<uni-td align="center">
+								<image v-if="index < 3"
+									:src="$IMG_URL+ (index == 0 ? '/statisticalForm/gold.svg' : index == 1 ? '/statisticalForm/silver.svg': '/statisticalForm/bronze.svg')"
+									class='medal-img'></image>
+								<text class="index-text" v-else>{{index + 1}}</text>
+							</uni-td>
+							<uni-td>
+								{{item.employeeName}}
+							</uni-td>
+							<uni-td align="right">{{formatNumber(item.completedOrderCount)}}</uni-td>
+							<uni-td align="right">{{formatNumber(item.totalAmount)}}</uni-td>
+							<uni-td align="right">
+								<view class="flex-row justify-end">
+									<uv-icon name="arrow-right"></uv-icon>
+								</view>
+							</uni-td>
+						</uni-tr>
+					</uni-table>
+				</view>
 				<view class="margin-top-sm flex-row justify-center">
 					<uv-icon v-if="performanceRank.length > 10" @click="showMore = !showMore"
 						:name="showMore ? 'arrow-down' : 'arrow-up'" :label="showMore ? '查看更多' : '收起'"
@@ -99,7 +101,7 @@
 				endDate: '',
 				modeTitle: date.format('YYYY/MM/DD'),
 				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
-				performanceRank: []
+				performanceRank: [],
 			}
 		},
 		onLoad() {
@@ -121,8 +123,11 @@
 			selfData() {
 				const userData = uni.getStorageSync('user')
 				const index = this.performanceRank.findIndex((item) => item.employeeId == userData.userId)
-				
-				return index > -1 ? {...this.performanceRank[index], index} : null
+
+				return index > -1 ? {
+					...this.performanceRank[index],
+					index
+				} : null
 			}
 		},
 		methods: {
@@ -263,14 +268,23 @@
 	}
 
 	::v-deep .uni-table-tr:first-child {
+		background: #F5F6F8;
+	}
+
+	::v-deep .uni-table-tr:nth-child(2) {
+		height: 30rpx;
+	}
+
+	::v-deep .uni-table-td {
+		vertical-align: middle;
+	}
+
+
+	.self-table ::v-deep .uni-table-tr:first-child {
 		background: linear-gradient(100deg, #D2E6FF 0%, #F8FBFF 100%);
 
 		.uni-table-td:first-child {
 			border-radius: 15rpx 0 0 15rpx;
-			font-weight: 600;
-			font-size: 27rpx;
-			color: #333333;
-			line-height: 34rpx;
 		}
 
 		.uni-table-td:last-child {
@@ -278,8 +292,8 @@
 		}
 	}
 
-	::v-deep .uni-table-tr:nth-child(2) {
-		height: 30rpx;
+	.self-table ::v-deep .uni-table-tr:nth-child(3) {
+		background: #F5F6F8;
 	}
 
 	.table-head {
