@@ -47,7 +47,7 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 			toLogin()
 			break;
 		case StatusCode.SYSTEM_ERROR:
-			Utils.showToast('系统错误');
+			Utils.showToast('系统错误:500');
 			break;
 		default:
 			if (message) {
