@@ -23,7 +23,7 @@
 
 						</view>
 					</template>
-					<template >
+					<template v-if="item.display && item.type==='orderCount'">
 						<view class="number-box margin-bottom-xs">
 							<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
 							<view class="number-counter">
