@@ -23,8 +23,8 @@
 
 						</view>
 					</template>
-					<template v-if="item.display && item.type==='orderCount'">
-						<view class="number-box">
+					<template >
+						<view class="number-box margin-bottom-xs">
 							<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
 							<view class="number-counter">
 								<uv-button @click="decrement" :disabled="orderCount === 1"><uv-icon
@@ -34,6 +34,15 @@
 									:disabled="orderCount === orderDetail.unCompleteCount"><uv-icon
 										name="plus"></uv-icon></uv-button>
 							</view>
+						</view>
+						<view class="composite-progress">
+							<uv-line-progress :customStyle="customStyle"  height="30" :showText="false">
+							</uv-line-progress>
+							<uv-line-progress  v-for="(item, index) in progressData" :customStyle="customStyle" height="30" :percentage="getPercent(index)">
+									<view class="progress-text" :style="{'z-index': 999 - index,background: progressColor[index]}">
+									{{`${item.opreatorName}`}}{{`${item.num}`}}
+									</view>
+							</uv-line-progress>
 						</view>
 					</template>
 					<template v-if="item.display && item.type==='upload'">
@@ -163,7 +172,6 @@
 	import {
 		baseURL
 	} from '@/common/config'
-
 	export default {
 		data() {
 			return {
@@ -173,6 +181,13 @@
 				loading: true,
 				isFinished: false,
 				attachmentInfos: [], // 附件
+				progressData: [],
+				progressColor: ['#FF6B6B','#4ECDC4', '#45B7D1', '#96CEB4','#FFEEAD'],
+				customStyle: {
+					position: 'absolute',
+					top: 0,
+					width: '100%',
+				},
 				detailCardList: [{
 					label: '完工信息',
 					icon: '/static/images/productionReport/finished.svg',
@@ -247,6 +262,7 @@
 						this.orderDetail = res.data
 						this.orderCount = this.orderDetail.unCompleteCount
 						this.isFinished = this.orderDetail.uStatus === 1
+						this.progressData = res.data.curTechWorkItemRecords
 						this.updateDetailCardList()
 					} else {
 						uni.$uv.toast('订单详情加载失败')
@@ -409,6 +425,9 @@
 				}
 
 				return '/static/images/productionReport/start.svg'
+			},
+			getPercent(index) {
+				return this.progressData.slice(0, index + 1).reduce((prev, cur) => prev + cur.num, 0) / this.orderDetail.orderCount * 100
 			}
 		}
 	}
@@ -514,6 +533,21 @@
 			grid-template-columns: 1fr 2fr 1fr;
 			grid-auto-rows: 60rpx;
 			column-gap: 10rpx;
+		}
+	}
+	
+	.composite-progress {
+		position: relative;
+		padding-bottom: 50rpx;
+		
+		.progress-text {
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+			font-size: 23rpx;
+			width: 100%;
+			height: 100%;
+			text-align: right;
 		}
 	}
 
