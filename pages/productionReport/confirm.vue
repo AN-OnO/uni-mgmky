@@ -35,7 +35,7 @@
 										name="plus"></uv-icon></uv-button>
 							</view>
 						</view>
-						<view class="composite-progress">
+						<view v-if="progressData.length > 0" class="composite-progress">
 							<uv-line-progress :customStyle="customStyle"  height="30" :showText="false">
 							</uv-line-progress>
 							<uv-line-progress  v-for="(item, index) in progressData" :customStyle="customStyle" height="30" :percentage="getPercent(index)">
