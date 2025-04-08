@@ -261,7 +261,7 @@
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			width: 115rpx;
+			padding: 0 15rpx;
 			height: 46rpx;
 			background: #2FB7DF;
 			border-radius: 8rpx
