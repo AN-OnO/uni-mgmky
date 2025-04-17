@@ -1,14 +1,15 @@
 <template>
 	<view class="page-container">
-		<uv-sticky bg-color="#F0F1F5">
-			<view class="status-wrap">
-				<view class="status-item" v-for="s in statusList" :key="s.status">
-					<text class="status-icon" :style="{'backgroundColor':s.color}"></text>
-					<text class="text-ss">{{s.type}}</text>
-				</view>
-			</view>
-		</uv-sticky>
 		<template v-if="orderInfo">
+			<uv-sticky bg-color="#F0F1F5">
+				<view class="status-wrap">
+					<view class="status-item" v-for="s in statusList" :key="s.status">
+						<text class="status-icon" :style="{'backgroundColor':s.color}"></text>
+						<text class="text-ss">{{s.type}}</text>
+					</view>
+				</view>
+			</uv-sticky>
+
 			<view class="data-list flex-1 align-start padding">
 				<view v-for="(item,index) in orderInfo.orderItemTrackings" :key="index" class="data-contain">
 					<view :class="['list-item',{'active':hasSelection(item.productTechnologyId)}]"
@@ -45,7 +46,7 @@
 			</view>
 		</template>
 		<template v-else>
-			<uv-empty mode="order"></uv-empty>
+			<uv-empty mode="order" margin-top="50"></uv-empty>
 		</template>
 
 		<uv-popup ref="popup" mode="bottom" round="31rpx" closeable>
@@ -107,9 +108,7 @@
 		},
 		onLoad(option) {
 			this.scanResult = option.orderItemNo
-			if (this.scanResult) {
-				this.init()
-			}
+			this.init()
 		},
 		computed: {
 			hasSelection() {
@@ -122,7 +121,16 @@
 			iconClass(iconName) {
 				return `iconfont ${iconMapping[iconName]}`;
 			},
-			init() {
+			async init() {
+				if (!this.scanResult) {
+					await uni.$uv.sleep(1500)
+					this.loading = false
+					uni.$uv.toast('扫码无效！')
+					await uni.$uv.sleep(1500)
+					uni.navigateBack()
+					return
+				}
+
 				this.loading = true
 
 				GetOrderItemAndTrackings({
@@ -208,7 +216,7 @@
 						showCancel: false,
 						success: ({
 							confirm
-						}) => confirm && success && this.onCancel()// uni.navigateBack()
+						}) => confirm && success && this.onCancel() // uni.navigateBack()
 					})
 				})
 			}
