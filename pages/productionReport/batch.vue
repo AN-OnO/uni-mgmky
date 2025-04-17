@@ -208,7 +208,7 @@
 						showCancel: false,
 						success: ({
 							confirm
-						}) => confirm && navigateBack(success)
+						}) => confirm && success && this.onCancel()// uni.navigateBack()
 					})
 				})
 			}
@@ -265,7 +265,7 @@
 	.data-list {
 		display: grid;
 		grid-template-columns: repeat(4, 1fr);
-		grid-auto-rows:220rpx;
+		grid-auto-rows: 220rpx;
 		gap: 20rpx 10rpx;
 		overflow-y: auto;
 
