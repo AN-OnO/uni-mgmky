@@ -4,25 +4,24 @@
 			<image class="app-title-cover" :src="$IMG_URL +'/app/印业小助手.svg'" mode="widthFix"></image>
 			<text class="app-description margin-top-sm">轻松掌握每一步</text>
 		</view>
-		<view class="flex-row margin-top-lg margin-bottom-sm">
-			<view class="flex-row flex-1 align-center card margin-right-sm" @click="handleToolEvent({event: '/pages/performanceGain/index'})">
-				<image class="image-icon" src="/static/images/tabbar/gain.svg"></image>
-				<text>绩效收益</text>
-			</view>
-			<view class="flex-row flex-1 align-center card relative" @click="handleToolEvent(tools[1])">
-				<image class="image-icon" :src="$IMG_URL +'/app/统计报表1.png'"></image>
-				<text>统计报表</text>
-				<image class="top-img" :src="$IMG_URL +'/app/AI智能.svg'" mode="heightFix"></image>
-			</view>
+		<view class="flex-row margin-top-lg margin-bottom-sm relative">
+			<template v-for="item in menu" :key="item.key">
+				<view v-if="item.display" class="menu-item card " @click="handleToolEvent(item)">
+					<image class="image-icon" :src="item.icon"></image>
+					<text>{{item.name}}</text>
+					<image v-if="item.topIcon" class="top-img" :src="item.topIcon" mode="heightFix"></image>
+				</view>
+				<!-- <view v-else class="flex-1"></view> -->
+			</template>
 		</view>
-		<view class="card tool-box margin-bottom">
+		<view v-if="tools.length" class="card tool-box margin-bottom">
 			<view class="padding-tb-sm">
 				<text class="section-title">常用工具</text>
 			</view>
 			<view class="grid-row-3 margin-top">
-				<template v-for="(item,index) in tools" :key="index">
+				<template v-for="item in tools" :key="item.key">
 					<view class="flex-column align-center justify-around radius" @click="handleToolEvent(item)">
-						<image class="tool-image-icon" :src="$IMG_URL+item.icon"></image>
+						<image class="tool-image-icon" :src="item.icon"></image>
 						<text class="text-xs">{{item.name}}</text>
 					</view>
 				</template>
@@ -37,27 +36,76 @@
 		reactive,
 		computed
 	} from 'vue';
-	const tools = ref([{
-		icon:  '/app/考勤打卡.svg',
-		name: '考勤打卡',
-		event: '/pages/check/check'
-	}, {
-		icon: '/app/统计报表.svg',
-		name: '统计报表',
-		event: '/pages/statisticalForm/index'
-	}, {
-		icon: '/app/报工.svg',
-		name: '报工',
-		event: '/pages/productionReport/index'
-	}, {
-		icon: '/app/配送.svg',
-		name: '配送',
-		event: '/pages/logistics/list?deliveryMethod=3'
-	}, {
-		icon: '/app/物流.svg',
-		name: '物流',
-		event: '/pages/logistics/list?deliveryMethod=4'
-	}])
+	import {
+		imageURL
+	} from '@/common/config';
+	import {
+		useUserStore
+	} from '@/store/user';
+	const userStore = useUserStore();
+	// 首页应用菜单
+	const appMenus = ref([{
+			key: 1,
+			type: 'menu',
+			icon: '/static/images/tabbar/gain.svg',
+			name: '绩效收益',
+			event: '/pages/performanceGain/index'
+		},
+		{
+			key: 2,
+			type: 'menu',
+			icon: `${imageURL}/app/统计报表1.png`,
+			topIcon: `${imageURL}/app/AI智能.svg`,
+			name: '统计报表',
+			event: '/pages/check/check'
+		}, {
+			key: 3,
+			type: 'tools',
+			icon: `${imageURL}/app/考勤打卡.svg`,
+			name: '考勤打卡',
+			event: '/pages/check/check'
+		}, {
+			key: 4,
+			type: 'tools',
+			icon: `${imageURL}/app/统计报表.svg`,
+			name: '统计报表',
+			event: '/pages/statisticalForm/index'
+		}, {
+			key: 5,
+			type: 'tools',
+			icon: `${imageURL}/app/报工.svg`,
+			name: '报工',
+			event: '/pages/productionReport/index'
+		}, {
+			key: 6,
+			type: 'tools',
+			icon: `${imageURL}/app/配送.svg`,
+			name: '配送',
+			event: '/pages/logistics/list?deliveryMethod=3'
+		}, {
+			key: 7,
+			type: 'tools',
+			icon: `${imageURL}/app/物流.svg`,
+			name: '物流',
+			event: '/pages/logistics/list?deliveryMethod=4'
+		}
+	]);
+	// 用户菜单
+	const userAppMenu = computed(() => userStore.userData.weChatAppMenu || '');
+	// 导航菜单
+	const menu = computed(() => appMenus.value
+		.filter(x => x.type === 'menu')
+		.map(item => {
+			return {
+				...item,
+				display: userAppMenu.value.includes(item.key)
+			}
+		})
+	);
+	// 工具菜单
+	const tools = computed(() => appMenus.value
+		.filter(x => x.type === 'tools' && userAppMenu.value.includes(x.key))
+	);
 
 	const handleToolEvent = (e) => {
 		if (e.event) {
@@ -110,6 +158,16 @@
 		line-height: 46rpx;
 	}
 
+	.menu-item {
+		@include flex;
+		align-items: center;
+		flex: 1;
+	}
+
+	.menu-item+.menu-item {
+		margin-left: 20rpx;
+	}
+
 	.card {
 		background-color: #fff;
 		padding: 20rpx;
@@ -138,6 +196,7 @@
 		position: absolute;
 		z-index: -1;
 		top: -220rpx;
+		right: 100rpx;
 		height: 290rpx;
 		width: auto;
 	}
