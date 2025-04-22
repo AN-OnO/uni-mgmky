@@ -182,6 +182,13 @@
 				let endTime = new Date(resultDate[1]).getTime()
 				let nowTime = timeLimit ? new Date().getTime() : endTime
 				if (startTime <= endTime && endTime <= nowTime) {
+					if (endTime - startTime > 1000 * 60 * 60 * 24 * 365) {
+						// 时间跨度超过365天
+						uni.showToast({
+							title: '时间跨度超过365天，查询时间较久',
+							icon: 'none'
+						})
+					}
 					this.$emit('confirm', this.resultDate)
 					this.maskClick()
 				} else {

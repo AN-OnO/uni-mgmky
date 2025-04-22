@@ -4,7 +4,7 @@
 			<image v-if="showBanner" :src="$IMG_URL+'/statisticalForm/banner.svg'" mode="" class="banner-img"></image>
 			<view class="flex-between padding-lr" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">
-					{{modeTitle}}
+					<text style="max-width: 190rpx;">{{modeTitle}}</text>
 					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
@@ -16,8 +16,10 @@
 		</uv-sticky>
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
-				<view class="padding-30">
+				<view class="flex-between padding-30">
 					<text class="section-title">{{ele.name}}</text>
+					<view v-if="indx === 0" class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['已下单', '已取消', '已退款']"
+							:current="currentStatus" @change="changeStatus"></uv-subsection></view>
 				</view>
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
@@ -34,7 +36,7 @@
 		</view>
 		<view>
 			<view class="flex-between padding-30">
-				<text class="section-title">订单金额占比</text>
+				<text class="section-title">营业收入占比</text>
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
@@ -132,6 +134,7 @@
 				<view class="capacity-line"></view>
 			</template>
 		</view>
+		<uv-loading-page :loading="loading"></uv-loading-page>
 	</view>
 </template>
 
@@ -174,6 +177,7 @@
 				current: 0,
 				currentSource: 0,
 				currentPerson: 0,
+				currentStatus: 0,
 				currentPersonName: '下单人',
 				productData: [],
 				productRank: [],
@@ -185,6 +189,8 @@
 				capacityData: [],
 				pickerVisable: false,
 				showBanner: true,
+				statOrderStatus: 1,
+				loading: false,
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
@@ -208,19 +214,31 @@
 					{
 						name: '营业收入统计(元)',
 						content: [{
-							title: '所有订单',
+							title: '总收益',
 							increase: '0',
 							number: '0'
 						}, {
-							title: '内部下单',
+							title: '线下支付',
 							increase: '0',
 							number: '0'
 						}, {
-							title: '微信订单',
+							title: '在线支付',
 							increase: '0',
 							number: '0'
 						}, {
-							title: '网站下单',
+							title: '扣减预存',
+							increase: '0',
+							number: '0'
+						},{
+							title: '应收未结',
+							increase: '0',
+							number: '0'
+						},{
+							title: '应收已结',
+							increase: '0',
+							number: '0'
+						},{
+							title: '退款',
 							increase: '0',
 							number: '0'
 						}]
@@ -286,6 +304,23 @@
 				this.currentSource = index;
 				this.getPieEcharts()
 			},
+			changeStatus(index) {
+				this.currentStatus = index;
+				let beginDate = ''
+				let endDate = ''
+				if (this.mode === 'year') {
+					beginDate = `${this.modeTitle}-01-01`
+					endDate = `${this.modeTitle}-12-31`
+				} else if (this.mode === 'year-month') {
+					beginDate = dayjs(this.modeTitle).startOf('month').format('YYYY-MM-DD')
+					endDate = dayjs(this.modeTitle).endOf('month').format('YYYY-MM-DD')
+				} else {
+					const date = this.modeTitle.split("-")
+					beginDate = date[0]
+					endDate = date[1] || date[0]
+				}
+				this.getOrderStat(beginDate, endDate)
+			},
 			changePerson(index) {
 				this.currentPerson = index;
 				this.currentPersonName = {
@@ -327,10 +362,12 @@
 				this.getThingsCapacityStat(beginDate, endDate)
 			},
 			getOrderStat(beginDate, endDate) {
+				this.loading = true
 				GetOrderStat({
 					beginDate,
 					endDate,
-					mercantileAgents
+					mercantileAgents,
+					statOrderStatus: this.currentStatus + 1
 				}).then(res => {
 					if (res.code !== 0) {
 						uni.$Utils.showToast(res.message)
@@ -361,23 +398,37 @@
 					this.dataList[1].content[0].number = curPeriodAmount
 						.orderAmount
 					this.dataList[1].content[1].number = curPeriodAmount
-						.innerOrderAmount
+						.cashPaymentOrderAmount
 					this.dataList[1].content[2].number = curPeriodAmount
-						.weChatOrderAmount
+						.onlinePaymentOrderAmount
 					this.dataList[1].content[3].number = curPeriodAmount
-						.shoppingOrderAmount
+						.balancPaymentOrderAmount
+					this.dataList[1].content[4].number = curPeriodAmount
+					    .unPaymentOrderAmount
+					this.dataList[1].content[5].number = curPeriodAmount
+						.billPaymentOrderAmount
+					this.dataList[1].content[6].number = curPeriodAmount
+						.refundTotalAmount
 					this.dataList[1].content[0].increase = new Big(curPeriodAmount
 						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
 					this.dataList[1].content[1].increase = new Big(curPeriodAmount
-						.innerOrderAmount).minus(prevPeriodAmount.innerOrderAmount).toString()
+						.cashPaymentOrderAmount).minus(prevPeriodAmount.cashPaymentOrderAmount).toString()
 					this.dataList[1].content[2].increase = new Big(curPeriodAmount
-						.weChatOrderAmount).minus(prevPeriodAmount.weChatOrderAmount).toString()
+						.onlinePaymentOrderAmount).minus(prevPeriodAmount.onlinePaymentOrderAmount).toString()
 					this.dataList[1].content[3].increase = new Big(curPeriodAmount
-						.shoppingOrderAmount).minus(prevPeriodAmount.shoppingOrderAmount).toString()
+						.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
+					this.dataList[1].content[4].increase = new Big(curPeriodAmount
+						.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
+					this.dataList[1].content[5].increase = new Big(curPeriodAmount
+						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
+					this.dataList[1].content[6].increase = new Big(curPeriodAmount
+						.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
 
 					if (this.currentSource == 0) {
 						this.getPieEcharts()
 					}
+				}).finally(() => {
+					this.loading = false
 				})
 			},
 			getOrderProductStat(beginDate, endDate) {
@@ -532,23 +583,35 @@
 					sourceData = this.dataList[1].content;
 					data = [{
 							value: sourceData[1].number,
-							name: '内部下单',
+							name: '线下支付',
 							itemStyle: {
-								color: '#3CC3DF'
+								color: '#5470c6'
 							}
 						},
 						{
 							value: sourceData[2].number,
-							name: '微信订单',
+							name: '在线支付',
 							itemStyle: {
-								color: '#6FD195'
+								color: '#91cd77'
 							}
 						},
 						{
 							value: sourceData[3].number,
-							name: '网站下单',
+							name: '扣减预存',
 							itemStyle: {
-								color: '#F5C461'
+								color: '#ef6567'
+							}
+						},{
+							value: sourceData[4].number,
+							name: '应收未结',
+							itemStyle: {
+								color: '#f9c956'
+							}
+						},{
+							value: sourceData[5].number,
+							name: '应收已结',
+							itemStyle: {
+								color: '#75bedc'
 							}
 						},
 					]
@@ -569,7 +632,7 @@
 							padding: [0, 0, 0, -10], // 修改文字和图标距离
 							rich: {
 								a: {
-									width: 110,
+									width: 105,
 									backgroundColor: "transparent", // 一定要设置，不然不生效
 								},
 							},
@@ -577,7 +640,7 @@
 						top: '61%',
 						left: '3%',
 						formatter: function(name) {
-							return `{a|${name} ${(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0).toFixed(0)}%}`;
+							return `{a|${name} ${Math.round(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0)}%}`;
 						}
 					},
 					series: [{
@@ -640,7 +703,7 @@
 						type: 'value',
 						axisLabel: {
 							formatter: function(value) {
-								return `${(value/10000).toFixed(0)}万`
+								return `${Math.round(value/10000)}万`
 							}
 						}
 					},
@@ -777,8 +840,8 @@
 	.section-content {
 		display: flex;
 		flex-wrap: wrap;
-		justify-content: space-around;
 		margin-bottom: 61rpx;
+		padding-left: 30rpx;
 	}
 
 	.ele-content {
@@ -913,9 +976,9 @@
 	}
 
 	.arrow-img {
-		max-width: 30.53rpx;
-		max-height: 30.53rpx;
-		margin: auto;
+		width: 30.53rpx;
+		height: 30.53rpx;
+		margin: auto 0;
 	}
 
 	.table {
