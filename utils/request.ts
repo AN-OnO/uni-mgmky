@@ -17,7 +17,7 @@ import { StatusCode } from "@/enums";
  */
 
 const http = uni.$uv.http;
-const timeout = 30000;
+const timeout = 60000;
 
 function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, HttpTask>) {
 	const {

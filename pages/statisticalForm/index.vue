@@ -134,7 +134,7 @@
 				<view class="capacity-line"></view>
 			</template>
 		</view>
-		<uv-loading-page :loading="loading"></uv-loading-page>
+		<uv-loading-page :loading="loading" bgColor="rgba(255,255,255,0.8)"></uv-loading-page>
 	</view>
 </template>
 
