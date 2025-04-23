@@ -57,7 +57,7 @@
 			icon: `${imageURL}/app/统计报表1.png`,
 			topIcon: `${imageURL}/app/AI智能.svg`,
 			name: '统计报表',
-			event: '/pages/check/check'
+			event: '/pages/statisticalForm/index'
 		}, {
 			key: 3,
 			type: 'tools',
