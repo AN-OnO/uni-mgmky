@@ -91,7 +91,7 @@
 		}
 	]);
 	// 用户菜单
-	const userAppMenu = computed(() => userStore.userData.weChatAppMenu || '');
+	const userAppMenu = computed(() => userStore.userData.weChatAppMenu || '3,4,5');
 	// 导航菜单
 	const menu = computed(() => appMenus.value
 		.filter(x => x.type === 'menu')
