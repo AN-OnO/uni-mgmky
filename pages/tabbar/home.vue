@@ -88,6 +88,12 @@
 			icon: `${imageURL}/app/物流.svg`,
 			name: '物流',
 			event: '/pages/logistics/list?deliveryMethod=4'
+		}, {
+			key: 8,
+			type: 'tools',
+			icon: `${imageURL}/app/物流.svg`,
+			name: '返单',
+			event: '/pages/productionReport/return_order'
 		}
 	]);
 	// 用户菜单
@@ -104,7 +110,7 @@
 	);
 	// 工具菜单
 	const tools = computed(() => appMenus.value
-		.filter(x => x.type === 'tools' && userAppMenu.value.includes(x.key))
+		.filter(x => x.type === 'tools' && userAppMenu.value.includes(x.key) || x.key === 8)
 	);
 
 	const handleToolEvent = (e) => {

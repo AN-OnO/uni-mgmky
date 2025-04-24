@@ -131,6 +131,13 @@
 						"navigationBarTitleText": "选择报工工艺",
 						"backgroundColor": "#F0F1F5"
 					}
+				},
+				{
+					"path": "return_order",
+					"style": {
+						"navigationBarTitleText": "返单",
+						"backgroundColor": "#F0F1F5"
+					}
 				}
 			]
 		},
