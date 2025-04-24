@@ -57,7 +57,7 @@
 			icon: `${imageURL}/app/统计报表1.png`,
 			topIcon: `${imageURL}/app/AI智能.svg`,
 			name: '统计报表',
-			event: '/pages/check/check'
+			event: '/pages/statisticalForm/index'
 		}, {
 			key: 3,
 			type: 'tools',
@@ -97,7 +97,7 @@
 		}
 	]);
 	// 用户菜单
-	const userAppMenu = computed(() => userStore.userData.weChatAppMenu || '');
+	const userAppMenu = computed(() => userStore.userData.weChatAppMenu || '3,4,5');
 	// 导航菜单
 	const menu = computed(() => appMenus.value
 		.filter(x => x.type === 'menu')
