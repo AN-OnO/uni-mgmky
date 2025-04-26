@@ -190,7 +190,7 @@
 				pickerVisable: false,
 				showBanner: true,
 				statOrderStatus: 1,
-				loading: false,
+				loading: true,
 				dataList: [{
 						name: '订单数量统计(单)',
 						content: [{
