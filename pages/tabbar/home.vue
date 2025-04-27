@@ -110,7 +110,7 @@
 	);
 	// 工具菜单
 	const tools = computed(() => appMenus.value
-		.filter(x => x.type === 'tools' && userAppMenu.value.includes(x.key) || x.key === 8)
+		.filter(x => x.type === 'tools' && userAppMenu.value.includes(x.key))
 	);
 
 	const handleToolEvent = (e) => {
