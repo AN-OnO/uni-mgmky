@@ -212,7 +212,7 @@
 						}]
 					},
 					{
-						name: '营业收入统计(元)',
+						name: '收款资金汇总(元)',
 						content: [{
 							title: '总收益',
 							increase: '0',
