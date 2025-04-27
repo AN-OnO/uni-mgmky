@@ -73,17 +73,16 @@
 			}
 		},
 		{
-			"path" : "pages/performanceGain/index",
+			"path": "pages/performanceGain/index",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#E6F1FF"
 			}
 		},
 		{
-			"path" : "pages/performanceGain/detail",
-			"style" : 
-			{
-				"navigationBarTitleText" : "",
+			"path": "pages/performanceGain/detail",
+			"style": {
+				"navigationBarTitleText": "",
 				"navigationBarBackgroundColor": "#D5E8FF"
 			}
 		}
@@ -142,6 +141,28 @@
 			]
 		},
 		{
+			"root": "pages/returnOrder",
+			"pages": [{
+				"path": "index",
+				"style": {
+					"navigationBarTitleText": "返单",
+					"backgroundColor": "#F0F1F5"
+				}
+			},{
+				"path": "search",
+				"style": {
+					"navigationBarTitleText": "添加返工订单",
+					"navigationBarBackgroundColor": "#fff",
+					"backgroundColor": "#F0F1F5"
+				}
+			},{
+				"path": "detail",
+				"style": {
+					"navigationBarTitleText": "添加返工订单",
+					"backgroundColor": "#F0F1F5"
+				}
+			}]
+		}, {
 			"root": "pages/statisticalForm",
 			"pages": [{
 				"path": "index",

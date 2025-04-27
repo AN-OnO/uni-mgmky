@@ -93,7 +93,7 @@
 			type: 'tools',
 			icon: `${imageURL}/app/物流.svg`,
 			name: '返单',
-			event: '/pages/productionReport/return_order'
+			event: '/pages/returnOrder/index'
 		}
 	]);
 	// 用户菜单
