@@ -159,6 +159,7 @@
 				"path": "detail",
 				"style": {
 					"navigationBarTitleText": "添加返工订单",
+					"navigationBarBackgroundColor": "#fff",
 					"backgroundColor": "#F0F1F5"
 				}
 			}]

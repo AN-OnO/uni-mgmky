@@ -125,7 +125,9 @@
 
 	const onChoose = (e) => {
 		console.log('onChoose item:', e)
-
+		uni.navigateTo({
+			url: '/pages/returnOrder/detail'
+		})
 	}
 </script>
 
