@@ -161,3 +161,21 @@ export function LogOut(params) {
 export function GetPerformanceRank(params) {
 	return request.post('/api/CalcPerformance/GetPerformanceRank', params)
 }
+
+/**
+ * 主营业务收入统计
+ * @param params 
+ * @return 
+ */
+export function GetMainRevenueStat(params) {
+	return request.post('/api/DashboardStat/GetMainRevenueStat', params)
+}
+
+/**
+ * 订单数量统计
+ * @param params 
+ * @return 
+ */
+export function GetOrderCountStat(params) {
+	return request.post('/api/DashboardStat/GetOrderCountStat', params)
+}

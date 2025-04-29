@@ -17,9 +17,8 @@
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
 				<view class="flex-between padding-30">
-					<text class="section-title">{{ele.name}}</text>
-					<view v-if="indx === 0" class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['已下单', '已取消', '已退款']"
-							:current="currentStatus" @change="changeStatus"></uv-subsection></view>
+					<text class="section-title flex-1">{{ele.name}}</text>
+					<text v-if="ele.lastestUpdateTime" style="font-size: 14px;color: gray;">最近更新{{ele.lastestUpdateTime}}</text>
 				</view>
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
@@ -37,7 +36,7 @@
 		<view>
 			<view class="flex-between padding-30">
 				<text class="section-title">营业收入占比</text>
-				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['订单来源', '产品品类']"
+				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['支付方式', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
 			<view style="height:343rpx;">
@@ -134,12 +133,15 @@
 				<view class="capacity-line"></view>
 			</template>
 		</view>
-		<uv-loading-page :loading="loading" bgColor="rgba(255,255,255,0.8)"></uv-loading-page>
+		<uv-loading-page :loading="loading" loading-text="数据加载中" color="#fff"
+			bg-color="rgba(0, 0, 0, 0.3)"></uv-loading-page>
 	</view>
 </template>
 
 <script>
 	import {
+		GetMainRevenueStat,
+		GetOrderCountStat,
 		GetOrderProductStat,
 		GetOrderProductTopStat,
 		GetOrderProductTrendStat,
@@ -177,7 +179,6 @@
 				current: 0,
 				currentSource: 0,
 				currentPerson: 0,
-				currentStatus: 0,
 				currentPersonName: '下单人',
 				productData: [],
 				productRank: [],
@@ -212,7 +213,32 @@
 						}]
 					},
 					{
+						name: '营业收入统计(元)',
+						content: [{
+							title: '总收入',
+							increase: '0',
+							number: '0'
+						}, {
+							title: '线下支付',
+							increase: '0',
+							number: '0'
+						}, {
+							title: '在线支付',
+							increase: '0',
+							number: '0'
+						}, {
+							title: '储值支付',
+							increase: '0',
+							number: '0'
+						}, {
+							title: '月结支付',
+							increase: '0',
+							number: '0'
+						}]
+					},
+					{
 						name: '收款资金汇总(元)',
+						lastestUpdateTime: '',
 						content: [{
 							title: '总收益',
 							increase: '0',
@@ -229,15 +255,15 @@
 							title: '扣减预存',
 							increase: '0',
 							number: '0'
-						},{
+						}, {
 							title: '应收未结',
 							increase: '0',
 							number: '0'
-						},{
+						}, {
 							title: '应收已结',
 							increase: '0',
 							number: '0'
-						},{
+						}, {
 							title: '退款',
 							increase: '0',
 							number: '0'
@@ -304,23 +330,6 @@
 				this.currentSource = index;
 				this.getPieEcharts()
 			},
-			changeStatus(index) {
-				this.currentStatus = index;
-				let beginDate = ''
-				let endDate = ''
-				if (this.mode === 'year') {
-					beginDate = `${this.modeTitle}-01-01`
-					endDate = `${this.modeTitle}-12-31`
-				} else if (this.mode === 'year-month') {
-					beginDate = dayjs(this.modeTitle).startOf('month').format('YYYY-MM-DD')
-					endDate = dayjs(this.modeTitle).endOf('month').format('YYYY-MM-DD')
-				} else {
-					const date = this.modeTitle.split("-")
-					beginDate = date[0]
-					endDate = date[1] || date[0]
-				}
-				this.getOrderStat(beginDate, endDate)
-			},
 			changePerson(index) {
 				this.currentPerson = index;
 				this.currentPersonName = {
@@ -354,6 +363,8 @@
 			},
 			updateData(beginDate, endDate) {
 				this.getOrderStat(beginDate, endDate)
+				this.getOrderCountStat(beginDate, endDate)
+				this.getMainRevenueStat(beginDate, endDate)
 				this.getOrderProductStat(beginDate, endDate)
 				this.getOrderProductTopStat(beginDate, endDate, 2)
 				this.getOrderProductTopStat(beginDate, endDate, 3)
@@ -361,23 +372,16 @@
 				this.getPrintProductionStat(beginDate, endDate)
 				this.getThingsCapacityStat(beginDate, endDate)
 			},
-			getOrderStat(beginDate, endDate) {
-				this.loading = true
-				GetOrderStat({
+			getOrderCountStat(beginDate, endDate) {
+				GetOrderCountStat({
 					beginDate,
 					endDate,
 					mercantileAgents,
-					statOrderStatus: this.currentStatus + 1
+					statOrderStatus:  1
 				}).then(res => {
-					if (res.code !== 0) {
-						uni.$Utils.showToast(res.message)
-						return
-					}
 					const curPeriodCount = res.data.curPeriodCount
 					const prevPeriodCount = res.data.prevPeriodCount
-					const curPeriodAmount = res.data.curPeriodAmount
-					const prevPeriodAmount = res.data.prevPeriodAmount
-
+					
 					this.dataList[0].content[0].number = curPeriodCount.orderCount
 					this.dataList[0].content[1].number = curPeriodCount
 						.innerOrderCount
@@ -393,40 +397,84 @@
 						.weChatOrderCount - prevPeriodCount.weChatOrderCount
 					this.dataList[0].content[3].increase = curPeriodCount
 						.shoppingOrderCount - prevPeriodCount.shoppingOrderCount
-
-
+				})
+			},
+			getMainRevenueStat(beginDate, endDate) {
+				GetMainRevenueStat({
+					beginDate,
+					endDate,
+					mercantileAgents,
+					statOrderStatus:  1
+				}).then(res => {
+					const curPeriodAmount = res.data.curPeriodAmount
+					const prevPeriodAmount = res.data.prevPeriodAmount
+					
 					this.dataList[1].content[0].number = curPeriodAmount
-						.orderAmount
+						.totalRevenue
 					this.dataList[1].content[1].number = curPeriodAmount
-						.cashPaymentOrderAmount
+						.offlinePayedRevenue
 					this.dataList[1].content[2].number = curPeriodAmount
-						.onlinePaymentOrderAmount
+						.onlinePayedRevenue
 					this.dataList[1].content[3].number = curPeriodAmount
-						.balancPaymentOrderAmount
+						.balancePayedRevenue
 					this.dataList[1].content[4].number = curPeriodAmount
-					    .unPaymentOrderAmount
-					this.dataList[1].content[5].number = curPeriodAmount
-						.billPaymentOrderAmount
-					this.dataList[1].content[6].number = curPeriodAmount
-						.refundTotalAmount
+						.billPayedRevenue
 					this.dataList[1].content[0].increase = new Big(curPeriodAmount
-						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
+						.totalRevenue).minus(prevPeriodAmount.totalRevenue).toString()
 					this.dataList[1].content[1].increase = new Big(curPeriodAmount
-						.cashPaymentOrderAmount).minus(prevPeriodAmount.cashPaymentOrderAmount).toString()
+						.offlinePayedRevenue).minus(prevPeriodAmount.offlinePayedRevenue).toString()
 					this.dataList[1].content[2].increase = new Big(curPeriodAmount
-						.onlinePaymentOrderAmount).minus(prevPeriodAmount.onlinePaymentOrderAmount).toString()
+						.onlinePayedRevenue).minus(prevPeriodAmount.onlinePayedRevenue).toString()
 					this.dataList[1].content[3].increase = new Big(curPeriodAmount
-						.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
+						.balancePayedRevenue).minus(prevPeriodAmount.balancePayedRevenue).toString()
 					this.dataList[1].content[4].increase = new Big(curPeriodAmount
-						.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
-					this.dataList[1].content[5].increase = new Big(curPeriodAmount
-						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
-					this.dataList[1].content[6].increase = new Big(curPeriodAmount
-						.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
-
+						.billPayedRevenue).minus(prevPeriodAmount.billPayedRevenue).toString()
+						
 					if (this.currentSource == 0) {
 						this.getPieEcharts()
 					}
+				})
+			},
+			getOrderStat(beginDate, endDate) {
+				this.loading = true
+				GetOrderStat({
+					beginDate,
+					endDate,
+					mercantileAgents,
+					statOrderStatus:  1
+				}).then(res => {
+					const curPeriodAmount = res.data.curPeriodAmount
+					const prevPeriodAmount = res.data.prevPeriodAmount
+					
+					this.dataList[2].lastestUpdateTime = curPeriodAmount.lastestUpdateTime
+					this.dataList[2].content[0].number = curPeriodAmount
+						.orderAmount
+					this.dataList[2].content[1].number = curPeriodAmount
+						.cashPaymentOrderAmount
+					this.dataList[2].content[2].number = curPeriodAmount
+						.onlinePaymentOrderAmount
+					this.dataList[2].content[3].number = curPeriodAmount
+						.balancPaymentOrderAmount
+					this.dataList[2].content[4].number = curPeriodAmount
+						.unPaymentOrderAmount
+					this.dataList[2].content[5].number = curPeriodAmount
+						.billPaymentOrderAmount
+					this.dataList[2].content[6].number = curPeriodAmount
+						.refundTotalAmount
+					this.dataList[2].content[0].increase = new Big(curPeriodAmount
+						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
+					this.dataList[2].content[1].increase = new Big(curPeriodAmount
+						.cashPaymentOrderAmount).minus(prevPeriodAmount.cashPaymentOrderAmount).toString()
+					this.dataList[2].content[2].increase = new Big(curPeriodAmount
+						.onlinePaymentOrderAmount).minus(prevPeriodAmount.onlinePaymentOrderAmount).toString()
+					this.dataList[2].content[3].increase = new Big(curPeriodAmount
+						.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
+					this.dataList[2].content[4].increase = new Big(curPeriodAmount
+						.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
+					this.dataList[2].content[5].increase = new Big(curPeriodAmount
+						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
+					this.dataList[2].content[6].increase = new Big(curPeriodAmount
+						.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
 				}).finally(() => {
 					this.loading = false
 				})
@@ -565,6 +613,7 @@
 				const chart = await this.$refs.pieRef.init(echarts);
 				let sourceData = [];
 				let data = [];
+				let otherNumber = 0;
 
 				if (this.currentSource == 1) {
 					const total = this.productData.reduce((prev, cur) => new Big(prev).plus(cur.orderAmountStat),
@@ -581,6 +630,8 @@
 					}))
 				} else {
 					sourceData = this.dataList[1].content;
+					otherNumber = new Big(sourceData[0].number).minus(sourceData.slice(1).reduce((prev, cur) =>
+						new Big(prev).plus(cur.number), 0)).toNumber();
 					data = [{
 							value: sourceData[1].number,
 							name: '线下支付',
@@ -597,19 +648,19 @@
 						},
 						{
 							value: sourceData[3].number,
-							name: '扣减预存',
+							name: '储值支付',
 							itemStyle: {
 								color: '#ef6567'
 							}
-						},{
+						}, {
 							value: sourceData[4].number,
-							name: '应收未结',
+							name: '月结支付',
 							itemStyle: {
 								color: '#f9c956'
 							}
-						},{
-							value: sourceData[5].number,
-							name: '应收已结',
+						}, {
+							value: otherNumber,
+							name: '其他',
 							itemStyle: {
 								color: '#75bedc'
 							}
@@ -640,7 +691,7 @@
 						top: '61%',
 						left: '3%',
 						formatter: function(name) {
-							return `{a|${name} ${Math.round(sourceData.find(item => item.title == name)?.number / sourceData[0].number * 100 || 0)}%}`;
+							return `{a|${name} ${Math.round((sourceData.find(item => item.title == name)?.number || otherNumber) / sourceData[0].number * 100 || 0)}%}`;
 						}
 					},
 					series: [{
