@@ -6,7 +6,7 @@
 				<view class="list-grid margin-top-sm">
 					<template v-for="item in list" :key="item.event">
 						<view class="list-item" @click="addReturnOrder(item.event)">
-							<image class="image-icon margin-right-sm" :src="$IMG_URL + item.icon"></image>
+							<image class="image-icon margin-right-sm" :src="item.icon"></image>
 							<text class="text-label">{{item.label}}</text>
 						</view>
 					</template>
@@ -48,12 +48,12 @@
 
 	const list = ref([{
 			label: '扫码添加',
-			icon: '/app/物流.svg',
+			icon: '/static/images/returnOrder/scan.svg',
 			event: 'scan'
 		},
 		{
 			label: '搜索添加',
-			icon: '/app/物流.svg',
+			icon: '/static/images/returnOrder/search.svg',
 			event: 'search'
 		}
 	])
@@ -174,8 +174,8 @@
 	}
 
 	.image-icon {
-		height: 90rpx;
-		width: 90rpx;
+		height: 122rpx;
+		width: 122rpx;
 	}
 
 	.section-title {
