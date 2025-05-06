@@ -25,7 +25,12 @@
 					</template>
 					<template v-if="item.display && item.type==='orderCount'">
 						<view class="number-box margin-bottom-xs">
-							<text class="number-box-title">待完成数量({{orderDetail.unCompleteCount}})</text>
+							<view class="number-box-title">
+								<view>
+									报工方式:{{orderDetail.workRptTypeDesc}}
+								</view>
+								待完成数量({{orderDetail.unCompleteCount}})
+							</view>
 							<view class="number-counter">
 								<uv-button @click="decrement" :disabled="orderCount === 1"><uv-icon
 										name="minus"></uv-icon></uv-button>
@@ -526,6 +531,9 @@
 			font-size: 27rpx;
 			color: #333333;
 			line-height: 42rpx;
+			.note {
+				font-size: 23rpx;
+			}
 		}
 
 		.number-counter {
