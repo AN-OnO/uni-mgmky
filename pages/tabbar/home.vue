@@ -91,7 +91,7 @@
 		}, {
 			key: 8,
 			type: 'tools',
-			icon: `${imageURL}/app/物流.svg`,
+			icon: '/static/images/tabbar/返单.svg',
 			name: '返单',
 			event: '/pages/returnOrder/index'
 		}
