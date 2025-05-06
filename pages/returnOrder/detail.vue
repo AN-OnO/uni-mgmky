@@ -16,8 +16,11 @@
 					<uv-form-item label="订单金额(元)">
 						<uv-input v-model="model.orderAmount"></uv-input>
 					</uv-form-item>
-					<uv-form-item label="返工金额(元)" prop="returnAmount">
+					<uv-form-item label="返工金额(元)" required prop="returnAmount">
 						<uv-input v-model="model.returnAmount"></uv-input>
+					</uv-form-item>
+					<uv-form-item label="数量" prop="count">
+						<uv-input v-model="model.count"></uv-input>
 					</uv-form-item>
 				</view>
 			</view>
@@ -25,7 +28,7 @@
 			<view class="card-wrap">
 				<text class="section-title">相关人员</text>
 				<view class="padding-lr">
-					<uv-form-item label="责任人" prop="mainPerson" borderBottom>
+					<uv-form-item label="责任人" required prop="mainPerson" borderBottom>
 						<uv-input v-model="model.mainPerson" border="none" readonly suffixIcon="arrow-down"
 							suffixIconStyle="color: #909399"></uv-input>
 					</uv-form-item>
@@ -41,7 +44,7 @@
 						<uv-input v-model="model.manager" placeholder="请选择主管" border="none" readonly
 							suffixIcon="arrow-down" suffixIconStyle="color: #909399"></uv-input>
 					</uv-form-item>
-					<uv-form-item label="责任问题原因" prop="reason" borderBottom>
+					<uv-form-item label="责任问题原因" required prop="reason" borderBottom>
 						<uv-input v-model="model.reason" placeholder="请选择责任问题原因" border="none" readonly
 							suffixIcon="arrow-down" suffixIconStyle="color: #909399"></uv-input>
 					</uv-form-item>
@@ -51,7 +54,7 @@
 							<text class="text-btn flex-1">外部发现</text>
 						</view>
 					</uv-form-item>
-					<uv-form-item label="发现者" prop="finder" borderBottom>
+					<uv-form-item label="发现者" required prop="finder" borderBottom>
 						<uv-input v-model="model.finder" placeholder="请选择发现者" border="none" readonly
 							suffixIcon="arrow-down" suffixIconStyle="color: #909399"></uv-input>
 					</uv-form-item>
