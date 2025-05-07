@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uv-sticky bg-color="#fff">
+		<uv-sticky>
 			<view class="padding">
 				<text class="section-title">添加返工订单</text>
 				<view class="list-grid margin-top-sm">
@@ -163,13 +163,16 @@
 		.list-item {
 			@include flex;
 			align-items: center;
-			background-color: #f3f3f3;
+			background-color: #ffffff;
 			padding: 10rpx;
 			border-radius: 8px;
 		}
 
 		.text-label {
-			color: #777;
+			font-weight: 500;
+			font-size: 31rpx;
+			color: #4E5969;
+			line-height: 46rpx;
 		}
 	}
 
