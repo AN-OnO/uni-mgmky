@@ -38,7 +38,8 @@
 		{
 			"path": "pages/check/check",
 			"style": {
-				"navigationBarTitleText": "考勤打卡"
+				"navigationBarTitleText": "考勤打卡",
+				"navigationBarBackgroundColor": "#e2efff"
 			}
 		},
 		{

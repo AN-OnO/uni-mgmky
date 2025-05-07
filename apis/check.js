@@ -4,8 +4,8 @@ import request from "../utils/request"
  * 打卡
  * @return 
  */
-export function ClockIn() {
-	return request.post('/api/Attendance/ClockIn');
+export function ClockIn(params) {
+	return request.post('/api/Attendance/ClockIn',params);
 }
 
 /**
@@ -31,4 +31,12 @@ export function Mend(params) {
  */
 export function GetAttendanceRecords(params) {
 	return request.post('/api/Attendance/GetAttendanceRecords',params);
+}
+
+/**
+ * 判断是否打卡上班中
+ * @return 
+ */
+export function IsWorking(params) {
+	return request.get('/api/Attendance/IsWorking');
 }

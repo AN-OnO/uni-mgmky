@@ -6,39 +6,39 @@
 		<view class="date-date">
 			<text>{{ currentDate }} {{ currentWeekday }}</text>
 		</view>
-		<view class="punch-status">
-			<view class="todayCheck">
-				<view class="title-left">
-					<image class="calendar-icon" src="/static/images/check/打卡.png" />
-					<text class="title">今日打卡</text>
-				</view>
-				<view class="log">
-					<text @click="goToPunchRecord">所有记录 ></text>
+		<view class="todayCheck">
+			<view class="title-left">
+				<image class="calendar-icon" src="/static/images/check/打卡.png" />
+				<text class="title">最近打卡</text>
+			</view>
+			<!-- <view class="log">
+				<text @click="goToPunchRecord">所有记录 ></text>
+			</view> -->
+		</view>
+		<view class="clocking-record">
+			<view v-if="punchRecords.length > 0" class="last-punch">
+				<view class="punch-records">
+					<view v-for="(record, index) in punchRecords" :key="index" class="record">
+						<image class="record-badge" :src="record.badge"></image>
+						<image class="record-img"
+							:src="record.status === 1 ? '/static/images/check/unfinish.svg' : '/static/images/check/finish.svg'" />
+						<view class="record-time">{{ record.beginTime ? `上班 ${record.beginTime}` : '上班' }}</view>
+						<view class="record-time">{{ record.endTime ? `下班 ${record.endTime}` : '下班'}}</view>
+					</view>
 				</view>
 			</view>
-			<view class="clocking-record">
-				<view v-if="lastPunchRecord" class="last-punch">
-					<view class="punch-records">
-						<view v-for="(record, index) in punchRecords" :key="index" class="record">
-							<!-- <view class="record-mark">{{ record.mark }}</view> -->
-							<uv-icon name="checkbox-mark" color="#ABCAF1" size="22px"></uv-icon>
-							<view class="record-time">{{ record.time }}</view>
-						</view>
-					</view>
-				</view>
-				<view v-else class="not-punched">
-					<image class="success-icon" src="/static/images/check/not-punched.png" />
-					<view class="hint">
-						<text>您今日还未打卡</text>
-					</view>
+			<view v-else class="not-punched">
+				<image class="success-icon" src="/static/images/check/not-punched.png" />
+				<view class="hint">
+					<text>您今日还未打卡</text>
 				</view>
 			</view>
 		</view>
 		<button class="button" @click="punch" :disabled="isPunching">{{ punchButtonText }}</button>
-		<view class="addCard">
+		<!-- <view class="addCard">
 			<image class="card-icon" src="/static/images/check/Frame 427320768.png" />
 			<text class="add-card" @click="makeUpCard">申请补卡 ></text>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -46,7 +46,8 @@
 	import {
 		ClockIn,
 		GetLatestAttendances,
-		GetAttendanceRecords
+		GetAttendanceRecords,
+		IsWorking
 	} from '../../apis/check.js';
 	export default {
 		data() {
@@ -56,24 +57,37 @@
 				currentWeekday: this.getWeekday(),
 				isPunching: false, //正在打卡的状态，防止重复点击
 				punchRecords: [], //打卡记录数组
-				lastPunchRecord: null, //最近一次打卡记录
-				punchButtonText: '打卡',
+				punchButtonText: '上班',
 				timer: null
 			};
 		},
 		onShow() {
 			this.getTodayCheckInLogs()
+			this.getStatus()
 		},
 		methods: {
+			getStatus() {
+				IsWorking().then(res => {
+					this.punchButtonText = res.data.isWorking ? '下班' : '上班'
+					this.attendanceId = res.data.attendanceId
+				})
+			},
 			getTodayCheckInLogs() {
 				GetLatestAttendances().then(res => {
 					if (res.code === 0) {
 						this.punchRecords = res.data.map(({
+							beginTime,
+							endTime,
+							status,
 							checkintime
 						}) => ({
-							time: uni.$uv.timeFormat(checkintime, 'hh:MM')
+							beginTime: beginTime ? uni.$uv.timeFormat(beginTime, 'hh:MM') : null,
+							endTime: endTime ? uni.$uv.timeFormat(endTime, 'hh:MM') : null,
+							badge: new Date(checkintime).setHours(0, 0, 0, 0) - new Date().setHours(0,
+									0, 0, 0) === 0 ? '/static/images/check/today.svg' :
+								'/static/images/check/yesterday.svg',
+							status
 						}))
-						this.lastPunchRecord = this.punchRecords.at(-1)
 					} else {
 						console.error('GetLatestAttendances response', res)
 					}
@@ -121,10 +135,13 @@
 				// 	this.punchButtonText = '打卡';
 				// }, 1000);
 				this.isPunching = true;
-				ClockIn().then(res => {
+				ClockIn({
+					attendanceId: this.punchButtonText === '下班' ? this.attendanceId : null
+				}).then(res => {
 					this.isPunching = false;
-					uni.$uv.toast(res.code === 0 ? '打卡成功！' : '打卡失败！')
+					uni.$uv.toast('打卡成功！')
 					this.getTodayCheckInLogs()
+					this.getStatus()
 				})
 			},
 			goToPunchRecord() {
@@ -208,7 +225,7 @@
 		height: 56px;
 		font-size: 18px;
 		border-radius: 8px;
-		background-color: #58c3de;
+		background-color: #469DCD;
 		color: #FFFFFF;
 		display: flex;
 		/* 如果需要按钮内部的元素也灵活布局 */
@@ -224,8 +241,10 @@
 		margin-top: 30px;
 
 		.hint {
-			font-size: 14px;
+			font-weight: 500;
+			font-size: 27rpx;
 			color: #808080;
+			line-height: 42rpx;
 		}
 	}
 
@@ -287,28 +306,38 @@
 	}
 
 	.record {
-		width: 60px;
-		height: 60px;
+		width: 30%;
+		height: 191rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		background-color: #FFFFFF;
-		border-radius: 16px;
+		box-shadow: 0rpx 8rpx 76rpx 0rpx #E8EEF4;
+		border-radius: 31rpx;
+		position: relative;
 	}
 
-	.record-mark {
-		font-size: 15px;
-		color: #ABCAF1;
-		font-weight: 900;
-		font-family: 'DINPro-Black', sans-serif;
+	.record-badge {
+		position: absolute;
+		width: 46rpx;
+		height: 46rpx;
+		top: 0;
+		right: 0;
+	}
+
+	.record-img {
+		width: 53rpx;
+		height: 53rpx;
 	}
 
 	.record-time {
-		font-size: 15px;
-		color: #8DB5E7;
-		font-weight: bold;
-		font-family: 'DINPro-Black', sans-serif;
+		width: 145rpx;
+		height: 42rpx;
+		font-weight: 600;
+		font-size: 27rpx;
+		color: #469DCD;
+		line-height: 42rpx;
 	}
 
 	.clocking-record {
