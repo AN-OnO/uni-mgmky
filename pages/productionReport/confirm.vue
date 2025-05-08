@@ -91,7 +91,7 @@
 							<view v-for="(item, index) in orderDetail.orderItemAllTechs" :key="index">
 								<view class="component-name">{{item.componentName}}</view>
 								<uv-steps
-									:customStyle="{width: `${Math.min(item.technologyStatuses.length / 10 * 100, 100)}%`}">
+									:customStyle="{width: `${Math.min(item.technologyStatuses.length / 10 * 100, 100)}%`, overflow: 'scroll'}">
 									<uv-steps-item v-for="(tech, indx) in item.technologyStatuses" :key="indx">
 										<template v-slot:title>
 											<text class="steps-title">{{tech.technologyName}}</text>
