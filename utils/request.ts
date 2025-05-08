@@ -39,6 +39,9 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 			if (code === 1001) {
 				Utils.showToast(message);
 				toLogin()
+			} else if (code !== 0) {
+				Utils.showToast(message || 'Error')
+				break;
 			} else {
 				return data;
 			}
