@@ -92,8 +92,8 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 		LogOut().then(res => {
 			console.log('退出登录', res)
 			uni.$Utils.removeAllStorage()
-			uni.navigateTo({
-				url: '/pages/tabbar/index'
+			uni.redirectTo({
+				url: '/pages/index/login'
 			})
 		})
 	}
