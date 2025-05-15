@@ -187,6 +187,7 @@
 				isFinished: false,
 				attachmentInfos: [], // 附件
 				progressData: [],
+				thingId: null,
 				progressColor: ['#FF6B6B','#4ECDC4', '#45B7D1', '#96CEB4','#FFEEAD'],
 				customStyle: {
 					position: 'absolute',
@@ -256,6 +257,7 @@
 
 			console.log('options', options)
 			this.getDetail(options)
+			this.thingId = options.thingId
 		},
 		methods: {
 			getDetail(params) {
@@ -389,7 +391,8 @@
 					// checkinType: 0, // 1：切换 2：覆盖 3：新增
 					// employeeId: "",
 					makeQuantity: this.orderCount, // 完成件数
-					attachmentInfos: this.attachmentInfos
+					attachmentInfos: this.attachmentInfos,
+					thingId: this.thingId
 				}).then(res => {
 					const success = res.code === 0
 					let message = success ? '任务已完成！' : (res.message || '任务完成失败！')

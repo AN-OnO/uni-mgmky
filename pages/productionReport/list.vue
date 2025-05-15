@@ -15,11 +15,14 @@
 			</view>
 		</view>
 		<uv-loading-page :loading="loading"></uv-loading-page>
+		<uv-action-sheet ref="actionSheet" :actions="list" description="请选择报工设备" :safeAreaInsetBottom="true" round="16" @select="selectEquipment" >
+		</uv-action-sheet>
 	</view>
 </template>
 
 <script>
-	import {
+	import { ListTechnologyBindThings } from '../../apis/member'
+import {
 		ScanResult,
 		MyCompletedStatForToday,
 		ListTechnologyOrderItems,
@@ -35,6 +38,8 @@
 				taskAmount: 0,
 				loading: true,
 				type: '',
+				list: [],
+				thingId: null
 			}
 		},
 		onLoad(options) {
@@ -56,12 +61,35 @@
 					}
 				}).finally(() => this.loading = false)
 			},
-			handleSelect(item) {
+			async handleSelect(item) {
 				this.technologyId = item.technologyId
+				
+				if (item.thingBindType === 2) {
+					const res = await ListTechnologyBindThings({
+						technologyId: item.technologyId
+					})
+					this.list = res.data.map(ele => ({
+					   name: ele.thingName,
+					   thingId: ele.thingId,
+					   technologyName: item.name,
+					}))
+					this.$refs.actionSheet.open()
+					return
+				} else {
+					this.thingId = item.thingId
+				}
 
+				this.navigateNext(item.name)
+			},
+			selectEquipment(e){
+					console.log('选中设备', e);
+					this.thingId = e.thingId
+					this.navigateNext(e.technologyName)
+			},
+			navigateNext(name) {
 				if (this.type == '查看订单') {
 					uni.navigateTo({
-						url: `/pages/productionReport/info?name=${item.name}&technologyId=${this.technologyId}`,
+						url: `/pages/productionReport/info?name=${name}&technologyId=${this.technologyId}&thingId=${this.thingId}`,
 						animationType: 'pop-in',
 						animationDuration: 300
 					})
@@ -86,6 +114,7 @@
 							ScanResult({
 								scanResult: res.result,
 								technologyid: this.technologyId,
+								thingId: this.thingId
 							}).then(scanRes => {
 								console.log('ScanResult result', scanRes)
 								if (scanRes.code == 0) {
@@ -104,7 +133,7 @@
 							}).finally(() => this.loading = false)
 						} else if (this.type == '多人报工') {
 							uni.navigateTo({
-								url: `/pages/productionReport/confirm?orderItemNo=${res.result}&technologyId=${this.technologyId}`,
+								url: `/pages/productionReport/confirm?orderItemNo=${res.result}&technologyId=${this.technologyId}&thingId=${this.thingId}`,
 								animationType: 'pop-in',
 								animationDuration: 300
 							})

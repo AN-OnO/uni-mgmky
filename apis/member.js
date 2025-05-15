@@ -179,3 +179,30 @@ export function GetMainRevenueStat(params) {
 export function GetOrderCountStat(params) {
 	return request.post('/api/DashboardStat/GetOrderCountStat', params)
 }
+
+/**
+ * 我的工艺下设备绑定设置
+ * @param params 
+ * @return 
+ */
+export function ListMyProductionBindThings(params) {
+	return request.post('/api/Profile/ListMyProductionBindThings', params)
+}
+
+/**
+ * 工艺下绑定设备列表
+ * @param params 
+ * @return 
+ */
+export function ListTechnologyBindThings(params) {
+	return request.post('/api/Profile/ListTechnologyBindThings', params)
+}
+
+/**
+ * 保存绑定设备
+ * @param params 
+ * @return 
+ */
+export function SaveMyTechnologyBindThings(params) {
+	return request.post('/api/Profile/SaveMyTechnologyBindThings', params)
+}

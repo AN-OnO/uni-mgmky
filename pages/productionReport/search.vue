@@ -36,10 +36,12 @@
 				listData: [],
 				status: 'nomore',
 				count: 0,
+				thingId: null
 			}
 		},
 		onLoad(options) {
 			this.technologyId = options.technologyId;
+			this.thingId = options.thingId
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
@@ -90,7 +92,7 @@
 			},
 			jumpToConfirm(orderItemNo) {
 				uni.navigateTo({
-					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${this.technologyId}`,
+					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${this.technologyId}&thingId=${this.thingId}`,
 					animationType: 'pop-in',
 					animationDuration: 300
 				})

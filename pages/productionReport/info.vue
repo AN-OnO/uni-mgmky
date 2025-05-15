@@ -85,7 +85,8 @@
 				sortField: 'saleOrderNo',
 				sortDirection: 'desc', // asc 、desc
 				technologyId: '', // 产品工艺编号（页参）
-				spreadArr: []
+				spreadArr: [],
+				thingId: null
 			}
 		},
 		onLoad(options) {
@@ -93,6 +94,7 @@
 				title: `订单列表(${options.name})`
 			})
 			this.technologyId = options.technologyId
+			this.thingId = options.thingId
 		},
 		onShow() {
 			this.refresh()
@@ -118,7 +120,7 @@
 			},
 			goSearch() {
 				uni.navigateTo({
-					url: `/pages/productionReport/search?technologyId=${this.technologyId}`
+					url: `/pages/productionReport/search?technologyId=${this.technologyId}&thingId=${this.thingId}`
 				})
 			},
 			refresh() {
@@ -189,7 +191,7 @@
 			},
 			jumpToConfirm(orderItemNo) {
 				uni.navigateTo({
-					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${this.technologyId}`,
+					url: `/pages/productionReport/confirm?orderItemNo=${orderItemNo}&technologyId=${this.technologyId}&thingId=${this.thingId}`,
 					animationType: 'pop-in',
 					animationDuration: 300
 				})

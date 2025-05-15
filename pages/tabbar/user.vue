@@ -31,6 +31,14 @@
 		</view>
 		<view class="bg-white margin-lr-sm operation-card">
 			<view class="flex-row align-center padding" hover-stay-time="250" hover-class="click-hover"
+				@click="goBind">
+				<view class="flex-1 flex-row align-center">
+					<image class="item-icon" src="/static/images/tabbar/bindEquipment.svg"></image>
+					<text class="item-title">默认设备绑定</text>
+				</view>
+				<uv-icon name="arrow-right" size="28rpx" color="#7f8699"></uv-icon>
+			</view>
+			<view class="flex-row align-center padding" hover-stay-time="250" hover-class="click-hover"
 				@click="exit">
 				<view class="flex-1 flex-row align-center">
 					<image class="item-icon" src="/static/images/tabbar/exit-icon.svg"></image>
@@ -73,6 +81,11 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 	const goEarning = () => {
 		uni.navigateTo({
 			url: '/pages/tabbar/earning'
+		})
+	}
+	const goBind = () => {
+		uni.navigateTo({
+			url: '/pages/tabbar/bind'
 		})
 	}
 	const exit = () => {
@@ -237,5 +250,8 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 		color: #333333;
 		line-height: 46rpx;
 		margin-left: 15rpx;
+	}
+	.click-hover {
+		background-color: #f1f1f1;
 	}
 </style>

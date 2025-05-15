@@ -74,6 +74,13 @@
 			}
 		},
 		{
+			"path": "pages/tabbar/bind",
+			"style": {
+				"navigationBarTitleText": "默认设备绑定",
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/performanceGain/index",
 			"style": {
 				"navigationBarTitleText": "",
