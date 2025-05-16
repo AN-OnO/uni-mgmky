@@ -3,11 +3,11 @@
 		<uv-search bgColor="#F3F3F3" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='getList'
 			placeholder="搜索工艺名称"></uv-search>
 		<template v-for="(item, index) in technologies" :key="index">
-			<view class="content">
+			<view class="content" @click="selectTechnology(item)">
 				<image class="icon" :src="item.photo"></image>
 				<text class="name">{{item.name}}</text>
 				<text class="flex-1">已选：{{item.thingBindTypeDesc === '设置默认设备' ? item.thingName : item.thingBindTypeDesc}}</text>
-				<text :class="['down-arrow', selectedId === item.technologyId ? 'up-arrow' : '']" @click="selectTechnology(item)"></text>
+				<text :class="['down-arrow', selectedId === item.technologyId ? 'up-arrow' : '']" ></text>
 			</view>
 			<view v-if="selectedId === item.technologyId" class="selected">
 				<view class="flex-row flex-between">
