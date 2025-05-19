@@ -51,6 +51,7 @@
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
 			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo='orderItemNo' />
 		</uv-modal>
+		<uv-loading-page :loading="loading"></uv-loading-page>
 	</view>
 </template>
 
@@ -74,6 +75,7 @@
 				pageIndex: 1,
 				keywords: '',
 				orderItemNo: '',
+				loading: false,
 				options: [{
 					text: '撤销',
 					style: {
@@ -107,6 +109,7 @@
 				});
 			},
 			search(keywords) {
+				this.loading = true
 				if (keywords !== 'loadMore') {
 					this.listData = [];
 					this.status = 'nomore';
@@ -130,7 +133,7 @@
 					} else {
 						this.status = 'loadmore';
 					}
-				})
+				}).finally(() => this.loading = false)
 			},
 			jumpToInfo(data) {
 				uni.navigateTo({
