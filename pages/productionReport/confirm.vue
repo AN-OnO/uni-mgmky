@@ -41,12 +41,14 @@
 							</view>
 						</view>
 						<view v-if="progressData.length > 0" class="composite-progress">
-							<uv-line-progress :customStyle="customStyle"  height="30" :showText="false">
+							<uv-line-progress :customStyle="customStyle" height="30" :showText="false">
 							</uv-line-progress>
-							<uv-line-progress  v-for="(item, index) in progressData" :customStyle="customStyle" height="30" :percentage="getPercent(index)">
-									<view class="progress-text" :style="{'z-index': 999 - index,background: progressColor[index]}">
+							<uv-line-progress v-for="(item, index) in progressData" :customStyle="customStyle"
+								height="30" :percentage="getPercent(index)">
+								<view class="progress-text"
+									:style="{'z-index': 999 - index,background: progressColor[index]}">
 									{{`${item.opreatorName}`}}{{`${item.num}`}}
-									</view>
+								</view>
 							</uv-line-progress>
 						</view>
 					</template>
@@ -80,12 +82,12 @@
 					<template v-if="item.display && item.type==='productProgress'">
 						<view class="flex-row align-center">
 							<text class="process-latest">
-									【当前进度】：{{orderDetail.curProductionTechnologyName}}
+								【当前进度】：{{orderDetail.curProductionTechnologyName}}
 							</text>
-							<button class="process-btn" @click="item.showMore = !item.showMore">
+							<view class="process-btn" @click="item.showMore = !item.showMore">
 								{{item.showMore? '收起' : '所有流程'}}
 								<uv-icon :name="item.showMore? 'arrow-up' : 'arrow-down'"></uv-icon>
-							</button>
+							</view>
 						</view>
 						<view v-if="item.showMore">
 							<view v-for="(item, index) in orderDetail.orderItemAllTechs" :key="index">
@@ -188,7 +190,7 @@
 				attachmentInfos: [], // 附件
 				progressData: [],
 				thingId: null,
-				progressColor: ['#FF6B6B','#4ECDC4', '#45B7D1', '#96CEB4','#FFEEAD'],
+				progressColor: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEEAD'],
 				customStyle: {
 					position: 'absolute',
 					top: 0,
@@ -435,7 +437,8 @@
 				return '/static/images/productionReport/start.svg'
 			},
 			getPercent(index) {
-				return this.progressData.slice(0, index + 1).reduce((prev, cur) => prev + cur.num, 0) / this.orderDetail.orderCount * 100
+				return this.progressData.slice(0, index + 1).reduce((prev, cur) => prev + cur.num, 0) / this.orderDetail
+					.orderCount * 100
 			}
 		}
 	}
@@ -534,6 +537,7 @@
 			font-size: 27rpx;
 			color: #333333;
 			line-height: 42rpx;
+
 			.note {
 				font-size: 23rpx;
 			}
@@ -546,11 +550,11 @@
 			column-gap: 10rpx;
 		}
 	}
-	
+
 	.composite-progress {
 		position: relative;
 		padding-bottom: 50rpx;
-		
+
 		.progress-text {
 			display: flex;
 			align-items: center;

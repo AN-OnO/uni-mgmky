@@ -29,7 +29,7 @@
 					<view v-for="(comp, index) in item.orderItemAllTechs" :key="index">
 						<view class="component-name">{{comp.componentName}}</view>
 						<uv-steps
-							:customStyle="{width: `${Math.min(comp.technologyStatuses.length / 10 * 100, 100)}%`}">
+							:customStyle="{width: `${Math.min(comp.technologyStatuses.length / 10 * 100, 100)}%`, overflow: 'scroll'}">
 							<uv-steps-item v-for="(tech, indx) in comp.technologyStatuses" :key="indx">
 								<template v-slot:title>
 									<text class="steps-title">{{tech.technologyName}}</text>
@@ -251,6 +251,7 @@
 		padding: 20rpx;
 		border-radius: 15rpx;
 		box-shadow: 0rpx 8rpx 31rpx 0rpx #D0D6EC;
+		overflow: scroll;
 
 		.order-no {
 			font-weight: bold;
