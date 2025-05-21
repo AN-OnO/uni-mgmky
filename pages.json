@@ -190,10 +190,8 @@
 			"pages": [{
 					"path": "list",
 					"style": {
-						"navigationStyle": "custom"
-						// "navigationBarTitleText": "",
-						// "navigationBarTextStyle": "white",
-						// "navigationBarBackgroundColor": "#2FB7DF"
+						"navigationStyle": "custom",
+						"enablePullDownRefresh": true
 					}
 				},
 				{

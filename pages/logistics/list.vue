@@ -25,7 +25,7 @@
 				</view>
 			</view>
 			<view class="padding-lr flex-between">
-				<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab"></uv-tabs>
+				<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab" :current="current"></uv-tabs>
 				<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
 			</view>
 		</uv-sticky>
@@ -112,6 +112,10 @@
 				count: 0,
 				orderItemNo: '',
 				keywords: '',
+				current: 0,
+				beforeDeliveryIndex: 1,
+				deliveryingIndex: 1,
+				afterDeliveryIndex: 1,
 				options: [{
 					text: '撤销',
 					style: {
@@ -123,9 +127,6 @@
 		onLoad(options) {
 			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.buttonText = options.deliveryMethod == 3 ? '开始配送' : '开始取送';
-			// uni.setNavigationBarTitle({
-			// 	title: this.deliveryMethod == 3 ? '配送' : '物流'
-			// });
 			this.pageTitle = this.deliveryMethod == 3 ? '配送' : '物流'
 		},
 		onShow() {
@@ -136,6 +137,14 @@
 				this.reFresh()
 			}
 		},
+		async onPullDownRefresh() {
+			if (this.pageIndex > 1) {
+				this.listData = [];
+				this.pageIndex = this.pageIndex - 1;
+				await this.getList();
+				uni.stopPullDownRefresh();
+			}
+		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
 			this.loadMore()
@@ -143,17 +152,30 @@
 		methods: {
 			changeTab(item) {
 				this.status = 'loadmore';
+				
+				const stateMap = {
+				  0: 'beforeDeliveryIndex',
+				  1: 'deliveryingIndex'
+				};
+				const property = stateMap[this.current] ?? 'afterDeliveryIndex';
+				this[property] = this.pageIndex;
+				
 				if (item.index == 0) {
 					this.buttonText = this.deliveryMethod == 4 ? '开始取送' : '开始配送';
 					this.searchType = 1;
+					this.current = 0;
+					this.reFresh(this.beforeDeliveryIndex)
 				} else if (item.index == 1) {
 					this.buttonText = this.deliveryMethod == 4 ? '完成取送' : '完成配送';
 					this.searchType = 2;
+					this.current = 1;
+					this.reFresh(this.deliveryingIndex)
 				} else {
 					this.buttonText = '';
 					this.searchType = 3;
+					this.current = 2;
+					this.reFresh(this.afterDeliveryIndex)
 				}
-				this.reFresh()
 			},
 			goSearch() {
 				uni.navigateTo({
@@ -173,14 +195,14 @@
 					await ConfirmDelivery({
 						orderItemNo: orderItemNo
 					});
-					this.reFresh()
+					this.reFresh(this.pageIndex)
 					uni.$Utils.showToast('已开始运输')
 				}
 			},
 			closeModal(key) {
 				this.$refs.modal.close();
 				if (key == 'reFresh') {
-					this.reFresh()
+					this.reFresh(this.pageIndex)
 					uni.$Utils.showToast('已完成运输')
 				}
 			},
@@ -217,8 +239,8 @@
 					}
 				})
 			},
-			reFresh() {
-				this.pageIndex = 1;
+			reFresh(index) {
+				this.pageIndex = index && !this.keywords ? index : 1;
 				this.listData = [];
 				this.getList(this.keywords)
 			},
@@ -274,7 +296,7 @@
 					orderItemNo
 				}).then(res => {
 					if (res) {
-						this.reFresh()
+						this.reFresh(this.pageIndex)
 						uni.$Utils.showToast('已撤销')
 					}
 				})
