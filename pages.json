@@ -6,17 +6,17 @@
 		}
 	},
 	"pages": [{
+			"path": "pages/tabbar/index",
+			"style": {
+				"navigationStyle": "custom"
+			}
+		}, {
 			"path": "pages/index/login",
 			"style": {
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
 		},{
-			"path": "pages/tabbar/index",
-			"style": {
-				"navigationStyle": "custom"
-			}
-		}, {
 			"path": "pages/tabbar/home",
 			"style": {
 				"navigationStyle": "custom"
