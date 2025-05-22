@@ -116,6 +116,7 @@
 				beforeDeliveryIndex: 1,
 				deliveryingIndex: 1,
 				afterDeliveryIndex: 1,
+				scanning: false,
 				options: [{
 					text: '撤销',
 					style: {
@@ -133,6 +134,8 @@
 			const flag = uni.$Utils.getStorage('backbutton')
 			if (flag) {
 				uni.$Utils.removeStorage('backbutton')
+			} else if (this.scanning) {
+				this.scanning = false
 			} else {
 				this.reFresh()
 			}
@@ -240,9 +243,9 @@
 				})
 			},
 			reFresh(index) {
-				this.pageIndex = index && !this.keywords ? index : 1;
+				this.pageIndex = index || 1;
 				this.listData = [];
-				this.getList(this.keywords)
+				this.getList()
 			},
 			loadMore() {
 				this.status = 'loading';
@@ -250,6 +253,7 @@
 				this.getList();
 			},
 			onScanTap() {
+				this.scanning = true
 				// 调用小程序的扫码 API
 				uni.scanCode({
 					success: (res) => {
