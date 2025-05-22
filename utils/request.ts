@@ -23,11 +23,14 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 	const {
 		statusCode,
 		data,
+		config
 	} = res || {};
-
 	if (data == undefined) {
 		Utils.showToast(res.errMsg || '服务接口请求异常');
 		return Promise.reject(res);
+	}
+	if (['/api/Production/ScanResult', '/api/Production/BatchScanResult'].includes(config.url)) {
+		return data
 	}
 	const { code, message, ...resData } = data
 	const toLogin = () => {
