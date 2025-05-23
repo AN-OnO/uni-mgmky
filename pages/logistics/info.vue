@@ -38,7 +38,7 @@
 				<view class="margin-left-xl">
 					<view style="display: flex;">
 						<image class="order-img" :src='data.productImage'></image>
-						<view>
+						<view class="flex-column justify-between">
 							<uni-tooltip>
 								<view class="uv-line-3 info-productName">{{data.productName}}</view>
 								<template v-slot:content>
@@ -290,12 +290,13 @@
 	}
 
 	.order-img {
-		max-width: 190.84rpx;
-		max-height: 190.84rpx;
+		max-width: 191rpx;
+		max-height: 191rpx;
 		margin-right: 15rpx;
 	}
 
 	.info-productName {
+		width: 418rpx;
 		font-size: 27rpx;
 		color: #333333;
 		line-height: 38rpx;
@@ -319,6 +320,7 @@
 		padding: 30rpx;
 		display: flex;
 		justify-content: flex-end;
+		padding-bottom: env(safe-area-inset-bottom);
 	}
 
 	.button-operation {
@@ -327,6 +329,7 @@
 		border-radius: 15rpx;
 		margin-right: 0;
 		margin-left: 5rpx;
+		padding: 25rpx 38rpx;
 		display: flex;
 		align-items: center;
 		justify-content: center;
