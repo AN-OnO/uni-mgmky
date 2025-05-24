@@ -26,7 +26,7 @@
 				<view class='flex-center'>
 					<image class="image" src="/static/images/logistics/infoLocal (已定位).svg" mode=""></image>
 					<text
-						class="text">{{`${data.linkMan } ${data.contactMobile?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') }`}}</text>
+						class="text">{{`${data.linkMan} ${phoneNumber}`}}</text>
 				</view>
 				<div class="address margin-left-xl">{{data.address}}</div>
 			</view>
@@ -158,6 +158,11 @@
 		},
 		onUnload() {
 			uni.$Utils.setStorage('backbutton', true)
+		},
+		computed: {
+			phoneNumber() {
+				return this.deliveryMethod == 4 ? this.data.contactMobile : this.data.contactMobile?.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
+			}
 		},
 		methods: {
 			getData() {
