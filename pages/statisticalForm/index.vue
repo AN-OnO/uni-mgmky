@@ -158,7 +158,7 @@
 	import * as echarts from 'echarts';
 	// #endif
 	// #ifndef H5
-	const echarts = require('../../uni_modules/lime-echart/static/echarts.min.js')
+	const echarts = require('./static/echarts.min.js')
 	// #endif
 	import RankTable from './components/rankTable.vue';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
