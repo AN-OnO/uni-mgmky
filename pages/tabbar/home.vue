@@ -6,7 +6,7 @@
 		</view>
 		<view class="flex-row margin-top-lg margin-bottom-sm relative">
 			<template v-for="item in menu" :key="item.key">
-				<view v-if="item.display" class="menu-item card " @click="handleToolEvent(item)">
+				<view v-if="item.display" class="menu-item card " @tap="handleToolEvent(item)">
 					<image class="image-icon" :src="item.icon"></image>
 					<text>{{item.name}}</text>
 					<image v-if="item.topIcon" class="top-img" :src="item.topIcon" mode="heightFix"></image>
@@ -20,7 +20,7 @@
 			</view>
 			<view class="grid-row-3 margin-top">
 				<template v-for="item in tools" :key="item.key">
-					<view class="flex-column align-center justify-around radius" @click="handleToolEvent(item)">
+					<view class="flex-column align-center justify-around radius" @tap="handleToolEvent(item)">
 						<image class="tool-image-icon" :src="item.icon"></image>
 						<text class="text-xs">{{item.name}}</text>
 					</view>
