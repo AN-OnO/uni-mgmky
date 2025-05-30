@@ -69,7 +69,7 @@
 				Promise.all([this.getTodayCheckInLogs(), this.getStatus()]).then(res => {
 					this.isPunching = false
 				})
-			}
+			},
 			async getStatus() {
 				let res = {}
 				try {
