@@ -62,7 +62,7 @@
 			};
 		},
 		onShow() {
-			init()
+			this.init()
 		},
 		methods: {
 			init() {
@@ -77,7 +77,7 @@
 				} catch (error) {
 					throw error
 				}
-				
+
 				this.punchButtonText = res.data.isWorking ? '下班' : '上班'
 				this.attendanceId = res.data.attendanceId
 			},
@@ -88,7 +88,7 @@
 				} catch (error) {
 					throw error
 				}
-				
+
 				this.punchRecords = res.data.map(({
 					beginTime,
 					endTime,
@@ -131,7 +131,7 @@
 					attendanceId: this.punchButtonText === '下班' ? this.attendanceId : null
 				}).then(res => {
 					uni.$uv.toast('打卡成功！')
-					init()
+					this.init()
 				})
 			},
 			goToPunchRecord() {
