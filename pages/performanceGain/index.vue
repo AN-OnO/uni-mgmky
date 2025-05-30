@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<uv-sticky bgColor='#FFFFFF'>
-			<image v-if="showBanner" src="/static/images/gain/绩效收益banner.png" mode="" class="banner-img"></image>
+			<image v-if="showBanner" :src="$IMG_URL + '/app/绩效收益banner.png'" mode="" class="banner-img"></image>
 			<view class="flex-row align-center justify-between padding-lr"
 				:style="{'margin-top': showBanner ? '200rpx' : '0'}">
 				<view @click="open" class="mode-title">

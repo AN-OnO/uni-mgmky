@@ -171,9 +171,9 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 		color: #666666;
 		line-height: 42rpx;
 	}
-
+	
 	.detail-banner {
-		background: url('/static/images/tabbar/detail-bg.png');
+		background: url("#{$IMG_URL}/app/detail-bg.png");
 		background-repeat: no-repeat;
 		background-size: contain;
 		margin: 0 15rpx;
