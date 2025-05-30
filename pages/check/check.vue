@@ -55,43 +55,53 @@
 				currentDate: this.getDate(),
 				currentTime: this.getTime(),
 				currentWeekday: this.getWeekday(),
-				isPunching: false, //正在打卡的状态，防止重复点击
+				isPunching: true, //正在打卡的状态，防止重复点击
 				punchRecords: [], //打卡记录数组
 				punchButtonText: '上班',
 				timer: null
 			};
 		},
 		onShow() {
-			this.getTodayCheckInLogs()
-			this.getStatus()
+			init()
 		},
 		methods: {
-			getStatus() {
-				IsWorking().then(res => {
-					this.punchButtonText = res.data.isWorking ? '下班' : '上班'
-					this.attendanceId = res.data.attendanceId
+			init() {
+				Promise.all([this.getTodayCheckInLogs(), this.getStatus()]).then(res => {
+					this.isPunching = false
 				})
+			}
+			async getStatus() {
+				let res = {}
+				try {
+					res = await IsWorking()
+				} catch (error) {
+					throw error
+				}
+				
+				this.punchButtonText = res.data.isWorking ? '下班' : '上班'
+				this.attendanceId = res.data.attendanceId
 			},
-			getTodayCheckInLogs() {
-				GetLatestAttendances().then(res => {
-					if (res.code === 0) {
-						this.punchRecords = res.data.map(({
-							beginTime,
-							endTime,
-							status,
-							checkintime
-						}) => ({
-							beginTime: beginTime ? uni.$uv.timeFormat(beginTime, 'hh:MM') : null,
-							endTime: endTime ? uni.$uv.timeFormat(endTime, 'hh:MM') : null,
-							badge: new Date(checkintime).setHours(0, 0, 0, 0) - new Date().setHours(0,
-									0, 0, 0) === 0 ? '/static/images/check/today.svg' :
-								'/static/images/check/yesterday.svg',
-							status
-						}))
-					} else {
-						console.error('GetLatestAttendances response', res)
-					}
-				})
+			async getTodayCheckInLogs() {
+				let res = {}
+				try {
+					res = await GetLatestAttendances()
+				} catch (error) {
+					throw error
+				}
+				
+				this.punchRecords = res.data.map(({
+					beginTime,
+					endTime,
+					status,
+					checkintime
+				}) => ({
+					beginTime: beginTime ? uni.$uv.timeFormat(beginTime, 'hh:MM') : null,
+					endTime: endTime ? uni.$uv.timeFormat(endTime, 'hh:MM') : null,
+					badge: new Date(checkintime).setHours(0, 0, 0, 0) - new Date().setHours(0,
+							0, 0, 0) === 0 ? '/static/images/check/today.svg' :
+						'/static/images/check/yesterday.svg',
+					status
+				}))
 			},
 			getTime() {
 				const now = new Date();
@@ -116,32 +126,12 @@
 				this.currentTime = this.getTime();
 			},
 			punch() {
-				//打卡逻辑
-				// this.isPunching = true;
-				// const punchTime = this.getTime();
-				// const punchMark = '√'
-				// this.punchRecords.push({
-				// 	mark: punchMark,
-				// 	time: punchTime
-				// });
-				// this.lastPunchRecord = {
-				// 	mark: punchMark,
-				// 	time: punchTime
-				// };
-				// this.punchButtonText = '打卡成功';
-
-				// setTimeout(() => {
-				// 	this.isPunching = false;
-				// 	this.punchButtonText = '打卡';
-				// }, 1000);
 				this.isPunching = true;
 				ClockIn({
 					attendanceId: this.punchButtonText === '下班' ? this.attendanceId : null
 				}).then(res => {
-					this.isPunching = false;
 					uni.$uv.toast('打卡成功！')
-					this.getTodayCheckInLogs()
-					this.getStatus()
+					init()
 				})
 			},
 			goToPunchRecord() {
