@@ -259,7 +259,7 @@
 
 			console.log('options', options)
 			this.getDetail(options)
-			this.thingId = options.thingId
+			this.thingId = options.thingId === 'null' ? null : options.thingId
 		},
 		methods: {
 			getDetail(params) {

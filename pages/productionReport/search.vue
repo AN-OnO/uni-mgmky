@@ -41,7 +41,7 @@
 		},
 		onLoad(options) {
 			this.technologyId = options.technologyId;
-			this.thingId = options.thingId
+			this.thingId = options.thingId === 'null' ? null : options.thingId
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;

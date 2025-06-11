@@ -94,7 +94,7 @@
 				title: `订单列表(${options.name})`
 			})
 			this.technologyId = options.technologyId
-			this.thingId = options.thingId
+			this.thingId = options.thingId === 'null' ? null : options.thingId
 		},
 		onShow() {
 			this.refresh()
