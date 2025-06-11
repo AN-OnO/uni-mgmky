@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<uv-sticky  customNavHeight="0" bgColor="#F0F1F5">
+		<uv-sticky customNavHeight="0" bgColor="#F0F1F5">
 			<view class="navbar-wrap">
 				<uv-status-bar></uv-status-bar>
 				<view class="navbar-wrap-title">
@@ -37,7 +37,13 @@
 						@click="cancelDelivery(item.orderItemNo)">
 						<view @click="jumpToInfo(item)" class="list-contain">
 							<view class="flex-between">
-								<text class="list-companyName">{{item.companyName}}</text>
+								<view class="list-companyName">
+									<view v-if="item.mercantileAgentShortName"
+										:class="['circle', item.mercantileAgentShortName === 'S' ? 'sc-bg' : '']">
+										{{item.mercantileAgentShortName}}
+									</view>
+									<view>{{item.companyName}}</view>
+								</view>
 								<text
 									:class="deliveryMethod == 4 ? 'logistics-method' : 'time'">{{item.tags?.[0] || ''}}</text>
 							</view>
@@ -155,14 +161,14 @@
 		methods: {
 			changeTab(item) {
 				this.status = 'loadmore';
-				
+
 				const stateMap = {
-				  0: 'beforeDeliveryIndex',
-				  1: 'deliveryingIndex'
+					0: 'beforeDeliveryIndex',
+					1: 'deliveryingIndex'
 				};
 				const property = stateMap[this.current] ?? 'afterDeliveryIndex';
 				this[property] = this.pageIndex;
-				
+
 				if (item.index == 0) {
 					this.buttonText = this.deliveryMethod == 4 ? '开始取送' : '开始配送';
 					this.searchType = 1;
@@ -375,10 +381,34 @@
 	}
 
 	.list-companyName {
+		display: flex;
+		align-items: center;
 		font-weight: 500;
 		font-size: 34rpx;
 		color: #000000;
 		line-height: 53rpx;
+	}
+
+	.circle {
+		width: 50rpx;
+		height: 50rpx;
+		margin-right: 8rpx;
+		border-radius: 50%;
+		background-color: #009945;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+
+		/* 文字样式 */
+		color: white;
+		font-size: 34rpx;
+		font-weight: bold;
+		/* 无衬线字体更清晰 */
+		font-family: Arial, sans-serif;
+	}
+
+	.sc-bg {
+		background-color: #1576ED
 	}
 
 	.time {
