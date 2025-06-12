@@ -387,6 +387,8 @@
 				const navigateBack = (success = false) => {
 					success && uni.$Utils.navigateBack()
 				}
+				this.loading = true
+
 				ScanResult({
 					scanResult: this.orderDetail.orderItemNo,
 					technologyid: this.orderDetail.productionTechnologyId,
@@ -407,8 +409,9 @@
 							confirm
 						}) => confirm && navigateBack(success)
 					})
+				}).finally(() => {
+					this.loading = false
 				})
-
 			},
 			onCopy(text) {
 				uni.setClipboardData({
