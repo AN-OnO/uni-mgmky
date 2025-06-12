@@ -34,6 +34,7 @@
 				</view>
 			</view>
 		</view>
+		<uv-textarea :customStyle="customStyle" v-model="attendanceDes" placeholder="备注" autoHeight></uv-textarea>
 		<button class="button" @click="punch" :disabled="isPunching">{{ punchButtonText }}</button>
 		<!-- <view class="addCard">
 			<image class="card-icon" src="/static/images/check/Frame 427320768.png" />
@@ -58,7 +59,13 @@
 				isPunching: true, //正在打卡的状态，防止重复点击
 				punchRecords: [], //打卡记录数组
 				punchButtonText: '上班',
-				timer: null
+				timer: null,
+				attendanceDes: '',
+				customStyle: {
+					width: '90%',
+					marginTop: '90px',
+					marginBottom: '32rpx'
+				}
 			};
 		},
 		onShow() {
@@ -128,9 +135,11 @@
 			punch() {
 				this.isPunching = true;
 				ClockIn({
-					attendanceId: this.punchButtonText === '下班' ? this.attendanceId : null
+					attendanceId: this.punchButtonText === '下班' ? this.attendanceId : null,
+					attendanceDes: this.attendanceDes || null
 				}).then(res => {
 					uni.$uv.toast('打卡成功！')
+					this.attendanceDes = ''
 					this.init()
 				})
 			},
@@ -210,8 +219,7 @@
 	}
 
 	.button {
-		margin-top: 110px;
-		width: 360px;
+		width: 100%;
 		height: 56px;
 		font-size: 18px;
 		border-radius: 8px;
