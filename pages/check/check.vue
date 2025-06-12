@@ -34,7 +34,7 @@
 				</view>
 			</view>
 		</view>
-		<uv-textarea :customStyle="customStyle" v-model="attendanceDes" placeholder="备注" autoHeight></uv-textarea>
+		<uv-textarea :customStyle="customStyle" v-model="attendanceDes" placeholder="备注" ></uv-textarea>
 		<button class="button" @click="punch" :disabled="isPunching">{{ punchButtonText }}</button>
 		<!-- <view class="addCard">
 			<image class="card-icon" src="/static/images/check/Frame 427320768.png" />
