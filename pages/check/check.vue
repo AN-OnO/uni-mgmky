@@ -62,7 +62,7 @@
 				timer: null,
 				attendanceDes: '',
 				customStyle: {
-					width: '90%',
+					width: '85%',
 					marginTop: '70px',
 					marginBottom: '32rpx'
 				}
