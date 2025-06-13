@@ -63,7 +63,7 @@
 				attendanceDes: '',
 				customStyle: {
 					width: '90%',
-					marginTop: '90px',
+					marginTop: '40px',
 					marginBottom: '32rpx'
 				}
 			};
