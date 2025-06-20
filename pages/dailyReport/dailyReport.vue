@@ -9,7 +9,7 @@
 				<uv-datetime-picker ref="datetimePicker" v-model="value" mode="year-month"
 					@confirm="confirm"></uv-datetime-picker>
 				<view class="title" style="color: #1D2129;" @click="openWorker">
-					{{employeeName || name}}
+					{{employeeName}}
 					<image v-if="isAdmin" :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img" ></image>
 				</view>
 				<uv-picker ref="picker" :columns="workerList" keyName="name" @confirm="confirmWorker"></uv-picker>
@@ -109,7 +109,7 @@
 				isSpread: false,
 				workerList: [],
 				employeeId: null,
-				employeeName: '',
+				employeeName: useUserStore().userData.name,
 				reportData: {},
 				spreadArr: [],
 				beginDate: date.startOf('month').format('YYYY-MM-DD'),
@@ -119,7 +119,6 @@
 		},
 		created() {
 		    this.isAdmin = useUserStore().userData.isAdmin; 
-		    this.name = useUserStore().userData.name; 
 		},
 		mounted() {
 			if (this.isAdmin) {
@@ -128,9 +127,9 @@
 				}).then(res => {
 					this.workerList = [res.data] || []
 				})
-			} else {
-				this.getData()
 			}
+			
+			this.getData()
 		},
 		methods: {
 			openDate() {
@@ -146,7 +145,6 @@
 				this.beginDate = dayjs(e.value).startOf('month').format('YYYY-MM-DD')
 				this.endDate = dayjs(e.value).endOf('month').format('YYYY-MM-DD')
 				
-				if (this.isAdmin && !this.employeeId) return
 				this.getData()
 			},
 			confirmWorker(e) {
