@@ -63,3 +63,21 @@ export function ScanResult(params) {
 export function BatchScanResult(params) {
 	return request.post('/api/Production/BatchScanResult', params);
 }
+
+/**
+ * 获取报工员工列表
+ * @param params 
+ * @return 
+ */
+export function GetWorderList(params) {
+	return request.post('/api/Production/GetWorderList', params);
+}
+
+/**
+ * 月度员工生产数据
+ * @param params 
+ * @return 
+ */
+export function GetDailyProductionData(params) {
+	return request.post('/api/Production/GetDailyProductionData', params);
+}

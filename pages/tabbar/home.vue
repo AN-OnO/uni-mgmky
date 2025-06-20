@@ -94,6 +94,12 @@
 			icon: '/static/images/tabbar/返单.svg',
 			name: '返单',
 			event: '/pages/returnOrder/index'
+		},{
+			key: 9,
+			type: 'tools',
+			icon: '/static/images/tabbar/dailyReport.svg',
+			name: '生产日报表',
+			event: '/pages/dailyReport/dailyReport'
 		}
 	]);
 	// 用户菜单

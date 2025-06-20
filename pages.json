@@ -216,6 +216,15 @@
 					}
 				}
 			]
+		}, {
+			"root": "pages/dailyReport",
+			"pages": [{
+				"path": "dailyReport",
+				"style": {
+					"navigationBarTitleText": "生产日报表",
+					"navigationBarBackgroundColor": "#ffffff"
+				}
+			}]
 		}
 	],
 	"globalStyle": {
