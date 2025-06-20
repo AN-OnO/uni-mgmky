@@ -1,7 +1,7 @@
 <template>
 	<view class="daily-container">
 		<uv-sticky bgColor='#FFFFFF'>
-			<view class="flex-row align-center justify-between padding-lr">
+			<view class="flex-row align-center justify-between padding-lr margin-top-sm">
 				<view @click="openDate" class="title">
 					{{modeTitle}}
 					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
