@@ -28,11 +28,11 @@
 					<uni-table>
 						<!-- 表头行 -->
 						<uni-tr>
-							<uni-th width="100rpx"></uni-th>
-							<uni-th width="140rpx"></uni-th>
-							<uni-th width="170rpx" align="center">小计</uni-th>
-							<uni-th width="100rpx" align="center">天数</uni-th>
-							<uni-th width="170rpx" align="center">平均数</uni-th>
+							<uni-th width="50"></uni-th>
+							<uni-th width="70"></uni-th>
+							<uni-th width="85" align="center">小计</uni-th>
+							<uni-th width="50" align="center">天数</uni-th>
+							<uni-th width="85" align="center">平均数</uni-th>
 						</uni-tr>
 						<!-- 表格数据行 -->
 						<template v-for="(statDetail, index) in reportData.statInfo?.statDetails" :key="index">
