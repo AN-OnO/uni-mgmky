@@ -18,7 +18,8 @@
 			<view>
 				<view class="flex-between padding-30">
 					<text class="section-title flex-1">{{ele.name}}</text>
-					<text v-if="ele.lastestUpdateTime" style="font-size: 14px;color: gray;">最近更新{{ele.lastestUpdateTime}}</text>
+					<text v-if="ele.lastestUpdateTime"
+						style="font-size: 14px;color: gray;">最近更新{{ele.lastestUpdateTime}}</text>
 				</view>
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
@@ -163,6 +164,16 @@
 	import RankTable from './components/rankTable.vue';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
 	const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
+	const tooltipStyle = {
+		textStyle: {
+			textShadowBlur: 10, // 关键！必须 >0 
+			textShadowColor: 'transparent' // 透明覆盖阴影
+		},
+		backgroundColor: '#ffffff', // 非透明背景
+		borderColor: '#000000',
+		shadowColor: 'transparent', // 容器阴影透明
+		shadowBlur: 0 // 阴影模糊度归零
+	}
 	export default {
 		components: {
 			RankTable,
@@ -377,11 +388,11 @@
 					beginDate,
 					endDate,
 					mercantileAgents,
-					statOrderStatus:  1
+					statOrderStatus: 1
 				}).then(res => {
 					const curPeriodCount = res.data.curPeriodCount
 					const prevPeriodCount = res.data.prevPeriodCount
-					
+
 					this.dataList[0].content[0].number = curPeriodCount.orderCount
 					this.dataList[0].content[1].number = curPeriodCount
 						.innerOrderCount
@@ -404,11 +415,11 @@
 					beginDate,
 					endDate,
 					mercantileAgents,
-					statOrderStatus:  1
+					statOrderStatus: 1
 				}).then(res => {
 					const curPeriodAmount = res.data.curPeriodAmount
 					const prevPeriodAmount = res.data.prevPeriodAmount
-					
+
 					this.dataList[1].content[0].number = curPeriodAmount
 						.totalRevenue
 					this.dataList[1].content[1].number = curPeriodAmount
@@ -429,7 +440,7 @@
 						.balancePayedRevenue).minus(prevPeriodAmount.balancePayedRevenue).toString()
 					this.dataList[1].content[4].increase = new Big(curPeriodAmount
 						.billPayedRevenue).minus(prevPeriodAmount.billPayedRevenue).toString()
-						
+
 					if (this.currentSource == 0) {
 						this.getPieEcharts()
 					}
@@ -441,11 +452,11 @@
 					beginDate,
 					endDate,
 					mercantileAgents,
-					statOrderStatus:  1
+					statOrderStatus: 1
 				}).then(res => {
 					const curPeriodAmount = res.data.curPeriodAmount
 					const prevPeriodAmount = res.data.prevPeriodAmount
-					
+
 					this.dataList[2].lastestUpdateTime = curPeriodAmount.lastestUpdateTime
 					this.dataList[2].content[0].number = curPeriodAmount
 						.orderAmount
@@ -670,8 +681,9 @@
 
 				const option = {
 					tooltip: {
+						...tooltipStyle,
 						trigger: 'item',
-						confine: true
+						confine: true,
 					},
 					legend: {
 						orient: 'horizontal',
@@ -715,8 +727,9 @@
 				const chart = await this.$refs.lineRef.init(echarts);
 				const option = {
 					tooltip: {
+						...tooltipStyle,
 						trigger: 'axis',
-						confine: true
+						confine: true,
 					},
 					legend: {
 						icon: 'circle',
@@ -776,7 +789,8 @@
 						left: 'center'
 					},
 					tooltip: {
-						trigger: 'axis'
+						...tooltipStyle,
+						trigger: 'axis',
 					},
 					legend: {
 						icon: 'circle',
