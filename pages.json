@@ -214,6 +214,31 @@
 						"navigationBarTitleText": "搜索",
 						"navigationBarBackgroundColor": "#D5E8FF"
 					}
+				},
+				{
+					"path" : "newList",
+					"style" : 
+					{	
+						"navigationBarTitleText" : "配送列表",
+						"enablePullDownRefresh": true,
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				},
+				{
+					"path" : "newSearch",
+					"style" : 
+					{
+						"navigationBarTitleText" : "搜索",
+						"navigationBarBackgroundColor": "#FFFFFF"
+					}
+				},
+				{
+					"path" : "newInfo",
+					"style" : 
+					{
+						"navigationBarTitleText" : "订单详情",
+						"navigationBarBackgroundColor": "#F2F3F5"
+					}
 				}
 			]
 		}, {

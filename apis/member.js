@@ -206,3 +206,39 @@ export function ListTechnologyBindThings(params) {
 export function SaveMyTechnologyBindThings(params) {
 	return request.post('/api/Profile/SaveMyTechnologyBindThings', params)
 }
+
+/**
+ * 加载配送列表(地址分组)
+ * @param params 
+ * @return 
+ */
+export function ListDeliveryByPSPByAddress(params) {
+	return request.post('/api/Delivery/ListDeliveryByPSPByAddress', params)
+}
+
+/**
+ * 加载配送列表(订单分组)
+ * @param params 
+ * @return 
+ */
+export function ListDeliveryByPSPBySaleOrder(params) {
+	return request.post('/api/Delivery/ListDeliveryByPSPBySaleOrder', params)
+}
+
+/**
+ * 获取订单配送单详情
+ * @param params 
+ * @return 
+ */
+export function GetDeliveryDetailBySaleOrder(params) {
+	return request.get('/api/Delivery/GetDeliveryDetailBySaleOrder', {params})
+}
+
+/**
+ * 批量开始配送
+ * @param params 
+ * @return 
+ */
+export function BatchConfirmDeliveryByPSP(params) {
+	return request.post('/api/Delivery/BatchConfirmDeliveryByPSP', params)
+}
