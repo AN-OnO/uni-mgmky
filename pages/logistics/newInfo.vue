@@ -1,0 +1,360 @@
+<template>
+	<view class="container-background">
+		<view class="container">
+			<view class="card">
+				<view class='flex-center'>
+					<image class="title-image" src="/static/images/logistics/待配送.svg" mode=""></image>
+					<text class="order-status">{{data.group.delivryStatusDesc}}</text>
+				</view>
+			</view>
+			<view class="card">
+				<view class='flex-center'>
+					<image class="image" src="/static/images/logistics/newList-local.svg" mode=""></image>
+					<text class="text">{{data.group.companyName}}</text>
+				</view>
+				<div class="address margin-left-xl">{{data.group.address}}</div>
+			</view>
+			<view class="card">
+				<view class='flex-center'>
+					<text class="text prefix">{{data.group.orderNo}}</text>
+				</view>
+				<view v-for="(detail, index) in data.details" :key="index"
+					class="flex-row align-start margin-left-xs margin-bottom-xs">
+					<image class="order-img" :src='detail.productImage'></image>
+					<view class="flex-column justify-between">
+						<view class="text">
+							{{detail.orderItemNo}}
+						</view>
+						<view
+							:class="['info-productName',`${detail.orderItemNo}`, spreadArr.includes(detail.orderItemNo) && !spreadArr.includes(`${index}-${detail.orderItemNo}`)?'uv-line-2':'']">
+							{{detail.productName}}</view>
+						<view v-if="spreadArr.includes(detail.orderItemNo)" class="tag-wrap"
+							@click.stop="spread(`${index}-${detail.orderItemNo}`)">
+							<uv-icon
+								:name="spreadArr.includes(`${index}-${detail.orderItemNo}`)?'arrow-up':'arrow-down'"
+								:label="spreadArr.includes(`${index}-${detail.orderItemNo}`)?'收起':'更多'"
+								label-size="24rpx" size="32rpx" label-pos="left" color="#808080"
+								label-color="#808080"></uv-icon>
+						</view>
+					</view>
+				</view>
+				<view class="flex-row align-center address margin-tb-sm">
+					<text class="margin-left-xs flex-1">订单编号:</text>
+					<text class="margin-right-xs">{{data.group.orderNo}}</text>
+					<text class="copy" @click="copy(data.group.orderNo)">复制</text>
+				</view>
+				<view class="flex-row address margin-tb-sm highlight">
+					<text class="margin-left-xs flex-1">下单备注:</text>
+					<text class="flex-1">{{data.group.remark}}</text>
+				</view>
+				<view class="flex-row address margin-tb-sm">
+					<text class="margin-left-xs flex-1">下单时间:</text>
+					<text></text>
+				</view>
+				<view class="flex-row address margin-tb-sm">
+					<text class="margin-left-xs flex-1">签收时间:</text>
+					<text></text>
+				</view>
+				<view class="flex-row address margin-tb-sm">
+					<text class="margin-left-xs flex-1">签收信息:</text>
+					<text></text>
+				</view>
+			</view>
+		</view>
+		<view v-if="[1, 2].includes(data.group.delivryStatus)" class="bottom-container">
+			<button class="button-operation normal-button" @click.stop="callPhone(data.details[0].contactMobile)">
+				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
+					class="text-operation" style="color: #333333;">电话</text>
+			</button>
+			<button class="button-operation normal-button" @click.stop="goNavigation">
+				<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
+					class="text-operation" style="color: #333333;">导航</text>
+			</button>
+			<button class="button-operation" @click.stop="confirm(data.group.orderNo)">
+				<image
+					:src="data.group.delivryStatus === 1 ? '/static/images/logistics/开始配送.svg' : '/static/images/logistics/完成.svg'"
+					style="max-width: 45.8rpx;max-height: 45.8rpx; " mode="">
+				</image>
+				<text class="text-operation">{{data.group.delivryStatus === 1 ? '开始配送' : '完成配送'}}</text>
+			</button>
+		</view>
+		<uv-loading-page :loading="loading"></uv-loading-page>
+		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo" />
+		</uv-modal>
+	</view>
+</template>
+
+<script>
+	import {
+		BatchConfirmDeliveryByPSP,
+		ConfirmDelivery,
+		GetDeliveryDetail,
+		GetDeliveryDetailBySaleOrder,
+	} from '../../apis/member';
+	import UploadVue from './upload.vue';
+	export default {
+		components: {
+			UploadVue,
+		},
+		data() {
+			return {
+				data: {
+					details: [],
+					group: {}
+				},
+				orderNo: '',
+				loading: true,
+				spreadArr: []
+			}
+		},
+		onLoad(options) {
+			this.orderNo = options.orderNo;
+			this.getData()
+		},
+		onUnload() {
+			uni.$Utils.setStorage('backbutton', true)
+		},
+		watch: {
+			async data() {
+				await uni.$uv.sleep(30)
+				this.data.details.forEach((detail) => {
+					uni.createSelectorQuery().select(`.${detail.orderItemNo}`).boundingClientRect(
+						data => {
+							if (data.height > 50) {
+								this.spreadArr.push(detail.orderItemNo)
+							}
+						}).exec()
+
+				})
+			}
+		},
+		methods: {
+			getData() {
+				GetDeliveryDetailBySaleOrder({
+					orderNo: this.orderNo
+				}).then(res => {
+					this.data = res.data
+				}).finally(() => this.loading = false)
+			},
+			async confirm(orderNo) {
+				await BatchConfirmDeliveryByPSP({
+					saleOrders: [{
+						orderNo,
+						orderItemNos: []
+					}]
+				})
+				uni.navigateTo({
+					url: `/pages/logistics/newList`
+				});
+			},
+			closeModal(key) {
+				this.$refs.modal.close();
+				if (key == 'reFresh') {
+					this.getData()
+				}
+			},
+			spread(key) {
+				if (this.spreadArr.includes(key)) {
+					this.spreadArr = this.spreadArr.filter(item => item != key)
+				} else {
+					this.spreadArr.push(key)
+				}
+			},
+			copy(text) {
+				uni.setClipboardData({
+					data: text,
+					success: function() {
+						uni.$uv.toast('复制成功')
+					}
+				});
+			},
+			callPhone(mobile) {
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
+			},
+			goNavigation() {
+				uni.getLocation({
+					success: res => {
+						// 获取当前位置
+						let currentLocation = {
+							latitude: res.latitude,
+							longitude: res.longitude
+						};
+						// 打开地图进行导航
+						uni.openLocation({
+							latitude: res.latitude,
+							longitude: res.longitude,
+							success: function() {
+								console.log('导航成功');
+							},
+							fail: function(err) {
+								console.log('导航失败', err);
+							}
+						});
+					}
+				});
+			}
+		}
+	}
+</script>
+
+<style lang="scss">
+	.container-background {
+		background: #F2F3F5;
+		height: 100%;
+		overflow: scroll;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.container {
+		width: 92%;
+		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+	}
+
+	.card {
+		background: #FFFFFF;
+		border-radius: 15rpx;
+		margin-bottom: 15.27rpx;
+		padding: 30rpx 15rpx;
+
+		.flex-center {
+			display: flex;
+			align-items: center;
+
+			.title-image {
+				max-width: 61.07rpx;
+				max-height: 61.07rpx;
+				margin-right: 7.63rpx;
+			}
+
+			.order-status {
+				font-weight: 600;
+				font-size: 46rpx;
+				color: #333333;
+				line-height: 69rpx;
+			}
+
+			.image {
+				max-width: 45.8rpx;
+				max-height: 45.8rpx;
+			}
+
+			.prefix {
+				position: relative;
+				padding-left: 15rpx;
+				margin-left: 15rpx;
+			}
+
+			.prefix::before {
+				content: '';
+				position: absolute;
+				left: 0;
+				height: 1em;
+				width: 0.25em;
+				border-radius: 10px;
+				background-color: #469DCD;
+				top: 50%;
+				transform: translateY(-50%);
+			}
+		}
+
+		.tag-wrap {
+			width: 120rpx;
+			height: 50rpx;
+			background: #F5F6F8;
+			border-radius: 191rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin-left: auto;
+		}
+	}
+
+	.copy {
+		font-size: 27rpx;
+		color: #86909C;
+		line-height: 46rpx;
+		padding-left: 15rpx;
+		border-left: 2rpx solid #F2F3F5;
+	}
+
+	.text {
+		font-weight: 600;
+		font-size: 31rpx;
+		color: #333333;
+		line-height: 46rpx;
+	}
+
+	.address {
+		font-size: 27rpx;
+		color: #4E5969;
+		line-height: 42rpx;
+	}
+
+	.order-img {
+		max-width: 191rpx;
+		max-height: 191rpx;
+		margin-right: 15rpx;
+	}
+
+	.info-productName {
+		width: 418rpx;
+		font-size: 27rpx;
+		color: #4E5969;
+		line-height: 42rpx;
+	}
+
+	.highlight {
+		color: #FF5722;
+	}
+
+	.bottom-container {
+		background: #FFFFFF;
+		padding: 30rpx;
+		display: flex;
+		justify-content: flex-end;
+		padding-bottom: env(safe-area-inset-bottom);
+	}
+
+	.button-operation {
+		height: 95rpx;
+		background: #2FB7DF;
+		border-radius: 15rpx;
+		margin-right: 0;
+		margin-left: 5rpx;
+		padding: 25rpx 38rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.normal-button {
+		background: #F0F0F0;
+	}
+
+	.button-image {
+		max-width: 45.8rpx;
+		max-height: 45.8rpx;
+		margin-right: 3.82rpx;
+	}
+
+	.text-operation {
+		font-weight: 500;
+		font-size: 34rpx;
+		color: #FFFFFF;
+		line-height: 42rpx;
+	}
+</style>
