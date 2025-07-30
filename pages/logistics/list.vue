@@ -151,8 +151,8 @@
 				this.listData = [];
 				this.pageIndex = this.pageIndex - 1;
 				await this.getList();
-				uni.stopPullDownRefresh();
 			}
+			uni.stopPullDownRefresh();
 		},
 		onReachBottom() {
 			if (this.listData.length >= this.count) return;
