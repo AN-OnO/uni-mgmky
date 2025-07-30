@@ -79,18 +79,18 @@
 				</view>
 			</template>
 			<view class="flex-row justify-end margin-top">
-				<template v-if="name === 'address'">
-					<view class="list-button" @click.stop="">
+				<template v-if="name === 'address' && [1, 2].includes(item.details[0].delivryStatus)">
+					<view class="list-button" @click.stop="callPhone(item.group.mobile)">
 						电话
 					</view>
 					<view class="list-button" @click.stop="goNavigation">
 						导航
 					</view>
-					<view class="list-button confirm" @click.stop="">
-						开始配送
+					<view class="list-button confirm" @click.stop="confirm(item.details)">
+						{{item.details[0].delivryStatus === 1 ? '开始配送' : '完成配送'}}
 					</view>
 				</template>
-				<template v-else>
+				<template v-else-if="name === 'orderNo'">
 					<view class="list-button" @click="jumpInfo(item.group.orderNo)">
 						查看订单详情
 					</view>
@@ -107,6 +107,7 @@
 
 <script>
 	import {
+		BatchConfirmDeliveryByPSP,
 		ListDeliveryByPSPByAddress,
 		ListDeliveryByPSPBySaleOrder
 	} from '../../apis/member';
@@ -186,6 +187,32 @@
 				} else {
 					return '/static/images/logistics/unselected.svg'
 				}
+			},
+			async confirm(details) {
+				const orders = details.map(detail => detail.orderNo).filter(item => this.selectedList.includes(item))
+				
+				if (orders.length === 0) {
+					uni.$uv.toast('至少选择一条数据')
+					return
+				}
+				await BatchConfirmDeliveryByPSP({
+					saleOrders: orders.map(orderNo => ({
+						orderNo,
+						orderItemNos: []
+					}))
+				})
+				this.goSearch()
+			},
+			callPhone(mobile) {
+				uni.makePhoneCall({
+					phoneNumber: mobile, // 需要拨打的电话号码
+					success: (res) => {
+						console.log('拨打电话成功', res);
+					},
+					fail: (res) => {
+						console.log('拨打电话失败', res);
+					}
+				});
 			},
 			goNavigation() {
 				uni.getLocation({

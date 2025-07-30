@@ -125,7 +125,6 @@
 								this.spreadArr.push(detail.orderItemNo)
 							}
 						}).exec()
-
 				})
 			}
 		},
