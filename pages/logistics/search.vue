@@ -106,11 +106,6 @@
 			}
 		},
 		methods: {
-			goback() {
-				uni.navigateBack({
-					delta: 1
-				});
-			},
 			search(keywords) {
 				this.loading = true
 				if (keywords !== 'loadMore') {
