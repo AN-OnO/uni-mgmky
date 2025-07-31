@@ -27,7 +27,8 @@
 						</view>
 						<view
 							:class="['info-productName',`${detail.orderItemNo}`, spreadArr.includes(detail.orderItemNo) && !spreadArr.includes(`${index}-${detail.orderItemNo}`)?'uv-line-2':'']">
-							{{detail.productName}}</view>
+							{{detail.productName}}
+						</view>
 						<view v-if="spreadArr.includes(detail.orderItemNo)" class="tag-wrap"
 							@click.stop="spread(`${index}-${detail.orderItemNo}`)">
 							<uv-icon
@@ -62,18 +63,18 @@
 			</view>
 		</view>
 		<view v-if="[1, 2].includes(data.group.delivryStatus)" class="bottom-container">
-			<button class="button-operation normal-button" @click.stop="callPhone(data.details[0].contactMobile)">
+			<button class="button-operation" @click.stop="callPhone(data.details[0].contactMobile)">
 				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 					class="text-operation" style="color: #333333;">电话</text>
 			</button>
-			<button class="button-operation normal-button" @click.stop="goNavigation">
+			<button class="button-operation" @click.stop="goNavigation">
 				<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 					class="text-operation" style="color: #333333;">导航</text>
 			</button>
-			<button class="button-operation" @click.stop="confirm(data.group.orderNo)">
-				<image
+			<button class="button-operation confirm" @click.stop="confirm(data.group.orderNo)">
+				<image class="button-image"
 					:src="data.group.delivryStatus === 1 ? '/static/images/logistics/开始配送.svg' : '/static/images/logistics/完成.svg'"
-					style="max-width: 45.8rpx;max-height: 45.8rpx; " mode="">
+					mode="">
 				</image>
 				<text class="text-operation">{{data.group.delivryStatus === 1 ? '开始配送' : '完成配送'}}</text>
 			</button>
@@ -326,34 +327,36 @@
 		display: flex;
 		justify-content: flex-end;
 		padding-bottom: env(safe-area-inset-bottom);
-	}
 
-	.button-operation {
-		height: 95rpx;
-		background: #2FB7DF;
-		border-radius: 15rpx;
-		margin-right: 0;
-		margin-left: 5rpx;
-		padding: 25rpx 38rpx;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+		.button-operation {
+			color: #333333;
+			background: #F2F3F5;
+			border-radius: 15rpx;
+			margin-left: 0;
+			margin-right: 8rpx;
+			padding: 29rpx 38rpx;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
 
-	.normal-button {
-		background: #F0F0F0;
-	}
+		.confirm {
+			color: #FFFFFF;
+			background: #469DCD;
+			margin-right: 0;
+		}
 
-	.button-image {
-		max-width: 45.8rpx;
-		max-height: 45.8rpx;
-		margin-right: 3.82rpx;
-	}
+		.button-image {
+			max-width: 45.8rpx;
+			max-height: 45.8rpx;
+			margin-right: 3.82rpx;
+		}
 
-	.text-operation {
-		font-weight: 500;
-		font-size: 34rpx;
-		color: #FFFFFF;
-		line-height: 42rpx;
+		.text-operation {
+			font-weight: 500;
+			font-size: 34rpx;
+			color: #FFFFFF;
+			line-height: 42rpx;
+		}
 	}
 </style>
