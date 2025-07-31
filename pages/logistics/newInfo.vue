@@ -163,7 +163,7 @@
 						}]
 					})
 					uni.navigateTo({
-						url: `/pages/logistics/newList`
+						url: `/pages/logistics/newList?deliveryMethod=${this.deliveryMethod}`
 					});
 				} else {
 					this.orderNos = [orderNo]
