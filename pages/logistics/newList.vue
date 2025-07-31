@@ -1,6 +1,6 @@
 <template>
 	<view class="newList-contain">
-		<uv-sticky customNavHeight="0"  bgColor="#F0F1F5">
+		<uv-sticky customNavHeight="0" bgColor="#F0F1F5">
 			<view class="">
 				<view class="title-wrap flex-row justify-between padding-lr padding-tb-sm">
 					<view class="today-content">
@@ -19,102 +19,106 @@
 				</view>
 			</view>
 		</uv-sticky>
-		<view v-for="(item, index) in listData" :key="index" class="list-card margin-sm padding-sm">
-			<view v-if="fixedTab === 'address'" class="flex-row">
-				<image class="local-img" src="/static/images/logistics/newList-local.svg" mode=""></image>
-				<view class="name">{{item.group.companyName}}</view>
-				<!-- <view class="tag">
+		<view class="list-wrap">
+			<view v-for="(item, index) in listData" :key="index" class="list-card margin-sm padding-sm">
+				<view v-if="fixedTab === 'address'" class="flex-row">
+					<image class="local-img" src="/static/images/logistics/newList-local.svg" mode=""></image>
+					<view class="name">{{item.group.companyName}}</view>
+					<!-- <view class="tag">
 					全部完成
 				</view> -->
-			</view>
-			<view v-else class="flex-row justify-between">
-				<view class="flex-row align-center">
-					<text class="orderNo">{{item.group.orderNo}}</text>
-					<view :class="{tag: true, 'tag-inactice': item.group.delivryStatus !== 1}">
-						{{item.group.delivryStatusDesc}}
-					</view>
 				</view>
-				<uv-icon @click="handleSpread(index)" :name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
-					:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD" labelColor="#469DCD"
-					labelSize="12"></uv-icon>
-			</view>
-			<view v-if="fixedTab === 'address'" class="address">
-				{{item.group.address}}
-			</view>
-			<template v-else>
-				<view class="text">
-					包裹数总数(个)：<text class="highlight">{{item.group.totalPackageCount}}</text>
-				</view>
-				<view class="text">
-					交付时间：{{item.group.lateDeliveryTime}}
-				</view>
-			</template>
-			<view v-if="fixedTab === 'address' && spreadList.includes(index)" class="order">
-				<template v-for="(detail, subindex) in item.details" :key="subindex">
-					<view class="order-head">
-						<view class="flex-row align-center">
-							<image class="selected-img"
-								:src="getImgStatus(detail)"
-								@click="handleSelected(detail.orderNo, index)"></image>
-							<text class="order-number">{{detail.orderNo}}</text>
-							<view :class="{tag: true, 'tag-inactice': detail.delivryStatus !== 1}">
-								{{detail.delivryStatusDesc}}
-							</view>
+				<view v-else class="flex-row justify-between">
+					<view class="flex-row align-center">
+						<text class="orderNo">{{item.group.orderNo}}</text>
+						<view :class="{tag: true, 'tag-inactice': item.group.delivryStatus !== 1}">
+							{{item.group.delivryStatusDesc}}
 						</view>
-						<uv-icon name="arrow-right" label="详情" labelPos="left" color="#469DCD" labelColor="#469DCD"
-							labelSize="12" @click="jumpInfo(detail.orderNo)"></uv-icon>
 					</view>
-					<view class="text margin-left-xl">
-						包裹数总数(个)：<text class="highlight">{{detail.totalPackageCount}}</text>
-					</view>
-					<view class="text margin-left-xl padding-bottom-sm">
-						交付时间：{{detail.lateDeliveryTime}}
-					</view>
-				</template>
-			</view>
-			<view v-if="fixedTab === 'address'" class="selectedInfo">
-				<image class="selected-img" @click="selectedAll(index)" :src="selectedAllList.includes(index) ? '/static/images/logistics/selected.svg' : '/static/images/logistics/unselected.svg'" mode=""></image>
-				<text class="flex-1" >全选</text>
-				<text class="margin-right-sm">同地址共<text class="highlight">{{item.details.length}}</text>单,已选<text
-						class="highlight">{{getSelectedNum(item.details)}}</text>单</text>
-				<uv-icon @click="handleSpread(index)" :name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
-					:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
-					labelColor="#469DCD" labelSize="12"></uv-icon>
-			</view>
-			<view v-else class="text text-active">
-				同地址共<text class="highlight">{{item.group.sameAddressOrderCount}}</text>单
-			</view>
-			<template v-if="fixedTab === 'orderNo' && spreadList.includes(index)">
-				<view class="sub-order" v-for="(detail, subindex) in item.details" :key="subindex">
-					<view class="order-head">
-						<text>{{detail.orderItemNo}}</text>
-						<text class="text">包裹数量(个)：<text class="highlight">{{detail.totalPackageCount}}</text></text>
-					</view>
-					<view class="detail">
-						{{detail.productName}}
-					</view>
+					<uv-icon @click="handleSpread(index)" :name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
+						:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
+						labelColor="#469DCD" labelSize="12"></uv-icon>
 				</view>
-			</template>
-			<view v-if="[1, 2].includes(item.details[0].delivryStatus)" class="flex-row justify-end margin-top">
-				<template v-if="fixedTab === 'address'">
-					<view class="list-button" @click.stop="callPhone(item.group.mobile)">
-						电话
-					</view>
-					<view class="list-button" @click.stop="goNavigation">
-						导航
-					</view>
-					<view class="list-button confirm" @click.stop="confirm(item.details)">
-						{{item.details[0].delivryStatus === 1 ? '开始配送' : '完成配送'}}
-					</view>
-				</template>
+				<view v-if="fixedTab === 'address'" class="address">
+					{{item.group.address}}
+				</view>
 				<template v-else>
-					<view class="list-button" @click="jumpInfo(item.group.orderNo)">
-						查看订单详情
+					<view class="text">
+						包裹数总数(个)：<text class="highlight">{{item.group.totalPackageCount}}</text>
 					</view>
-					<view class="list-button confirm" @click="jumpAddress(item.group.orderNo)">
-						跳转到地址组
+					<view class="text">
+						交付时间：{{item.group.lateDeliveryTime}}
 					</view>
 				</template>
+				<view v-if="fixedTab === 'address' && spreadList.includes(index)" class="order">
+					<template v-for="(detail, subindex) in item.details" :key="subindex">
+						<view class="order-head">
+							<view class="flex-row align-center">
+								<image class="selected-img" :src="getImgStatus(detail)"
+									@click="handleSelected(detail.orderNo, index)"></image>
+								<text class="order-number">{{detail.orderNo}}</text>
+								<view :class="{tag: true, 'tag-inactice': detail.delivryStatus !== 1}">
+									{{detail.delivryStatusDesc}}
+								</view>
+							</view>
+							<uv-icon name="arrow-right" label="详情" labelPos="left" color="#469DCD" labelColor="#469DCD"
+								labelSize="12" @click="jumpInfo(detail.orderNo)"></uv-icon>
+						</view>
+						<view class="text margin-left-xl">
+							包裹数总数(个)：<text class="highlight">{{detail.totalPackageCount}}</text>
+						</view>
+						<view class="text margin-left-xl padding-bottom-sm">
+							交付时间：{{detail.lateDeliveryTime}}
+						</view>
+					</template>
+				</view>
+				<view v-if="fixedTab === 'address'" class="selectedInfo">
+					<image class="selected-img" @click="selectedAll(index)"
+						:src="selectedAllList.includes(index) ? '/static/images/logistics/selected.svg' : '/static/images/logistics/unselected.svg'"
+						mode=""></image>
+					<text class="flex-1">全选</text>
+					<text class="margin-right-sm">同地址共<text class="highlight">{{item.details.length}}</text>单,已选<text
+							class="highlight">{{getSelectedNum(item.details)}}</text>单</text>
+					<uv-icon @click="handleSpread(index)" :name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
+						:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
+						labelColor="#469DCD" labelSize="12"></uv-icon>
+				</view>
+				<view v-else class="text text-active">
+					同地址共<text class="highlight">{{item.group.sameAddressOrderCount}}</text>单
+				</view>
+				<template v-if="fixedTab === 'orderNo' && spreadList.includes(index)">
+					<view class="sub-order" v-for="(detail, subindex) in item.details" :key="subindex">
+						<view class="order-head">
+							<text>{{detail.orderItemNo}}</text>
+							<text class="text">包裹数量(个)：<text
+									class="highlight">{{detail.totalPackageCount}}</text></text>
+						</view>
+						<view class="detail">
+							{{detail.productName}}
+						</view>
+					</view>
+				</template>
+				<view v-if="[1, 2].includes(item.details[0].delivryStatus)" class="flex-row justify-end margin-top">
+					<template v-if="fixedTab === 'address'">
+						<view class="list-button" @click.stop="callPhone(item.group.mobile)">
+							电话
+						</view>
+						<view class="list-button" @click.stop="goNavigation">
+							导航
+						</view>
+						<view class="list-button confirm" @click.stop="confirm(item.details)">
+							{{item.details[0].delivryStatus === 1 ? '开始配送' : '完成配送'}}
+						</view>
+					</template>
+					<template v-else>
+						<view class="list-button" @click="jumpInfo(item.group.orderNo)">
+							查看订单详情
+						</view>
+						<view class="list-button confirm" @click="jumpAddress(item.group.orderNo)">
+							跳转到地址组
+						</view>
+					</template>
+				</view>
 			</view>
 		</view>
 		<uv-load-more :status="status" @loadmore='loadMore' />
@@ -132,7 +136,8 @@
 <script>
 	import {
 		BatchConfirmDeliveryByPSP,
-		ListDeliveryByPSPByAddress, ListDeliveryByPSPBySaleOrder
+		ListDeliveryByPSPByAddress,
+		ListDeliveryByPSPBySaleOrder
 	} from '../../apis/member';
 
 	export default {
@@ -259,7 +264,7 @@
 			handleSelected(orderNo, index) {
 				if (this.selectedList.includes(orderNo)) {
 					this.selectedList = this.selectedList.filter((item) => item !== orderNo)
-					
+
 					if (this.selectedAllList.includes(index)) {
 						this.selectedAllList = this.selectedAllList.filter((item) => item !== index)
 					}
@@ -273,7 +278,7 @@
 			},
 			selectedAll(index) {
 				const orders = this.listData[index].details.map(item => item.orderNo)
-				
+
 				if (this.selectedAllList.includes(index)) {
 					this.selectedAllList = this.selectedAllList.filter((item) => item !== index)
 					this.selectedList = this.selectedList.filter(item => !orders.includes(item))
@@ -304,7 +309,7 @@
 			},
 			confirm(details) {
 				const orders = details.map(detail => detail.orderNo).filter(item => this.selectedList.includes(item))
-				
+
 				if (orders.length === 0) {
 					uni.$uv.toast('至少选择一条数据')
 					return
@@ -322,8 +327,8 @@
 				const func = {
 					address: ListDeliveryByPSPByAddress,
 					orderNo: ListDeliveryByPSPBySaleOrder
-				}[this.fixedTab]
-				
+				} [this.fixedTab]
+
 				func({
 					pageSize: 10,
 					pageIndex: this.pageIndex,
@@ -388,7 +393,7 @@
 			color: #FFFFFF;
 			background: #469DCD;
 		}
-
+		
 		.list-card {
 			background: #FFFFFF;
 			border-radius: 15rpx;
@@ -529,6 +534,10 @@
 				line-height: 57rpx;
 				margin-right: 8rpx;
 			}
+		}
+		
+		.list-wrap .list-card:last-child {
+			margin-bottom: calc(76rpx + env(safe-area-inset-bottom));
 		}
 
 		.fixed-tab {
