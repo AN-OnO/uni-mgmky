@@ -239,6 +239,14 @@
 						"navigationBarTitleText" : "订单详情",
 						"navigationBarBackgroundColor": "#F2F3F5"
 					}
+				},
+				{
+					"path" : "newUpload",
+					"style" : 
+					{
+						"navigationBarTitleText": "",
+						"navigationStyle": "custom"
+					}
 				}
 			]
 		}, {

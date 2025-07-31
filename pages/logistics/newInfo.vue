@@ -45,29 +45,35 @@
 					<text class="copy" @click="copy(data.group.orderNo)">复制</text>
 				</view>
 				<view class="flex-row address margin-tb-sm highlight">
-					<text class="margin-left-xs flex-1">下单备注:</text>
-					<text class="flex-1">{{data.group.remark}}</text>
+					<text class="margin-lr-xs">下单备注:</text>
+					<text class="text-right flex-1">{{data.group.remark}}</text>
 				</view>
-				<view class="flex-row address margin-tb-sm">
-					<text class="margin-left-xs flex-1">下单时间:</text>
-					<text></text>
-				</view>
-				<view class="flex-row address margin-tb-sm">
-					<text class="margin-left-xs flex-1">签收时间:</text>
-					<text></text>
-				</view>
-				<view class="flex-row address margin-tb-sm">
-					<text class="margin-left-xs flex-1">签收信息:</text>
-					<text></text>
-				</view>
+				<template v-if="showMore">
+					<view class="flex-row address margin-tb-sm">
+						<text class="margin-lr-xs">下单时间:</text>
+						<text class="text-right flex-1">{{data.group.saleOrderDeliverInfo?.checkintime}}</text>
+					</view>
+					<view class="flex-row address margin-tb-sm">
+						<text class="margin-lr-xs">签收时间:</text>
+						<text class="text-right flex-1">{{data.group.saleOrderDeliverInfo?.finishTime}}</text>
+					</view>
+					<view class="flex-row address margin-tb-sm">
+						<text class="margin-lr-xs">签收信息:</text>
+						<uv-image v-for="(item, index) in data.group.saleOrderDeliverInfo?.photoList" :key="index" :src="item" width="145.04rpx"
+							height="145.04rpx" style="margin: 8rpx;"></uv-image>
+					</view>
+				</template>
+				<uv-icon @click="this.showMore = !this.showMore" :name="showMore ? 'arrow-up' : 'arrow-down'"
+					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#469DCD"
+					labelColor="#469DCD" labelSize="12"></uv-icon>
 			</view>
 		</view>
 		<view v-if="[1, 2].includes(data.group.delivryStatus)" class="bottom-container">
-			<button class="button-operation" @click.stop="callPhone(data.details[0].contactMobile)">
+			<button v-if="deliveryMethod == 3" class="button-operation" @click.stop="callPhone(data.details[0].contactMobile)">
 				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 					class="text-operation" style="color: #333333;">电话</text>
 			</button>
-			<button class="button-operation" @click.stop="goNavigation">
+			<button v-if="deliveryMethod == 3" class="button-operation" @click.stop="goNavigation">
 				<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
 					class="text-operation" style="color: #333333;">导航</text>
 			</button>
@@ -76,12 +82,12 @@
 					:src="data.group.delivryStatus === 1 ? '/static/images/logistics/开始配送.svg' : '/static/images/logistics/完成.svg'"
 					mode="">
 				</image>
-				<text class="text-operation">{{data.group.delivryStatus === 1 ? '开始配送' : '完成配送'}}</text>
+				<text class="text-operation">{{getButtonText(data.group.delivryStatus)}}</text>
 			</button>
 		</view>
 		<uv-loading-page :loading="loading"></uv-loading-page>
 		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
-			<UploadVue :uploadType="deliveryMethod" :closeModal="closeModal" :orderItemNo="data.orderItemNo" />
+			<new-upload :uploadType="deliveryMethod" :closeModal="closeModal" :orderNos='orderNos' />
 		</uv-modal>
 	</view>
 </template>
@@ -93,10 +99,11 @@
 		GetDeliveryDetail,
 		GetDeliveryDetailBySaleOrder,
 	} from '../../apis/member';
-	import UploadVue from './upload.vue';
+	import NewUpload from './newUpload.vue';
+	
 	export default {
 		components: {
-			UploadVue,
+			NewUpload,
 		},
 		data() {
 			return {
@@ -106,11 +113,15 @@
 				},
 				orderNo: '',
 				loading: true,
-				spreadArr: []
+				spreadArr: [],
+				deliveryMethod: 3,
+				orderNos: '',
+				showMore: false
 			}
 		},
 		onLoad(options) {
 			this.orderNo = options.orderNo;
+			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.getData()
 		},
 		onUnload() {
@@ -130,6 +141,12 @@
 			}
 		},
 		methods: {
+			getButtonText(delivryStatus) {
+				if (this.deliveryMethod == 3) {
+					return delivryStatus === 1 ? '开始配送' : '完成配送'
+				}
+				return delivryStatus === 1 ? '开始取送' : '完成取送'
+			},
 			getData() {
 				GetDeliveryDetailBySaleOrder({
 					orderNo: this.orderNo
@@ -138,15 +155,20 @@
 				}).finally(() => this.loading = false)
 			},
 			async confirm(orderNo) {
-				await BatchConfirmDeliveryByPSP({
-					saleOrders: [{
-						orderNo,
-						orderItemNos: []
-					}]
-				})
-				uni.navigateTo({
-					url: `/pages/logistics/newList`
-				});
+				if (this.data.group.delivryStatus === 1) {
+					await BatchConfirmDeliveryByPSP({
+						saleOrders: [{
+							orderNo,
+							orderItemNos: []
+						}]
+					})
+					uni.navigateTo({
+						url: `/pages/logistics/newList`
+					});
+				} else {
+					this.orderNos = [orderNo]
+					this.$refs.modal.open();
+				}
 			},
 			closeModal(key) {
 				this.$refs.modal.close();

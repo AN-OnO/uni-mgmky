@@ -242,3 +242,12 @@ export function GetDeliveryDetailBySaleOrder(params) {
 export function BatchConfirmDeliveryByPSP(params) {
 	return request.post('/api/Delivery/BatchConfirmDeliveryByPSP', params)
 }
+
+/**
+ * 批量完成配送
+ * @param params 
+ * @return 
+ */
+export function BatchDeliveryByPSPFinished(params) {
+	return request.post('/api/Delivery/BatchDeliveryByPSPFinished', params)
+}

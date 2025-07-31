@@ -4,7 +4,7 @@
 			<view class="">
 				<view class="title-wrap flex-row justify-between padding-lr padding-tb-sm">
 					<view class="today-content">
-						<text class="num">{{amount}}</text>今日配送(件)
+						<text class="num">{{amount}}</text>{{deliveryMethod == 4 ?'今日取送(单)':'今日配送(件)'}}
 					</view>
 					<view class="today-content">
 						<text class="num">0</text>今日收益(元)
@@ -24,9 +24,6 @@
 				<view v-if="fixedTab === 'address'" class="flex-row">
 					<image class="local-img" src="/static/images/logistics/newList-local.svg" mode=""></image>
 					<view class="name">{{item.group.companyName}}</view>
-					<!-- <view class="tag">
-					全部完成
-				</view> -->
 				</view>
 				<view v-else class="flex-row justify-between">
 					<view class="flex-row align-center">
@@ -54,8 +51,9 @@
 					<template v-for="(detail, subindex) in item.details" :key="subindex">
 						<view class="order-head">
 							<view class="flex-row align-center">
-								<image class="selected-img" :src="getImgStatus(detail)"
+								<image v-if="[1, 2].includes(detail.delivryStatus)" class="selected-img" :src="getImgStatus(detail)"
 									@click="handleSelected(detail.orderNo, index)"></image>
+								<view v-else class="selected-img"></view>
 								<text class="order-number">{{detail.orderNo}}</text>
 								<view :class="{tag: true, 'tag-inactice': detail.delivryStatus !== 1}">
 									{{detail.delivryStatusDesc}}
@@ -73,12 +71,16 @@
 					</template>
 				</view>
 				<view v-if="fixedTab === 'address'" class="selectedInfo">
-					<image class="selected-img" @click="selectedAll(index)"
-						:src="selectedAllList.includes(index) ? '/static/images/logistics/selected.svg' : '/static/images/logistics/unselected.svg'"
-						mode=""></image>
-					<text class="flex-1">全选</text>
-					<text class="margin-right-sm">同地址共<text class="highlight">{{item.details.length}}</text>单,已选<text
-							class="highlight">{{getSelectedNum(item.details)}}</text>单</text>
+					<template v-if="[1, 2].includes(item.details[0].delivryStatus)">
+						<image class="selected-img" @click="selectedAll(index)"
+							:src="selectedAllList.includes(index) ? '/static/images/logistics/selected.svg' : '/static/images/logistics/unselected.svg'"
+							mode=""></image>
+						<text class="flex-1">全选</text>
+					</template>
+					<text class="margin-right-sm">同地址共<text
+							class="highlight">{{item.details.length}}</text>单,{{[1, 2].includes(item.details[0].delivryStatus) ? '已选' : '完成'}}<text
+							class="highlight">{{getSelectedNum(item.details)}}</text>单
+					</text>
 					<uv-icon @click="handleSpread(index)" :name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
 						:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
 						labelColor="#469DCD" labelSize="12"></uv-icon>
@@ -98,8 +100,8 @@
 						</view>
 					</view>
 				</template>
-				<view v-if="[1, 2].includes(item.details[0].delivryStatus)" class="flex-row justify-end margin-top">
-					<template v-if="fixedTab === 'address'">
+				<view class="flex-row justify-end margin-top">
+					<template v-if="fixedTab === 'address' && [1, 2].includes(item.details[0].delivryStatus)">
 						<view class="list-button" @click.stop="callPhone(item.group.mobile)">
 							电话
 						</view>
@@ -107,10 +109,10 @@
 							导航
 						</view>
 						<view class="list-button confirm" @click.stop="confirm(item.details)">
-							{{item.details[0].delivryStatus === 1 ? '开始配送' : '完成配送'}}
+							{{getButtonText(item.details)}}
 						</view>
 					</template>
-					<template v-else>
+					<template v-else-if="fixedTab === 'orderNo'">
 						<view class="list-button" @click="jumpInfo(item.group.orderNo)">
 							查看订单详情
 						</view>
@@ -121,7 +123,6 @@
 				</view>
 			</view>
 		</view>
-		<uv-load-more :status="status" @loadmore='loadMore' />
 		<view class="fixed-tab">
 			<text @click="handleFixedTab('address')" :class="{tab: true, selected: fixedTab === 'address'}">
 				按地址分类
@@ -130,6 +131,10 @@
 				按单号分类
 			</text>
 		</view>
+		<uv-load-more :status="status" @loadmore='loadMore' />
+		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+			<new-upload :uploadType="deliveryMethod" :closeModal="closeModal" :orderNos='orderNos' />
+		</uv-modal>
 	</view>
 </template>
 
@@ -139,8 +144,12 @@
 		ListDeliveryByPSPByAddress,
 		ListDeliveryByPSPBySaleOrder
 	} from '../../apis/member';
+	import NewUpload from './newUpload.vue';
 
 	export default {
+		components: {
+			NewUpload,
+		},
 		data() {
 			return {
 				tabIndex: 0,
@@ -154,6 +163,8 @@
 				spreadList: [],
 				selectedList: [],
 				selectedAllList: [],
+				orderNos: '',
+				deliveryMethod: 3,
 				tabList: [{
 					name: '待配送',
 					num: 8
@@ -168,6 +179,12 @@
 					num: 0
 				}]
 			}
+		},
+		onLoad(options) {
+			this.deliveryMethod = parseInt(options.deliveryMethod);
+			uni.setNavigationBarTitle({
+				title: this.deliveryMethod == 3 ? '配送' : '物流'
+			});
 		},
 		onShow() {
 			const flag = uni.$Utils.getStorage('backbutton')
@@ -194,10 +211,24 @@
 			this.loadMore()
 		},
 		methods: {
+			getButtonText(details) {
+				if (this.deliveryMethod == 3) {
+					return details[0].delivryStatus === 1 ? '开始配送' : '完成配送'
+				}
+				return details[0].delivryStatus === 1 ? '开始取送' : '完成取送'
+			},
 			goSearch() {
 				uni.navigateTo({
-					url: `/pages/logistics/newSearch?name=${this.fixedTab}`
+					url: `/pages/logistics/newSearch?name=${this.fixedTab}&deliveryMethod=${this.deliveryMethod}`
 				})
+			},
+			closeModal(key) {
+				this.$refs.modal.close();
+				if (key == 'reFresh') {
+					this.reset()
+					this.getList()
+					uni.$Utils.showToast('已完成运输')
+				}
 			},
 			callPhone(mobile) {
 				uni.makePhoneCall({
@@ -288,7 +319,10 @@
 				}
 			},
 			getSelectedNum(details) {
-				return details.map(detail => detail.orderNo).filter(item => this.selectedList.includes(item)).length
+				if ([1, 2].includes(details[0].delivryStatus)) {
+					return details.map(detail => detail.orderNo).filter(item => this.selectedList.includes(item)).length
+				}
+				return details.length
 			},
 			getImgStatus(detail) {
 				if (this.selectedList.includes(detail.orderNo)) {
@@ -304,7 +338,7 @@
 			},
 			jumpInfo(orderNo) {
 				uni.navigateTo({
-					url: `/pages/logistics/newInfo?orderNo=${orderNo}`
+					url: `/pages/logistics/newInfo?deliveryMethod=${this.deliveryMethod}&orderNo=${orderNo}`
 				})
 			},
 			confirm(details) {
@@ -314,16 +348,22 @@
 					uni.$uv.toast('至少选择一条数据')
 					return
 				}
-				BatchConfirmDeliveryByPSP({
-					saleOrders: orders.map(orderNo => ({
-						orderNo,
-						orderItemNos: []
-					}))
-				}).then(res => {
-					this.reset()
-					this.getList()
-					uni.$Utils.showToast('已开始运输')
-				})
+
+				if (details[0].delivryStatus === 1) {
+					BatchConfirmDeliveryByPSP({
+						saleOrders: orders.map(orderNo => ({
+							orderNo,
+							orderItemNos: []
+						}))
+					}).then(res => {
+						this.reset()
+						this.getList()
+						uni.$Utils.showToast('已开始运输')
+					})
+				} else {
+					this.orderNos = orders
+					this.$refs.modal.open();
+				}
 			},
 			getList(keywords) {
 				const func = {
@@ -335,7 +375,7 @@
 					pageSize: 10,
 					pageIndex: this.pageIndex,
 					searchType: this.tabIndex + 1,
-					deliveryMethod: 3,
+					deliveryMethod: this.deliveryMethod,
 					keywords
 				}).then(res => {
 					const {
@@ -343,6 +383,10 @@
 						pageEntities,
 						count
 					} = res.data;
+					this.tabList[0].name = this.deliveryMethod == 4 ? `待取送` :
+						`待配送`;
+					this.tabList[1].name = this.deliveryMethod == 4 ? `待取送` :
+						`待配送`;
 					this.tabList[0].num = deliveryStat.waitNum
 					this.tabList[1].num = deliveryStat.myWaitNum
 					this.tabList[2].num = deliveryStat.finishedNum
@@ -395,7 +439,7 @@
 			color: #FFFFFF;
 			background: #469DCD;
 		}
-		
+
 		.list-card {
 			background: #FFFFFF;
 			border-radius: 15rpx;
@@ -501,6 +545,7 @@
 				line-height: 42rpx;
 				display: flex;
 				align-items: center;
+				justify-content: flex-end;
 			}
 
 			.highlight {
@@ -537,7 +582,7 @@
 				margin-right: 8rpx;
 			}
 		}
-		
+
 		.list-wrap .list-card:last-child {
 			margin-bottom: calc(76rpx + env(safe-area-inset-bottom));
 		}

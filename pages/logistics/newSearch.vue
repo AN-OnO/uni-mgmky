@@ -6,9 +6,6 @@
 			<view v-if="name === 'address'" class="flex-row">
 				<image class="local-img" src="/static/images/logistics/newList-local.svg" mode=""></image>
 				<view class="name">{{item.group.companyName}}</view>
-				<!-- <view class="tag">
-					全部完成
-				</view> -->
 			</view>
 			<view v-else class="flex-row justify-between">
 				<view class="flex-row align-center">
@@ -87,7 +84,7 @@
 						导航
 					</view>
 					<view class="list-button confirm" @click.stop="confirm(item.details)">
-						{{item.details[0].delivryStatus === 1 ? '开始配送' : '完成配送'}}
+						{{getButtonText(item.details)}}
 					</view>
 				</template>
 				<template v-else-if="name === 'orderNo'">
@@ -102,6 +99,9 @@
 		</view>
 		<uv-load-more :status="status" @loadmore='loadMore' />
 		<uv-loading-page :loading="loading"></uv-loading-page>
+		<uv-modal ref="modal" :showConfirmButton='false' :closeOnClickOverlay='false'>
+			<new-upload :uploadType="deliveryMethod" :closeModal="closeModal" :orderNos='orderNos' />
+		</uv-modal>
 	</view>
 </template>
 
@@ -111,8 +111,12 @@
 		ListDeliveryByPSPByAddress,
 		ListDeliveryByPSPBySaleOrder
 	} from '../../apis/member';
+	import NewUpload from './newUpload.vue';
 
 	export default {
+		components: {
+			NewUpload,
+		},
 		data() {
 			return {
 				status: 'nomore',
@@ -124,10 +128,13 @@
 				selectedList: [],
 				selectedAllList: [],
 				keywords: '',
+				deliveryMethod: 3,
+				orderNos: ''
 			}
 		},
 		onLoad(options) {
 			this.name = options.name;
+			this.deliveryMethod = parseInt(options.deliveryMethod);
 		},
 		onShow() {
 			if (this.keywords) {
@@ -145,6 +152,12 @@
 			this.loadMore()
 		},
 		methods: {
+			getButtonText(details) {
+				if (this.deliveryMethod == 3) {
+					return details[0].delivryStatus === 1 ? '开始配送' : '完成配送'
+				}
+				return details[0].delivryStatus === 1 ? '开始取送' : '完成取送'
+			},
 			handleSpread(key) {
 				if (this.spreadList.includes(key)) {
 					this.spreadList = this.spreadList.filter((item) => item !== key)
@@ -195,13 +208,25 @@
 					uni.$uv.toast('至少选择一条数据')
 					return
 				}
-				await BatchConfirmDeliveryByPSP({
-					saleOrders: orders.map(orderNo => ({
-						orderNo,
-						orderItemNos: []
-					}))
-				})
-				this.goSearch()
+				if (details[0].delivryStatus === 1) {
+					BatchConfirmDeliveryByPSP({
+						saleOrders: orders.map(orderNo => ({
+							orderNo,
+							orderItemNos: []
+						}))
+					}).then(res => {
+						this.goSearch()
+					})
+				} else {
+					this.orderNos = orders
+					this.$refs.modal.open();
+				}
+			},
+			closeModal(key) {
+				this.$refs.modal.close();
+				if (key == 'reFresh') {
+					this.goSearch()
+				}
 			},
 			callPhone(mobile) {
 				uni.makePhoneCall({
@@ -245,7 +270,7 @@
 			},
 			jumpInfo(orderNo) {
 				uni.navigateTo({
-					url: `/pages/logistics/newInfo?orderNo=${orderNo}`
+					url: `/pages/logistics/newInfo?deliveryMethod=${this.deliveryMethod}&orderNo=${orderNo}`
 				})
 			},
 			jumpAddress(orderNo) {
@@ -275,7 +300,7 @@
 					pageSize: 10,
 					pageIndex: this.pageIndex,
 					searchType: 4,
-					deliveryMethod: 3,
+					deliveryMethod: this.deliveryMethod,
 					keywords: this.keywords
 				}).then(res => {
 					const {

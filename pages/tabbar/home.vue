@@ -100,6 +100,18 @@
 			icon: '/static/images/tabbar/dailyReport.svg',
 			name: '生产日报表',
 			event: '/pages/dailyReport/dailyReport'
+		},{
+			key: 10,
+			type: 'tools',
+			icon: `${imageURL}/app/配送.svg`,
+			name: '新版配送',
+			event: '/pages/logistics/newList?deliveryMethod=3'
+		},{
+			key: 11,
+			type: 'tools',
+			icon: `${imageURL}/app/物流.svg`,
+			name: '新版物流',
+			event: '/pages/logistics/newList?deliveryMethod=4'
 		}
 	]);
 	// 用户菜单
