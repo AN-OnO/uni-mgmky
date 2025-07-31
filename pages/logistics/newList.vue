@@ -320,6 +320,8 @@
 						orderItemNos: []
 					}))
 				}).then(res => {
+					this.reset()
+					this.getList()
 					uni.$Utils.showToast('已开始运输')
 				})
 			},
