@@ -46,22 +46,27 @@
 				</view>
 				<view class="flex-row address margin-tb-sm highlight">
 					<text class="margin-lr-xs">下单备注:</text>
-					<text class="text-right flex-1">{{data.group.remark}}</text>
+					<text class="text-right flex-1">{{data.group.orderRemark}}</text>
 				</view>
 				<template v-if="showMore">
 					<view class="flex-row address margin-tb-sm">
 						<text class="margin-lr-xs">下单时间:</text>
-						<text class="text-right flex-1">{{data.group.saleOrderDeliverInfo?.checkintime}}</text>
+						<text class="text-right flex-1">{{data.group.orderTime}}</text>
 					</view>
-					<view class="flex-row address margin-tb-sm">
+					<view v-if="data.group.saleOrderDeliverInfo?.finishTime" class="flex-row address margin-tb-sm">
 						<text class="margin-lr-xs">签收时间:</text>
 						<text class="text-right flex-1">{{data.group.saleOrderDeliverInfo?.finishTime}}</text>
 					</view>
-					<view class="flex-row address margin-tb-sm">
+					<view v-if="data.group.saleOrderDeliverInfo?.express_no" class="flex-row address margin-tb-sm">
+						<text class="margin-lr-xs">寄件单号:</text>
+						<text class="text-right flex-1">{{data.group.saleOrderDeliverInfo?.express_no}}</text>
+					</view>
+					<view v-if="data.group.saleOrderDeliverInfo?.photoList" class="flex-row address margin-tb-sm">
 						<text class="margin-lr-xs">签收信息:</text>
 						<uv-image v-for="(item, index) in data.group.saleOrderDeliverInfo?.photoList" :key="index" :src="item" width="145.04rpx"
 							height="145.04rpx" style="margin: 8rpx;"></uv-image>
 					</view>
+					<view v-if="data.group.saleOrderDeliverInfo?.remark" class="remark text-right">{{data.group.saleOrderDeliverInfo?.remark}}</view>
 				</template>
 				<uv-icon @click="this.showMore = !this.showMore" :name="showMore ? 'arrow-up' : 'arrow-down'"
 					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#469DCD"
@@ -302,6 +307,13 @@
 			align-items: center;
 			justify-content: center;
 			margin-left: auto;
+		}
+		
+		.remark {
+			font-size: 27rpx;
+			color: #1D2129;
+			line-height: 38rpx;
+			margin-bottom: 25rpx;
 		}
 	}
 
