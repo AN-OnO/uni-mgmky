@@ -251,3 +251,12 @@ export function BatchConfirmDeliveryByPSP(params) {
 export function BatchDeliveryByPSPFinished(params) {
 	return request.post('/api/Delivery/BatchDeliveryByPSPFinished', params)
 }
+
+/**
+ * 批量撤销配送
+ * @param params 
+ * @return 
+ */
+export function BatchCancelDeliveryByPSP(params) {
+	return request.post('/api/Delivery/BatchCancelDeliveryByPSP', params)
+}
