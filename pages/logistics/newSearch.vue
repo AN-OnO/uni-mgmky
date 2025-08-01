@@ -135,6 +135,7 @@
 		onLoad(options) {
 			this.name = options.name;
 			this.deliveryMethod = parseInt(options.deliveryMethod);
+			this.keywords = options.keywords
 		},
 		onShow() {
 			if (this.keywords) {
@@ -270,7 +271,7 @@
 			},
 			jumpInfo(orderNo) {
 				uni.navigateTo({
-					url: `/pages/logistics/newInfo?deliveryMethod=${this.deliveryMethod}&orderNo=${orderNo}`
+					url: `/pages/logistics/newInfo?deliveryMethod=${this.deliveryMethod}&orderNo=${orderNo}&keywords=${this.keywords}&name=${this.name}`
 				})
 			},
 			jumpAddress(orderNo) {

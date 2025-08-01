@@ -63,18 +63,20 @@
 					</view>
 					<view v-if="data.group.saleOrderDeliverInfo?.photoList" class="flex-row address margin-tb-sm">
 						<text class="margin-lr-xs">签收信息:</text>
-						<uv-image v-for="(item, index) in data.group.saleOrderDeliverInfo?.photoList" :key="index" :src="item" width="145.04rpx"
-							height="145.04rpx" style="margin: 8rpx;"></uv-image>
+						<uv-image v-for="(item, index) in data.group.saleOrderDeliverInfo?.photoList" :key="index"
+							:src="item" width="145.04rpx" height="145.04rpx" style="margin: 8rpx;"></uv-image>
 					</view>
-					<view v-if="data.group.saleOrderDeliverInfo?.remark" class="remark text-right">{{data.group.saleOrderDeliverInfo?.remark}}</view>
+					<view v-if="data.group.saleOrderDeliverInfo?.remark" class="remark text-right">
+						{{data.group.saleOrderDeliverInfo?.remark}}</view>
 				</template>
 				<uv-icon @click="this.showMore = !this.showMore" :name="showMore ? 'arrow-up' : 'arrow-down'"
-					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#469DCD"
-					labelColor="#469DCD" labelSize="12"></uv-icon>
+					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#469DCD" labelColor="#469DCD"
+					labelSize="12"></uv-icon>
 			</view>
 		</view>
 		<view v-if="[1, 2].includes(data.group.delivryStatus)" class="bottom-container">
-			<button v-if="deliveryMethod == 3" class="button-operation" @click.stop="callPhone(data.details[0].contactMobile)">
+			<button v-if="deliveryMethod == 3" class="button-operation"
+				@click.stop="callPhone(data.details[0].contactMobile)">
 				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
 					class="text-operation" style="color: #333333;">电话</text>
 			</button>
@@ -105,7 +107,7 @@
 		GetDeliveryDetailBySaleOrder,
 	} from '../../apis/member';
 	import NewUpload from './newUpload.vue';
-	
+
 	export default {
 		components: {
 			NewUpload,
@@ -121,12 +123,16 @@
 				spreadArr: [],
 				deliveryMethod: 3,
 				orderNos: '',
-				showMore: false
+				showMore: false,
+				keywords: '',
+				name: ''
 			}
 		},
 		onLoad(options) {
 			this.orderNo = options.orderNo;
 			this.deliveryMethod = parseInt(options.deliveryMethod);
+			this.keywords = options.keywords
+			this.name = options.name
 			this.getData()
 		},
 		onUnload() {
@@ -167,9 +173,16 @@
 							orderItemNos: []
 						}]
 					})
-					uni.navigateTo({
-						url: `/pages/logistics/newList?deliveryMethod=${this.deliveryMethod}`
-					});
+
+					if (this.name) {
+						uni.navigateTo({
+							url: `/pages/logistics/newSearch?name=${this.name}&deliveryMethod=${this.deliveryMethod}&keywords=${this.keywords}`
+						});
+					} else {
+						uni.navigateTo({
+							url: `/pages/logistics/newList?deliveryMethod=${this.deliveryMethod}`
+						});
+					}
 				} else {
 					this.orderNos = [orderNo]
 					this.$refs.modal.open();
@@ -178,7 +191,15 @@
 			closeModal(key) {
 				this.$refs.modal.close();
 				if (key == 'reFresh') {
-					this.getData()
+					if (this.name) {
+						uni.navigateTo({
+							url: `/pages/logistics/newSearch?name=${this.name}&deliveryMethod=${this.deliveryMethod}&keywords=${this.keywords}`
+						});
+					} else {
+						uni.navigateTo({
+							url: `/pages/logistics/newList?deliveryMethod=${this.deliveryMethod}`
+						});
+					}
 				}
 			},
 			spread(key) {
@@ -308,7 +329,7 @@
 			justify-content: center;
 			margin-left: auto;
 		}
-		
+
 		.remark {
 			font-size: 27rpx;
 			color: #1D2129;
