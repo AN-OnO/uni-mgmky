@@ -18,14 +18,14 @@
 			<template v-for="(item,index) in orderList" :key="index">
 				<view class="order-card margin-top">
 					<view class="order-card-head">
-						<text class="text-df text-bold">单号：{{item.orderItemNo}}</text>
-						<uv-tags :text="item.orderStatus===0?'未审核':'已审核'"
-							:type="item.orderStatus===0?'error':'success'"></uv-tags>
+						<text class="text-df text-bold">单号：{{item.consumeRecordsCode}}</text>
+						<uv-tags :text="item.statusDesc"
+							:type="item.status===2?'success':'error'"></uv-tags>
 					</view>
 					<view class="order-card-body">
-						<text>源订单号：{{item.sourceOrderItemNo}}</text>
-						<text>{{item.address}}</text>
-						<text class="self-end">{{item.checkinTime}}</text>
+						<text>源订单号：{{item.srcOrderNo}}</text>
+						<text>{{item.companyName}}</text>
+						<text class="self-end">{{item.checkintime}}</text>
 					</view>
 				</view>
 			</template>
@@ -45,6 +45,7 @@
 	import {
 		onReachBottom
 	} from '@dcloudio/uni-app'
+import { GetReWorkBillList } from '../../apis/member';
 
 	const list = ref([{
 			label: '扫码添加',
@@ -59,7 +60,6 @@
 	])
 
 	const pageIndex = ref(1)
-	const pageSize = ref(5)
 	const orderList = ref([])
 	const loadStatus = ref('loadmore')
 	const isReachBottom = ref(false)
@@ -69,53 +69,22 @@
 	onReachBottom(() => !isReachBottom.value && getList())
 
 	const getList = () => {
-		return new Promise(async (resolve) => {
-			loadStatus.value = 'loading'
-			await uni.$uv.sleep(500)
-			let data = [{
-					address: '汝河路-永昌广告印务',
-					orderItemNo: '240820000041478',
-					sourceOrderItemNo: '240820000041478-1',
-					checkinTime: '2025-03-17 21:26',
-					orderStatus: 0
-				},
-				{
-					address: '汝河路-永昌广告印务',
-					orderItemNo: 'T063226',
-					sourceOrderItemNo: '240820000041478-2',
-					checkinTime: '2025-03-17 21:26',
-					orderStatus: 1
-				}, {
-					address: '汝河路-永昌广告印务',
-					orderItemNo: 'T063226',
-					sourceOrderItemNo: '240820000041478-3',
-					checkinTime: '2025-03-17 21:26',
-					orderStatus: 1
-				},
-				{
-					address: '汝河路-永昌广告印务',
-					orderItemNo: 'T063226',
-					sourceOrderItemNo: '240820000041478-4',
-					checkinTime: '2025-03-17 21:26',
-					orderStatus: 1
-				}, {
-					address: '汝河路-永昌广告印务',
-					orderItemNo: 'T063226',
-					sourceOrderItemNo: '240820000041478-5',
-					checkinTime: '2025-03-17 21:26',
-					orderStatus: 1
-				}
-			]
-			if (pageIndex.value > 5) data = []
-
+		loadStatus.value = 'loading'
+		
+		GetReWorkBillList({
+			pageSize: 10,
+			pageIndex: pageIndex.value,
+		}).then(res => {
+			const {count, pageEntities} = res.data
+			
 			if (pageIndex.value === 1) {
-				orderList.value = data
+				orderList.value = pageEntities
 			} else {
-				orderList.value.push(...data)
+				orderList.value.push(...pageEntities)
 			}
-
+			
 			pageIndex.value++
-			isReachBottom.value = data.length < pageSize.value
+			isReachBottom.value = orderList.value.length === count
 			loadStatus.value = isReachBottom.value ? 'nomore' : 'loadmore'
 		})
 	}
@@ -123,17 +92,16 @@
 	getList()
 
 	const onScanTap = () => {
-		console.log('onScanTap')
-		// uni.scanCode({
-		// 	success: (res) => {
-		// 		console.log('扫码结果：', res.result);
-		// 	}
-		// });
+		uni.scanCode({
+			success: (res) => {
+				uni.navigateTo({
+					url: `/pages/returnOrder/detail?scanCode=${res.result}`
+				})
+			}
+		});
 	}
 
 	const onSearchTap = () => {
-		console.log('onSearchTap')
-
 		uni.navigateTo({
 			url: '/pages/returnOrder/search'
 		})

@@ -260,3 +260,50 @@ export function BatchDeliveryByPSPFinished(params) {
 export function BatchCancelDeliveryByPSP(params) {
 	return request.post('/api/Delivery/BatchCancelDeliveryByPSP', params)
 }
+
+/**
+ * 返工单列表
+ * @param params 
+ * @return 
+ */
+export function GetReWorkBillList(params) {
+	return request.post('/api/ReWork/GetReWorkBillList', params)
+}
+
+/**
+ * 获取待返工单
+ * @param params 
+ * @return 
+ */
+export function GetSourceBillList(params) {
+	return request.post('/api/ReWork/GetSourceBillList', params)
+}
+
+/**
+ * 获取待返工单详情
+ * @param params 
+ * @return 
+ */
+export function GetSourceBillDetail(params) {
+	return request.get('/api/ReWork/GetSourceBillDetail', {params})
+}
+
+/**
+ * 获取责任人
+ * @param params 
+ * @return 
+ */
+export function GetIssueCharger(params) {
+	return request.post('/api/ReWork/GetIssueCharger', params)
+}
+
+/**
+ * 创建返工单
+ * @param params 
+ * @return 
+ */
+export function CreateReWordBill(params) {
+	return request.post('/api/ReWork/CreateReWordBill', params)
+}
+
+
