@@ -147,6 +147,7 @@
 		GetOrderProductTopStat,
 		GetOrderProductTrendStat,
 		GetOrderStat,
+		GetPayModeAmount,
 		GetPrintProductionStat,
 		GetThingsCapacityStat
 	} from '../../apis/member';
@@ -251,34 +252,42 @@
 						name: '收款资金汇总(元)',
 						lastestUpdateTime: '',
 						content: [{
-							title: '总收益',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '线下支付',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '在线支付',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '扣减预存',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '应收未结',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '应收已结',
-							increase: '0',
-							number: '0'
-						}, {
-							title: '退款',
-							increase: '0',
-							number: '0'
-						}]
+								title: '总收益',
+								increase: '0',
+								number: '0'
+							}, {
+								title: '线下支付',
+								increase: '0',
+								number: '0'
+							}, {
+								title: '在线支付',
+								increase: '0',
+								number: '0'
+							},
+							{
+								title: '储值',
+								increase: '0',
+								number: '0'
+							},
+							// {
+							// 	title: '扣减预存',
+							// 	increase: '0',
+							// 	number: '0'
+							// }, {
+							// 	title: '应收未结',
+							// 	increase: '0',
+							// 	number: '0'
+							// }, 
+							{
+								title: '应收已结',
+								increase: '0',
+								number: '0'
+							}, {
+								title: '退款',
+								increase: '0',
+								number: '0'
+							}
+						]
 					}
 				],
 				printedStat: [{
@@ -446,16 +455,32 @@
 					}
 				})
 			},
-			getOrderStat(beginDate, endDate) {
-				this.loading = true
-				GetOrderStat({
+			getPayModeAmount(beginDate, endDate, payMode) {
+				return GetPayModeAmount({
 					beginDate,
 					endDate,
-					mercantileAgents,
-					statOrderStatus: 1
-				}).then(res => {
-					const curPeriodAmount = res.data.curPeriodAmount
-					const prevPeriodAmount = res.data.prevPeriodAmount
+					payMode
+				})
+			},
+			async getOrderStat(beginDate, endDate) {
+				this.loading = true
+				try {
+					const [orderStatRes, onlinePayRes, cashPayRes] =
+					await Promise.all([
+						GetOrderStat({
+							beginDate,
+							endDate,
+							mercantileAgents,
+							statOrderStatus: 1
+						}),
+						this.getPayModeAmount(beginDate,
+							endDate, 22),
+						this.getPayModeAmount(beginDate,
+							endDate, 20)
+					])
+					console.log('onlinePayRes', onlinePayRes)
+					const curPeriodAmount = orderStatRes.data.curPeriodAmount
+					const prevPeriodAmount = orderStatRes.data.prevPeriodAmount
 
 					this.dataList[2].lastestUpdateTime = curPeriodAmount.lastestUpdateTime
 					this.dataList[2].content[0].number = curPeriodAmount
@@ -474,21 +499,29 @@
 						.refundTotalAmount
 					this.dataList[2].content[0].increase = new Big(curPeriodAmount
 						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
-					this.dataList[2].content[1].increase = new Big(curPeriodAmount
-						.cashPaymentOrderAmount).minus(prevPeriodAmount.cashPaymentOrderAmount).toString()
-					this.dataList[2].content[2].increase = new Big(curPeriodAmount
-						.onlinePaymentOrderAmount).minus(prevPeriodAmount.onlinePaymentOrderAmount).toString()
+					this.dataList[2].content[1].increase = new Big(cashPayRes.data
+						.amount).minus(cashPayRes.data.amount).toString()
+					this.dataList[2].content[2].increase = new Big(onlinePayRes.data
+						.amount).minus(onlinePayRes.data.amount).toString()
+					// this.dataList[2].content[3].increase = new Big(curPeriodAmount
+					// 	.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
+					// this.dataList[2].content[4].increase = new Big(curPeriodAmount
+					// 	.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
+					// this.dataList[2].content[5].increase = new Big(curPeriodAmount
+					// 	.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
+					// this.dataList[2].content[6].increase = new Big(curPeriodAmount
+					// 	.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
 					this.dataList[2].content[3].increase = new Big(curPeriodAmount
-						.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
+						.storeAmount).minus(prevPeriodAmount.storeAmount).toString()
 					this.dataList[2].content[4].increase = new Big(curPeriodAmount
-						.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
-					this.dataList[2].content[5].increase = new Big(curPeriodAmount
 						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
-					this.dataList[2].content[6].increase = new Big(curPeriodAmount
+					this.dataList[2].content[5].increase = new Big(curPeriodAmount
 						.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
-				}).finally(() => {
 					this.loading = false
-				})
+				} catch (e) {
+					console.error(e)
+					this.loading = false
+				}
 			},
 			getOrderProductStat(beginDate, endDate) {
 				GetOrderProductStat({

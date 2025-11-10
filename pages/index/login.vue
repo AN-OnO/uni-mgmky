@@ -2,6 +2,7 @@
 	<view class="content">
 		<uv-status-bar></uv-status-bar>
 		<image class="logo" src="/static/logo.png"></image>
+		<!-- <image class="app_logo" src="/static/zhencai-logo.png" mode="widthFix"></image> -->
 		<text class="title">{{appName}}</text>
 
 		<view class="login-form">
@@ -40,7 +41,7 @@
 	} from '@/store/user';
 
 	const userStore = useUserStore()
-	const appName = '多普智能工厂' // 应用名称
+	const appName = '' // 应用名称
 	const form = ref(null)
 	const showPassword = ref(false)
 	
@@ -139,6 +140,13 @@
 		margin-right: auto;
 		margin-bottom: 20rpx;
 	}
+	.app_logo{
+		width: 254rpx;
+		margin-top: 200rpx;
+		margin-left: auto;
+		margin-right: auto;
+		margin-bottom: 20rpx;
+	}
 
 	.title {
 		font-size: 30rpx;
@@ -146,7 +154,7 @@
 	}
 
 	.login-form {
-		margin-top: 200rpx;
+		// margin-top: 200rpx;
 		width: calc(100vw - 100rpx);
 	}
 </style>

@@ -64,6 +64,15 @@ export function GetOrderStat(params) {
 }
 
 /**
+ * 统计报表线上、线下支付
+ * @param params 
+ * @return 
+ */
+export function GetPayModeAmount(params) {
+	return request.post('/api/DashboardStat/GetPayModeAmount', params)
+}
+
+/**
  * 获取配送单详情
  * @param params 
  * @return 
