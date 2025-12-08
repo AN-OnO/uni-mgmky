@@ -2,7 +2,7 @@
 	<view class="content">
 		<uv-status-bar></uv-status-bar>
 		<image class="logo" src="/static/logo.png"></image>
-		<!-- <image class="app_logo" src="/static/zhencai-logo.png" mode="widthFix"></image> -->
+		<!-- <image class="app_logo" src="/static/ancai-logo.jpg" mode="widthFix"></image> -->
 		<text class="title">{{appName}}</text>
 
 		<view class="login-form">

@@ -12,8 +12,17 @@
 				<TermPicker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
 				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
+
 			</view>
 		</uv-sticky>
+		<!-- 代理商下拉选择框 -->
+		<view class="agent-picker">
+			<uv-picker ref="agentPicker" title="代理商选择" :columns="[mercantileAgent]" keyName="name" @confirm="confirmAgent" />
+			<view @click="openAgentPicker" class="picker-btn">
+				<text>代理商：{{ mercantileAgent[currentTab]?.name || '选择代理商' }}</text>
+				<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+			</view>
+		</view>
 		<view v-for="(ele, indx) in dataList" :key="indx">
 			<view>
 				<view class="flex-between padding-30">
@@ -56,7 +65,7 @@
 		</view>
 		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatRank(productRank)'
 			:orderRankCount="rankTotal(productRank, 'orderCountStat')"
-			:orderRankAmount="rankTotal(productRank, 'orderAmountStat')" />
+			:orderRankAmount="rankTotal(productData, 'orderAmountStat')" />
 		<RankTable title='订单金额排名(客户)' name='客户' :orderRank='formatRank(companyRank)'
 			:orderRankCount="rankTotal(companyRank, 'orderCountStat')"
 			:orderRankAmount="rankTotal(companyRank, 'orderAmountStat')" />
@@ -164,7 +173,9 @@
 	// #endif
 	import RankTable from './components/rankTable.vue';
 	import TermPicker from '@/components/term-picker/term-picker.vue'
-	const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
+	import digit from '@/uni_modules/uv-ui-tools/libs/function/digit.js'
+
+	// const mercantileAgents = useUserStore().userData.mercantileAgents?.map(item => item.mercantileAgentId);
 	const tooltipStyle = {
 		textStyle: {
 			textShadowBlur: 10, // 关键！必须 >0 
@@ -184,6 +195,9 @@
 			const date = dayjs();
 
 			return {
+				mercantileAgent: [],
+				mercantileAgents: [],
+				currentTab: 0,
 				value: Number(new Date()),
 				mode: 'date',
 				defaultDate: [date.format('YYYY-MM-DD'), date.format('YYYY-MM-DD')],
@@ -283,7 +297,7 @@
 								increase: '0',
 								number: '0'
 							}, {
-								title: '退款',
+								title: '一般收入',
 								increase: '0',
 								number: '0'
 							}
@@ -314,7 +328,12 @@
 			}
 		},
 		onReady() {
-			this.change(0)
+			// this.change(0)
+			this.mercantileAgent = useUserStore().userData.mercantileAgents
+			// 初始化mercantileAgents数组
+			this.mercantileAgents = [this.mercantileAgent[this.currentTab].mercantileAgentId]
+
+			this.change(this.currentTab)
 		},
 		onPageScroll(e) {
 			if (e.scrollTop > 0) {
@@ -323,9 +342,23 @@
 					frontColor: '#000000',
 					backgroundColor: '#ffffff'
 				});
+			} else {
+				this.showBanner = true
 			}
 		},
 		methods: {
+			openAgentPicker() {
+				this.$refs.agentPicker.open();
+			},
+			confirmAgent(e) {
+				// 获取选中的代理商索引
+				const index = e.indexs[0];
+				this.currentTab = index;
+				// 根据选中的代理商更新数据
+				this.mercantileAgents = [this.mercantileAgent[index].mercantileAgentId];
+
+				this.change(this.current)
+			},
 			change(index) {
 				if (index == 0) {
 					this.mode = 'date';
@@ -396,7 +429,7 @@
 				GetOrderCountStat({
 					beginDate,
 					endDate,
-					mercantileAgents,
+					mercantileAgents: this.mercantileAgents,
 					statOrderStatus: 1
 				}).then(res => {
 					const curPeriodCount = res.data.curPeriodCount
@@ -423,7 +456,7 @@
 				GetMainRevenueStat({
 					beginDate,
 					endDate,
-					mercantileAgents,
+					mercantileAgents: this.mercantileAgents,
 					statOrderStatus: 1
 				}).then(res => {
 					const curPeriodAmount = res.data.curPeriodAmount
@@ -470,7 +503,7 @@
 						GetOrderStat({
 							beginDate,
 							endDate,
-							mercantileAgents,
+							mercantileAgents: this.mercantileAgents,
 							statOrderStatus: 1
 						}),
 						this.getPayModeAmount(beginDate,
@@ -478,45 +511,46 @@
 						this.getPayModeAmount(beginDate,
 							endDate, 20)
 					])
-					console.log('onlinePayRes', onlinePayRes)
+
 					const curPeriodAmount = orderStatRes.data.curPeriodAmount
 					const prevPeriodAmount = orderStatRes.data.prevPeriodAmount
 
+					const cashPayData = cashPayRes.code === 0 ? cashPayRes.data : {};
+					const onlinePayData = onlinePayRes.code === 0 ? onlinePayRes.data : {};
+					const cashPayAmount = cashPayData.amount || 0;
+					const cashPayCount = cashPayData.count || 0;
+					const onlinePayAmount = onlinePayData.amount || 0;
+					const onlinePayCount = onlinePayData.count || 0;
 					this.dataList[2].lastestUpdateTime = curPeriodAmount.lastestUpdateTime
-					this.dataList[2].content[0].number = curPeriodAmount
-						.orderAmount
-					this.dataList[2].content[1].number = curPeriodAmount
-						.cashPaymentOrderAmount
-					this.dataList[2].content[2].number = curPeriodAmount
-						.onlinePaymentOrderAmount
+					const {
+						storeAmount,
+						billPaymentOrderAmount,
+						generalIncome
+					} = curPeriodAmount
+
+					this.dataList[2].content[0].number = digit.plus(cashPayAmount, onlinePayAmount, storeAmount,
+						billPaymentOrderAmount, generalIncome)
+					this.dataList[2].content[1].number = cashPayAmount
+					this.dataList[2].content[2].number = onlinePayAmount
 					this.dataList[2].content[3].number = curPeriodAmount
-						.balancPaymentOrderAmount
+						.storeAmount
 					this.dataList[2].content[4].number = curPeriodAmount
-						.unPaymentOrderAmount
-					this.dataList[2].content[5].number = curPeriodAmount
 						.billPaymentOrderAmount
-					this.dataList[2].content[6].number = curPeriodAmount
-						.refundTotalAmount
+					this.dataList[2].content[5].number = curPeriodAmount
+						.generalIncome
+
 					this.dataList[2].content[0].increase = new Big(curPeriodAmount
 						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
-					this.dataList[2].content[1].increase = new Big(cashPayRes.data
-						.amount).minus(cashPayRes.data.amount).toString()
-					this.dataList[2].content[2].increase = new Big(onlinePayRes.data
-						.amount).minus(onlinePayRes.data.amount).toString()
-					// this.dataList[2].content[3].increase = new Big(curPeriodAmount
-					// 	.balancPaymentOrderAmount).minus(prevPeriodAmount.balancPaymentOrderAmount).toString()
-					// this.dataList[2].content[4].increase = new Big(curPeriodAmount
-					// 	.unPaymentOrderAmount).minus(prevPeriodAmount.unPaymentOrderAmount).toString()
-					// this.dataList[2].content[5].increase = new Big(curPeriodAmount
-					// 	.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
-					// this.dataList[2].content[6].increase = new Big(curPeriodAmount
-					// 	.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
+					this.dataList[2].content[1].increase = cashPayCount
+					this.dataList[2].content[2].increase = onlinePayCount
+
 					this.dataList[2].content[3].increase = new Big(curPeriodAmount
 						.storeAmount).minus(prevPeriodAmount.storeAmount).toString()
 					this.dataList[2].content[4].increase = new Big(curPeriodAmount
 						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
 					this.dataList[2].content[5].increase = new Big(curPeriodAmount
-						.refundTotalAmount).minus(prevPeriodAmount.refundTotalAmount).toString()
+						.generalIncome).minus(prevPeriodAmount.generalIncome).toString()
+
 					this.loading = false
 				} catch (e) {
 					console.error(e)
@@ -527,10 +561,11 @@
 				GetOrderProductStat({
 					beginDate,
 					endDate,
-					mercantileAgents
+					mercantileAgents: this.mercantileAgents
 				}).then(res => {
 					this.productData = res.data
 					this.productRank = res.data.sort((a, b) => b.orderAmountStat - a.orderAmountStat).slice(0, 3)
+					// console.log('total orderAmountStat',digit.plus(...res.data.map(i=>i.orderAmountStat)))
 					if (this.currentSource == 1) {
 						this.getPieEcharts()
 					}
@@ -540,7 +575,7 @@
 				GetOrderProductTopStat({
 					beginDate,
 					endDate,
-					mercantileAgents,
+					mercantileAgents: this.mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -564,7 +599,7 @@
 				GetOrderProductTrendStat({
 					beginDate,
 					endDate,
-					mercantileAgents,
+					mercantileAgents: this.mercantileAgents,
 					statDimension: {
 						year: 1,
 						'year-month': 2,
@@ -606,7 +641,7 @@
 				GetPrintProductionStat({
 					beginDate,
 					endDate,
-					mercantileAgents
+					mercantileAgents: this.mercantileAgents
 				}).then(res => {
 					this.totalPrintPagesCount = res.data.totalPrintPagesCount
 					this.totalSuiteCount = res.data.totalSuiteCount
@@ -628,7 +663,7 @@
 				GetThingsCapacityStat({
 					beginDate,
 					endDate,
-					mercantileAgents
+					mercantileAgents: this.mercantileAgents
 				}).then(res => {
 					this.capacityData = res.data
 				})
@@ -1096,5 +1131,30 @@
 		& ::-webkit-scrollbar-track {
 			background-color: #d9e5e5 !important;
 		}
+	}
+
+	.agent-picker {
+		margin: 16rpx 16rpx 0 16rpx;
+	}
+
+	.picker-btn {
+		display: flex;
+		align-items: center;
+		padding: 12rpx 24rpx;
+		background-color: #f5f5f5;
+		border-radius: 20rpx;
+		font-size: 28rpx;
+		color: #666666;
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.picker-btn:active {
+		background-color: #e5e5e5;
+	}
+
+	.picker-btn .arrow-img {
+		margin-left: 8rpx;
+		// transform: rotate(90deg);
 	}
 </style>
