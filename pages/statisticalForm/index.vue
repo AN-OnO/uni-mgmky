@@ -64,14 +64,14 @@
 			<view class="bottom-line"></view>
 		</view>
 		<RankTable title='订单金额排名(产品类)' name='产品' :orderRank='formatRank(productRank)'
-			:orderRankCount="rankTotal(productRank, 'orderCountStat')"
+			:orderRankCount="rankTotal(productData, 'orderCountStat')"
 			:orderRankAmount="rankTotal(productData, 'orderAmountStat')" />
 		<RankTable title='订单金额排名(客户)' name='客户' :orderRank='formatRank(companyRank)'
-			:orderRankCount="rankTotal(companyRank, 'orderCountStat')"
-			:orderRankAmount="rankTotal(companyRank, 'orderAmountStat')" />
+			:orderRankCount="rankTotal(companyData, 'orderCountStat')"
+			:orderRankAmount="rankTotal(companyData, 'orderAmountStat')" />
 		<RankTable title='订单金额排名(下单人)' name='下单人' :orderRank='formatRank(personRank)'
-			:orderRankCount="rankTotal(personRank, 'orderCountStat')"
-			:orderRankAmount="rankTotal(personRank, 'orderAmountStat')" />
+			:orderRankCount="rankTotal(personTotal, 'orderCountStat')"
+			:orderRankAmount="rankTotal(personTotal, 'orderAmountStat')" />
 		<view>
 			<view class="padding-30">
 				<text class="section-title">订单收款、应收款</text>
@@ -209,7 +209,9 @@
 				productData: [],
 				productRank: [],
 				companyRank: [],
+				companyData: [],
 				personRank: [],
+				personTotal: [],
 				personData: [],
 				totalPrintPagesCount: 0,
 				totalSuiteCount: 0,
@@ -492,7 +494,8 @@
 				return GetPayModeAmount({
 					beginDate,
 					endDate,
-					payMode
+					payMode,
+					mercantileAgents: this.mercantileAgents
 				})
 			},
 			async getOrderStat(beginDate, endDate) {
@@ -585,7 +588,9 @@
 				}).then(res => {
 					if (topStatType == 2) {
 						this.companyRank = res.data.slice(0, 10)
+						this.companyData = res.data
 					} else {
+						this.personTotal = res.data
 						this.personRank = res.data.slice(0, 5)
 						this.personData = res.data.slice(0, 10).map(item => ({
 							...item,
