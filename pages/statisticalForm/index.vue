@@ -17,7 +17,8 @@
 		</uv-sticky>
 		<!-- 代理商下拉选择框 -->
 		<view class="agent-picker">
-			<uv-picker ref="agentPicker" title="代理商选择" :columns="[mercantileAgent]" keyName="name" @confirm="confirmAgent" />
+			<uv-picker ref="agentPicker" title="代理商选择" :columns="[mercantileAgent]" keyName="name"
+				@confirm="confirmAgent" />
 			<view @click="openAgentPicker" class="picker-btn">
 				<text>代理商：{{ mercantileAgent[currentTab]?.name || '选择代理商' }}</text>
 				<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
@@ -197,6 +198,8 @@
 			return {
 				mercantileAgent: [],
 				mercantileAgents: [],
+				beginDate: null,
+				endDate: null,
 				currentTab: 0,
 				value: Number(new Date()),
 				mode: 'date',
@@ -359,7 +362,12 @@
 				// 根据选中的代理商更新数据
 				this.mercantileAgents = [this.mercantileAgent[index].mercantileAgentId];
 
-				this.change(this.current)
+				// 缓存日期查询
+				if (this.beginDate && this.endDate) {
+					this.updateData(this.beginDate, this.endDate)
+				} else {
+					this.change(this.current)
+				}
 			},
 			change(index) {
 				if (index == 0) {
@@ -417,6 +425,8 @@
 				}
 			},
 			updateData(beginDate, endDate) {
+				this.beginDate = beginDate
+				this.endDate = endDate
 				this.getOrderStat(beginDate, endDate)
 				this.getOrderCountStat(beginDate, endDate)
 				this.getMainRevenueStat(beginDate, endDate)
