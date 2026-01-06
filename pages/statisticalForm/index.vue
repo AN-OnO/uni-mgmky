@@ -17,7 +17,8 @@
 		</uv-sticky>
 		<!-- 代理商下拉选择框 -->
 		<view class="agent-picker">
-			<uv-picker ref="agentPicker" title="代理商选择" :columns="[mercantileAgent]" keyName="name" @confirm="confirmAgent" />
+			<uv-picker ref="agentPicker" title="代理商选择" :columns="[mercantileAgent]" keyName="name"
+				@confirm="confirmAgent" />
 			<view @click="openAgentPicker" class="picker-btn">
 				<text>代理商：{{ mercantileAgent[currentTab]?.name || '选择代理商' }}</text>
 				<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
@@ -517,10 +518,12 @@
 
 					const cashPayData = cashPayRes.code === 0 ? cashPayRes.data : {};
 					const onlinePayData = onlinePayRes.code === 0 ? onlinePayRes.data : {};
-					const cashPayAmount = cashPayData.amount || 0;
-					const cashPayCount = cashPayData.count || 0;
-					const onlinePayAmount = onlinePayData.amount || 0;
-					const onlinePayCount = onlinePayData.count || 0;
+					const cashPayCurPeriodAmount = cashPayData.curPeriodAmount.amount || 0;
+					const cashPayPrevPeriodAmount = digit.minus(cashPayCurPeriodAmount, cashPayData.prevPeriodAmount
+						.amount || 0);
+					const onlinePayCurPeriodAmount = onlinePayData.curPeriodAmount.amount || 0;
+					const onlinePayPrevPeriodAmount = digit.minus(onlinePayCurPeriodAmount, onlinePayData
+						.prevPeriodAmount.amount || 0);
 					this.dataList[2].lastestUpdateTime = curPeriodAmount.lastestUpdateTime
 					const {
 						storeAmount,
@@ -528,10 +531,11 @@
 						generalIncome
 					} = curPeriodAmount
 
-					this.dataList[2].content[0].number = digit.plus(cashPayAmount, onlinePayAmount, storeAmount,
+					this.dataList[2].content[0].number = digit.plus(cashPayCurPeriodAmount, onlinePayCurPeriodAmount,
+						storeAmount,
 						billPaymentOrderAmount, generalIncome)
-					this.dataList[2].content[1].number = cashPayAmount
-					this.dataList[2].content[2].number = onlinePayAmount
+					this.dataList[2].content[1].number = cashPayCurPeriodAmount
+					this.dataList[2].content[2].number = onlinePayCurPeriodAmount
 					this.dataList[2].content[3].number = curPeriodAmount
 						.storeAmount
 					this.dataList[2].content[4].number = curPeriodAmount
@@ -539,10 +543,8 @@
 					this.dataList[2].content[5].number = curPeriodAmount
 						.generalIncome
 
-					this.dataList[2].content[0].increase = new Big(curPeriodAmount
-						.orderAmount).minus(prevPeriodAmount.orderAmount).toString()
-					this.dataList[2].content[1].increase = cashPayCount
-					this.dataList[2].content[2].increase = onlinePayCount
+					this.dataList[2].content[1].increase = cashPayPrevPeriodAmount
+					this.dataList[2].content[2].increase = onlinePayPrevPeriodAmount
 
 					this.dataList[2].content[3].increase = new Big(curPeriodAmount
 						.storeAmount).minus(prevPeriodAmount.storeAmount).toString()
@@ -550,6 +552,9 @@
 						.billPaymentOrderAmount).minus(prevPeriodAmount.billPaymentOrderAmount).toString()
 					this.dataList[2].content[5].increase = new Big(curPeriodAmount
 						.generalIncome).minus(prevPeriodAmount.generalIncome).toString()
+					const [first, ...otherItems] = this.dataList[2].content;
+					const allIncreases = otherItems.map(item => item.increase)
+					this.dataList[2].content[0].increase = digit.plus(...allIncreases)
 
 					this.loading = false
 				} catch (e) {
