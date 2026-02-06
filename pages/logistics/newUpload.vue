@@ -96,13 +96,21 @@
 					})
 				})
 				lists.forEach(async (item, index) => {
-					const result = await this.uploadFilePromise(item.url)
-					this.fileList.splice(fileListLen + index, 1, {
-						...item,
-						...result.data[0],
-						status: 'success',
-						message: '',
-					})
+					try {
+						const result = await this.uploadFilePromise(item.url)
+						this.fileList.splice(fileListLen + index, 1, {
+							...item,
+							...result.data[0],
+							status: 'success',
+							message: '',
+						})
+					} catch (err) {
+						this.fileList.splice(fileListLen + index, 1, {
+							...item,
+							status: 'failed',
+							message: '上传失败',
+						})
+					}
 				})
 			},
 			uploadFilePromise(url) {
@@ -117,6 +125,10 @@
 						success: function(res) {
 							console.log('上传成功', JSON.parse(res.data));
 							resolve(JSON.parse(res.data))
+						},
+						fail: function(err) {
+							console.log('上传失败', err);
+							reject(err)
 						},
 					});
 				})

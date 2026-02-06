@@ -42,6 +42,10 @@
 	import {
 		useUserStore
 	} from '@/store/user';
+	import {
+		ScanRedirect
+	} from '../../apis/wechat';
+
 	const userStore = useUserStore();
 	// 首页应用菜单
 	const appMenus = ref([{
@@ -94,24 +98,31 @@
 			icon: '/static/images/tabbar/返单.svg',
 			name: '返单',
 			event: '/pages/returnOrder/index'
-		},{
+		}, {
 			key: 9,
 			type: 'tools',
 			icon: '/static/images/tabbar/dailyReport.svg',
 			name: '生产日报表',
 			event: '/pages/dailyReport/dailyReport'
-		},{
+		}, {
 			key: 10,
 			type: 'tools',
 			icon: `${imageURL}/app/配送.svg`,
 			name: '新版配送',
 			event: '/pages/logistics/newList?deliveryMethod=3'
-		},{
+		}, {
 			key: 11,
 			type: 'tools',
 			icon: `${imageURL}/app/物流.svg`,
 			name: '新版物流',
 			event: '/pages/logistics/newList?deliveryMethod=4'
+		},
+		{
+			key: 5,// 临时
+			type: 'tools',
+			icon: '/static/images/tabbar/扫一扫.svg',
+			name: '扫码查单',
+			event: 'startScan'
 		}
 	]);
 	// 用户菜单
@@ -133,9 +144,91 @@
 
 	const handleToolEvent = (e) => {
 		if (e.event) {
-			uni.navigateTo({
-				url: e.event
+			if (e.event == 'startScan') {
+				startScan()
+			} else {
+				uni.navigateTo({
+					url: e.event
+				})
+			}
+		}
+	}
+
+	// 开始扫码
+	const startScan = () => {
+		// 申请相机权限（H5和App需要）
+		uni.authorize({
+			scope: 'scope.camera',
+			success: () => {
+				// 权限通过，开始扫码
+				doScan()
+			},
+			fail: (err) => {
+				console.log('权限申请失败:', err)
+				// 引导用户手动开启权限
+				uni.showModal({
+					title: '提示',
+					content: '需要相机权限才能扫码，请在设置中开启权限',
+					showCancel: true,
+					confirmText: '去设置',
+					success: (res) => {
+						if (res.confirm) {
+							uni.openSetting() // 打开设置页面
+						}
+					}
+				})
+			}
+		})
+	}
+
+	// 执行扫码
+	const doScan = () => {
+		uni.scanCode({
+			onlyFromCamera: true, // 只允许从相机扫码
+			scanType: ['qrCode', 'barCode', 'datamatrix'], // 支持的码类型
+			success: (res) => {
+				handleScanResult(res)
+			},
+			fail: (err) => {
+				if (err.errMsg !== 'scanCode:fail cancel') {
+					uni.showToast({
+						title: '扫码失败，请重试',
+						icon: 'none'
+					})
+				}
+			},
+			complete: () => {
+				console.log('扫码完成')
+			}
+		})
+	}
+
+	// 处理扫码结果
+	const handleScanResult = async (res) => {
+		try {
+			uni.showLoading({
+				title: '加载中'
+			});
+
+			const scanResult = await ScanRedirect({
+				code: res.result
 			})
+
+			if (!scanResult.success) {
+				return uni.$uv.toast(scanResult.message)
+			}
+
+			if (scanResult.linkUrl) {
+				uni.navigateTo({
+					url: `/pages/webview/webview?url=${encodeURIComponent(scanResult.linkUrl)}`
+				})
+			} else {
+				uni.$uv.toast('无效链接无法访问')
+			}
+		} catch (e) {
+			console.error("扫码异常 ",e)
+		} finally {
+			uni.hideLoading()
 		}
 	}
 </script>

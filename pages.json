@@ -16,7 +16,7 @@
 				"navigationBarTitleText": "",
 				"navigationStyle": "custom"
 			}
-		},{
+		}, {
 			"path": "pages/tabbar/home",
 			"style": {
 				"navigationStyle": "custom"
@@ -155,14 +155,14 @@
 					"navigationBarTitleText": "返单",
 					"backgroundColor": "#F0F1F5"
 				}
-			},{
+			}, {
 				"path": "search",
 				"style": {
 					"navigationBarTitleText": "添加返工订单",
 					"navigationBarBackgroundColor": "#fff",
 					"backgroundColor": "#F0F1F5"
 				}
-			},{
+			}, {
 				"path": "detail",
 				"style": {
 					"navigationBarTitleText": "添加返工订单",
@@ -216,34 +216,30 @@
 					}
 				},
 				{
-					"path" : "newList",
-					"style" : 
-					{	
-						"navigationBarTitleText" : "配送列表",
+					"path": "newList",
+					"style": {
+						"navigationBarTitleText": "配送列表",
 						"enablePullDownRefresh": true,
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
 				},
 				{
-					"path" : "newSearch",
-					"style" : 
-					{
-						"navigationBarTitleText" : "搜索",
+					"path": "newSearch",
+					"style": {
+						"navigationBarTitleText": "搜索",
 						"navigationBarBackgroundColor": "#FFFFFF"
 					}
 				},
 				{
-					"path" : "newInfo",
-					"style" : 
-					{
-						"navigationBarTitleText" : "订单详情",
+					"path": "newInfo",
+					"style": {
+						"navigationBarTitleText": "订单详情",
 						"navigationBarBackgroundColor": "#F2F3F5"
 					}
 				},
 				{
-					"path" : "newUpload",
-					"style" : 
-					{
+					"path": "newUpload",
+					"style": {
 						"navigationBarTitleText": "",
 						"navigationStyle": "custom"
 					}
@@ -256,6 +252,24 @@
 				"style": {
 					"navigationBarTitleText": "生产日报表",
 					"navigationBarBackgroundColor": "#ffffff"
+				}
+			}]
+		}, {
+			"root": "pages/webview",
+			"pages": [{
+				"path": "webview",
+				"style": {
+					"navigationBarTitleText": "浏览",
+					"app-plus": {
+						"titleNView": {
+							"autoBackButton": true,
+							"buttons": [{
+								"text": "关闭",
+								"fontSize": "14px",
+								"onclick": "javascript:history.back()"
+							}]
+						}
+					}
 				}
 			}]
 		}

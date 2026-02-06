@@ -76,7 +76,8 @@
 					</uni-swipe-action-item>
 				</view>
 			</uni-swipe-action>
-			<uv-load-more :status="status" @loadmore='loadMore' />
+			<uv-load-more v-if="listData.length" :status="status" @loadmore='loadMore' />
+			<uv-empty v-else mode="order" marginTop="20"></uv-empty>
 			<view class="scan-wrap" @click="onScanTap">
 				<image class="scan-img" src="@/static/images/logistics/Scan-code.svg" alt="" />
 			</view>
