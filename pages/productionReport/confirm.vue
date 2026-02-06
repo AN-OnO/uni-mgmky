@@ -315,7 +315,7 @@
 					success(res) {
 						const tempFilePaths = res.tempFiles
 						uni.uploadFile({
-							url: baseURL + '/api/FileUpload/UploadFile',
+							url: baseURL + 'api/FileUpload/UploadFile',
 							filePath: tempFilePaths[0].tempFilePath,
 							name: 'file',
 							header: {
