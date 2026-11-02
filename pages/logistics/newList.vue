@@ -1,6 +1,6 @@
 <template>
 	<view class="newList-contain">
-		<uv-sticky customNavHeight="0" bgColor="#F0F1F5">
+		<uv-sticky customNavHeight="0" bgColor="#F3E6C8">
 			<view class="">
 				<view class="title-wrap flex-row justify-between padding-lr padding-tb-sm">
 					<view class="today-content">
@@ -15,7 +15,7 @@
 						:class="{'tab-content': true, 'active': tabIndex === index}">
 						{{item.name}}{{item.num ? `(${item.num})` : ''}}
 					</view>
-					<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
+					<uv-icon name="search" size="64rpx" @click="goSearch"></uv-icon>
 				</view>
 			</view>
 		</uv-sticky>
@@ -37,8 +37,8 @@
 							</view>
 							<uv-icon @click="handleSpread(index)"
 								:name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
-								:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
-								labelColor="#469DCD" labelSize="12"></uv-icon>
+								:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#B42318"
+								labelColor="#B42318" labelSize="12"></uv-icon>
 						</view>
 						<view v-if="fixedTab === 'address'" class="address">
 							{{item.group.address}}
@@ -64,8 +64,8 @@
 											{{detail.delivryStatusDesc}}
 										</view>
 									</view>
-									<uv-icon name="arrow-right" label="详情" labelPos="left" color="#469DCD"
-										labelColor="#469DCD" labelSize="12" @click="jumpInfo(detail.orderNo)"></uv-icon>
+									<uv-icon name="arrow-right" label="详情" labelPos="left" color="#B42318"
+										labelColor="#B42318" labelSize="12" @click="jumpInfo(detail.orderNo)"></uv-icon>
 								</view>
 								<view class="text margin-left-xl">
 									包裹数总数(个)：<text class="highlight">{{detail.totalPackageCount}}</text>
@@ -88,8 +88,8 @@
 							</text>
 							<uv-icon @click="handleSpread(index)"
 								:name="spreadList.includes(index) ? 'arrow-up' : 'arrow-down'"
-								:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#469DCD"
-								labelColor="#469DCD" labelSize="12"></uv-icon>
+								:label="spreadList.includes(index) ? '收起' : '展开'" labelPos="left" color="#B42318"
+								labelColor="#B42318" labelSize="12"></uv-icon>
 						</view>
 						<view v-else class="text text-active">
 							同地址共<text class="highlight">{{item.group.sameAddressOrderCount}}</text>单
@@ -441,22 +441,24 @@
 
 <style lang="scss" scoped>
 	.newList-contain {
-		background: #F2F3F5;
+		background: var(--ticket-paper);
 		min-height: 100%;
 
 		.title-wrap {
-			background: #E8F3FF;
+			background: var(--ticket-face);
+			border-bottom: 2rpx dashed var(--perf-line);
 
 			.today-content {
 				font-size: 27rpx;
-				color: #4E5969;
+				color: var(--ink-muted);
 				line-height: 42rpx;
 
 				.num {
-					font-weight: 500;
+					font-weight: 700;
 					font-size: 46rpx;
-					color: #1D2129;
+					color: var(--ink-black);
 					line-height: 69rpx;
+					font-family: ui-monospace, Menlo, Consolas, monospace;
 				}
 			}
 		}
@@ -465,19 +467,23 @@
 			font-weight: 500;
 			font-size: 27rpx;
 			line-height: 42rpx;
-			background: #FFFFFF;
-			border-radius: 15rpx;
+			background: var(--ticket-face);
+			border: 2rpx solid var(--ticket-edge);
+			border-radius: 0;
 			padding: 15rpx 23rpx;
 		}
 
 		.active {
 			color: #FFFFFF;
-			background: #469DCD;
+			background: var(--stamp-red);
+			border-color: var(--stamp-red);
 		}
 
 		.list-card {
-			background: #FFFFFF;
-			border-radius: 15rpx;
+			background: var(--ticket-face);
+			border: 2rpx solid rgba(28, 25, 23, 0.38);
+			border-radius: 0;
+			box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 
 			.local-img {
 				width: 46rpx;
@@ -494,7 +500,7 @@
 			.name {
 				font-weight: 500;
 				font-size: 31rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 46rpx;
 				flex: 1;
 			}
@@ -505,18 +511,18 @@
 				color: #FFFFFF;
 				line-height: 38rpx;
 				padding: 4rpx 15rpx;
-				background: #469DCD;
-				border-radius: 8rpx
+				background: var(--stamp-red);
+				border-radius: 0;
 			}
 
 			.tag-inactice {
 				color: #FFFFFF;
-				background: #4E5969;
+				background: var(--ink-muted);
 			}
 
 			.address {
 				font-size: 27rpx;
-				color: #4E5969;
+				color: var(--ink-muted);
 				line-height: 42rpx;
 				margin-left: 54rpx;
 				margin-bottom: 23rpx;
@@ -524,7 +530,7 @@
 
 			.order {
 				padding: 23rpx 0;
-				border-top: 2rpx solid #F2F3F5;
+				border-top: 2rpx dashed var(--perf-line);
 
 				.order-head {
 					display: flex;
@@ -534,7 +540,7 @@
 					.order-number {
 						font-weight: 500;
 						font-size: 34rpx;
-						color: #333333;
+						color: var(--ink-black);
 						line-height: 53rpx;
 						margin-right: 8rpx;
 					}
@@ -544,17 +550,17 @@
 			.text {
 				font-weight: 500;
 				font-size: 27rpx;
-				color: #4E5969;
+				color: var(--ink-muted);
 				line-height: 42rpx;
 			}
 
 			.text-active {
-				color: #469DCD;
+				color: #B42318;
 			}
 
 			.sub-order {
 				padding: 15rpx;
-				background: #F7F8FA;
+				background: var(--ticket-paper);
 				margin-bottom: 15rpx;
 
 				.order-head {
@@ -562,13 +568,13 @@
 					justify-content: space-between;
 					font-weight: bold;
 					font-size: 34rpx;
-					color: #333333;
+					color: var(--ink-black);
 					line-height: 53rpx;
 				}
 
 				.detail {
 					font-size: 27rpx;
-					color: #4E5969;
+					color: var(--ink-muted);
 					line-height: 42rpx;
 				}
 			}
@@ -576,7 +582,7 @@
 			.selectedInfo {
 				font-weight: 500;
 				font-size: 27rpx;
-				color: #4E5969;
+				color: var(--ink-muted);
 				line-height: 42rpx;
 				display: flex;
 				align-items: center;
@@ -584,18 +590,18 @@
 			}
 
 			.highlight {
-				color: #FF5A39;
+				color: var(--stamp-red);
 			}
 
 			.list-button {
 				font-weight: 500;
 				font-size: 27rpx;
-				color: #1D2129;
+				color: var(--ink-black);
 				line-height: 42rpx;
 				padding: 13rpx 31rpx;
-				background: #F7F8FA;
-				border-radius: 15rpx;
-				border: 2rpx solid #E5E6EB;
+				background: var(--ticket-paper);
+				border-radius: 0;
+				border: 2rpx solid var(--ticket-edge);
 				margin-right: 15rpx;
 
 				&:last-child {
@@ -604,15 +610,15 @@
 			}
 
 			.confirm {
-				color: #469DCD;
-				background: #E8F3FF;
-				border: 2rpx solid #469DCD
+				color: var(--stamp-red);
+				background: var(--ticket-face);
+				border: 2rpx solid var(--stamp-red);
 			}
 
 			.orderNo {
 				font-weight: bold;
 				font-size: 42rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 57rpx;
 				margin-right: 8rpx;
 			}
@@ -626,7 +632,8 @@
 			position: fixed;
 			bottom: 0;
 			display: flex;
-			background: #ffffff;
+			background: var(--ticket-face);
+			border-top: 2rpx solid var(--ink-black);
 			padding-bottom: env(safe-area-inset-bottom);
 
 			.tab {
@@ -637,14 +644,14 @@
 				justify-content: center;
 				font-weight: 500;
 				font-size: 31rpx;
-				color: #1D2129;
+				color: var(--ink-black);
 				line-height: 46rpx;
-				background: #E8F3FF;
+				background: var(--ticket-paper);
 			}
 
 			.selected {
 				color: #ffffff;
-				background: #469DCD;
+				background: var(--stamp-red);
 			}
 		}
 	}

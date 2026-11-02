@@ -41,10 +41,10 @@
 							</view>
 						</view>
 						<view v-if="progressData.length > 0" class="composite-progress">
-							<uv-line-progress :customStyle="customStyle" height="30" :showText="false">
+							<uv-line-progress :customStyle="customStyle" height="60rpx" :showText="false">
 							</uv-line-progress>
 							<uv-line-progress v-for="(item, index) in progressData" :customStyle="customStyle"
-								height="30" :percentage="getPercent(index)">
+								height="60rpx" :percentage="getPercent(index)">
 								<view class="progress-text"
 									:style="{'z-index': 999 - index,background: progressColor[index]}">
 									{{`${item.opreatorName}`}}{{`${item.num}`}}
@@ -130,7 +130,7 @@
 							<view class="flex-row justify-end">
 								<uv-icon @click="item.showMore = !item.showMore"
 									:name="item.showMore?'arrow-up':'arrow-down'" :label="item.showMore?'收起':'展开'"
-									label-size="27rpx" label-pos="left" color="#808080" label-color="#808080"></uv-icon>
+									label-size="27rpx" label-pos="left" color="#6B6258" label-color="#6B6258"></uv-icon>
 							</view>
 						</view>
 					</template>
@@ -452,13 +452,13 @@
 	$radius: 15rpx;
 
 	.page-container {
-		background-color: #F0F1F5;
+		background-color: #F3E6C8;
 		min-height: 100%;
 		box-sizing: border-box;
 	}
 
 	.card-ui {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		border-radius: $radius;
 		padding: 20rpx;
 
@@ -492,10 +492,10 @@
 		left: 0;
 		right: 0;
 		height: $footerHeight;
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
-		border: 2rpx solid #F2F3F5;
+		border: 2rpx dashed var(--perf-line);
 	}
 
 	.svg-icon {
@@ -514,7 +514,7 @@
 	}
 
 	.text-title {
-		color: #333;
+		color: var(--ink-black);
 		font-weight: 600;
 
 		&.h1 {
@@ -538,7 +538,7 @@
 
 		&-title {
 			font-size: 27rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 42rpx;
 
 			.note {
@@ -591,14 +591,14 @@
 			position: absolute;
 			top: 0;
 			right: 0;
-			background-color: #ccc;
+			background-color: var(--perf-line);
 			padding: 5rpx 10rpx;
 			border-radius: 0rpx 10rpx 0rpx 12rpx;
 		}
 	}
 
 	.preview-wrap {
-		background: #F5F6F8;
+		background: var(--ticket-paper);
 		border-radius: $radius;
 		padding: 30rpx;
 		@extend .svg-offset;
@@ -617,17 +617,18 @@
 	.process-latest {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 42rpx;
 		flex: 1;
 	}
 
 	.process-btn {
 		font-size: 23rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 34rpx;
-		background: #F7F7F7;
-		border-radius: 191rpx;
+		background: var(--ticket-paper);
+		border-radius: 0;
+		border: 2rpx solid var(--perf-line);
 		padding: 5rpx 15rpx;
 		display: flex;
 	}
@@ -642,7 +643,7 @@
 	.steps-title {
 		font-weight: 400;
 		font-size: 23rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 34rpx;
 	}
 
@@ -664,7 +665,7 @@
 
 		.order-label {
 			font-size: 27rpx;
-			color: #808080;
+			color: var(--ink-muted);
 			margin-right: 20rpx;
 		}
 
@@ -678,8 +679,8 @@
 	/* 此按钮样式可作为公共样式 */
 	.list-button {
 		height: 90rpx;
-		background: #2FB7DF;
-		border-radius: 15rpx;
+		background: #B42318;
+		border-radius: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;

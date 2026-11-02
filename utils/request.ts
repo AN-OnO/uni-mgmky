@@ -4,6 +4,7 @@ import type {
 	HttpError
 } from "@/uni_modules/uv-ui-tools/libs/luch-request";
 import { baseURL } from "@/common/config";
+import { ROUTE_GUARD_ENABLED } from "@/common/intercept";
 import Utils from "@/utils/index";
 import { StatusCode } from "@/enums";
 
@@ -34,14 +35,17 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 	}
 	const { code, message, ...resData } = data
 	const toLogin = () => {
+		if (!ROUTE_GUARD_ENABLED) return
 		Utils.removeAllStorage()
 		Utils.navigateTo('/pages/index/login')
 	}
 	switch (statusCode) {
 		case StatusCode.SUCCESS:
 			if (code === 1001) {
-				Utils.showToast(message);
-				toLogin()
+				if (ROUTE_GUARD_ENABLED) {
+					Utils.showToast(message);
+					toLogin()
+				}
 			} else if (code !== 0) {
 				Utils.showToast(message || 'Error')
 				break;
@@ -49,8 +53,10 @@ function handleStatusCode(res : HttpResponse<any, HttpTask> | HttpError<any, Htt
 				return data;
 			}
 		case StatusCode.LOGIN_ERROR:
-			Utils.showToast('登录失效');
-			toLogin()
+			if (ROUTE_GUARD_ENABLED) {
+				Utils.showToast('登录失效');
+				toLogin()
+			}
 			break;
 		case StatusCode.SYSTEM_ERROR:
 			Utils.showToast('系统错误:500');

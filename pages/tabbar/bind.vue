@@ -1,9 +1,9 @@
 <template>
 	<view class="bind-container">
-		<uv-search bgColor="#F3F3F3" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='getList'
+		<uv-search bgColor="#FFF8E7" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='getList'
 			placeholder="搜索工艺名称"></uv-search>
 		<template v-for="(item, index) in technologies" :key="index">
-			<view class="content" @click="selectTechnology(item)">
+			<view class="ticket content" @click="selectTechnology(item)">
 				<image class="icon" :src="item.photo"></image>
 				<text class="name">{{item.name}}</text>
 				<text class="flex-1">已选：{{item.thingBindTypeDesc === '设置默认设备' ? item.thingName : item.thingBindTypeDesc}}</text>
@@ -14,7 +14,7 @@
 					<button :class="['btn', selectedBtn === 'default' ? 'active' : '']" @click="selectedType('default')">设置默认设备</button>
 					<button :class="['btn', selectedBtn === 'manual' ? 'active' : '']" @click="selectedType('manual')">每次手工选择</button>
 				</view>
-				<uv-radio-group v-if="selectedBtn === 'default'" v-model="radiovalue" activeColor="#469DCD" placement="column" iconPlacement="right" @change="changeRadio">
+				<uv-radio-group v-if="selectedBtn === 'default'" v-model="radiovalue" activeColor="#B42318" placement="column" iconPlacement="right" @change="changeRadio">
 					<uv-radio v-for="(item, index) in radiolist" :key="index" :label="item.thingName"
 						:name="item.thingId" customStyle="padding: 32rpx 30rpx">
 					</uv-radio>
@@ -108,10 +108,17 @@
 </script>
 
 <style lang="scss" scoped>
+	.bind-container {
+		min-height: 100%;
+		background: var(--ticket-paper);
+		padding-top: 24rpx;
+		padding-bottom: 40rpx;
+		box-sizing: border-box;
+	}
+
 	.content {
-		padding: 46rpx 30rpx;
-		border-bottom: 2rpx solid #E5E6EB;
-		;
+		padding: 32rpx 24rpx;
+		margin: 0 30rpx 20rpx;
 		display: flex;
 		align-items: center;
 
@@ -125,7 +132,7 @@
 			width: 200rpx;
 			font-weight: 500;
 			font-size: 31rpx;
-			color: #469DCD;
+			color: var(--stamp-red);
 			line-height: 46rpx;
 		}
 
@@ -135,8 +142,8 @@
 			margin-bottom: 8rpx;
 			width: 16rpx;
 			height: 16rpx;
-			border-left: 1px solid #808080;
-			border-bottom: 1px solid #808080;
+			border-left: 2rpx solid var(--ink-muted);
+			border-bottom: 2rpx solid var(--ink-muted);
 			transform: rotate(-45deg)
 		}
 		
@@ -148,27 +155,30 @@
 
 
 	.selected {
-		background: #F7F8FA;
+		background: var(--ticket-face);
+		margin: 0 30rpx 20rpx;
+		border: 2rpx dashed var(--perf-line);
+		padding: 8rpx;
 
 		.btn {
 			width: 322rpx;
 			height: 76rpx;
 			margin-top: 15rpx;
 			margin-bottom: 48rpx;
-			background: #FFFFFF;
-			border-radius: 15rpx;
-			border: 2rpx solid #469DCD;
+			background: var(--ticket-face);
+			border-radius: 0;
+			border: 2rpx solid var(--ticket-edge);
 			font-weight: 500;
 			font-size: 31rpx;
-			color: #469DCD;
+			color: var(--stamp-red);
 			line-height: 42rpx;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 		}
 		.active {
-			color: rgba(255,255,255,0.9);
-			background: #469DCD;
+			color: #FFF8E7;
+			background: var(--stamp-red);
 		}
 	}
 </style>

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uv-sticky bg-color="#fff">
+		<uv-sticky bg-color="#F3E6C8">
 			<view class="padding-lr padding-tb-xs">
 				<uv-search v-model="keywords" :placeholder="placeholder" @search="handleSearch()"
 					@custom="handleSearch()" @clear="handleSearch(true)"></uv-search>
@@ -54,8 +54,8 @@ import { GetSourceBillList } from '../../apis/member';
 			height: '76rpx',
 			width: '156rpx',
 			color: '#fff',
-			background: '#469DCD',
-			borderRadius: '15rpx'
+			background: '#B42318',
+			borderRadius: '0'
 		}
 	})
 
@@ -103,14 +103,15 @@ import { GetSourceBillList } from '../../apis/member';
 
 <style>
 	page {
-		background-color: #f5f5f5;
+		background-color: var(--ticket-paper);
 	}
 </style>
 <style lang="scss" scoped>
 	.card-wrap {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 20rpx 30rpx;
-		border-radius: 8px;
+		border-radius: 0;
+		border: 2rpx solid var(--ticket-edge);
 
 		&-head {
 			@include flex;

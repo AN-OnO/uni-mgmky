@@ -1,50 +1,49 @@
 <template>
-	<view class="page-container flex-column">
-		<view class="flex-column margin-left">
-			<image class="app-title-cover" :src="$IMG_URL +'/app/印业小助手.svg'" mode="widthFix"></image>
-			<text class="app-description margin-top-sm">轻松掌握每一步</text>
+	<view>
+		<view class="page-container">
+		<view class="ticket masthead">
+			<text class="app-brand">印业小助手</text>
+			<text class="app-description">轻松掌握每一步</text>
 		</view>
-		<view class="flex-row margin-top-lg margin-bottom-sm relative">
-			<template v-for="item in menu" :key="item.key">
-				<view v-if="item.display" class="menu-item card " @tap="handleToolEvent(item)">
-					<image class="image-icon" :src="item.icon"></image>
-					<text>{{item.name}}</text>
-					<image v-if="item.topIcon" class="top-img" :src="item.topIcon" mode="heightFix"></image>
-				</view>
-				<!-- <view v-else class="flex-1"></view> -->
-			</template>
-		</view>
-		<view v-if="tools.length" class="card tool-box margin-bottom">
-			<view class="padding-tb-sm">
-				<text class="section-title">常用工具</text>
-			</view>
-			<view class="grid-row-3 margin-top">
-				<template v-for="item in tools" :key="item.key">
-					<view class="flex-column align-center justify-around radius" @tap="handleToolEvent(item)">
-						<image class="tool-image-icon" :src="item.icon"></image>
-						<text class="text-xs">{{item.name}}</text>
+		<view v-if="menu.filter(item => item.display).length" class="ticket menu-ticket">
+			<view class="menu-row">
+				<template v-for="item in menu" :key="item.name">
+					<view v-if="item.display" class="menu-item" @tap="handleToolEvent(item)">
+						<image class="image-icon" :src="item.icon"></image>
+						<text>{{item.name}}</text>
+						<image v-if="item.topIcon" class="top-img" :src="item.topIcon" mode="heightFix"></image>
 					</view>
 				</template>
 			</view>
 		</view>
+		<view v-if="tools.length" class="ticket ticket--tools tool-box">
+			<text class="section-title">常用工具</text>
+			<view class="tool-list">
+				<view
+					v-for="item in tools"
+					:key="item.name"
+					class="tool-row"
+					@tap="handleToolEvent(item)"
+				>
+					<image class="tool-image-icon" :src="item.icon"></image>
+					<text class="tool-name">{{item.name}}</text>
+					<image class="tool-chevron" src="/static/images/ticket/chevron.svg"></image>
+				</view>
+			</view>
+		</view>
+		</view>
+		<tabbar-nav />
 	</view>
 </template>
 
 <script setup>
 	import {
 		ref,
-		reactive,
 		computed
 	} from 'vue';
 	import {
-		imageURL
-	} from '@/common/config';
-	import {
 		useUserStore
 	} from '@/store/user';
-	import {
-		ScanRedirect
-	} from '../../apis/wechat';
 
 	const userStore = useUserStore();
 	// 首页应用菜单
@@ -58,38 +57,38 @@
 		{
 			key: 2,
 			type: 'menu',
-			icon: `${imageURL}/app/统计报表1.png`,
-			topIcon: `${imageURL}/app/AI智能.svg`,
+			icon: '/static/images/ticket/stats.svg',
+			topIcon: '/static/images/ticket/ai.svg',
 			name: '统计报表',
 			event: '/pages/statisticalForm/index'
 		}, {
 			key: 3,
 			type: 'tools',
-			icon: `${imageURL}/app/考勤打卡.svg`,
+			icon: '/static/images/ticket/check.svg',
 			name: '考勤打卡',
 			event: '/pages/check/check'
 		}, {
 			key: 4,
 			type: 'tools',
-			icon: `${imageURL}/app/统计报表.svg`,
+			icon: '/static/images/ticket/stats.svg',
 			name: '统计报表',
 			event: '/pages/statisticalForm/index'
 		}, {
 			key: 5,
 			type: 'tools',
-			icon: `${imageURL}/app/报工.svg`,
+			icon: '/static/images/ticket/report.svg',
 			name: '报工',
 			event: '/pages/productionReport/index'
 		}, {
 			key: 6,
 			type: 'tools',
-			icon: `${imageURL}/app/配送.svg`,
+			icon: '/static/images/ticket/delivery.svg',
 			name: '配送',
 			event: '/pages/logistics/list?deliveryMethod=3'
 		}, {
 			key: 7,
 			type: 'tools',
-			icon: `${imageURL}/app/物流.svg`,
+			icon: '/static/images/ticket/logistics.svg',
 			name: '物流',
 			event: '/pages/logistics/list?deliveryMethod=4'
 		}, {
@@ -107,22 +106,22 @@
 		}, {
 			key: 10,
 			type: 'tools',
-			icon: `${imageURL}/app/配送.svg`,
+			icon: '/static/images/ticket/delivery.svg',
 			name: '新版配送',
 			event: '/pages/logistics/newList?deliveryMethod=3'
 		}, {
 			key: 11,
 			type: 'tools',
-			icon: `${imageURL}/app/物流.svg`,
+			icon: '/static/images/ticket/logistics.svg',
 			name: '新版物流',
 			event: '/pages/logistics/newList?deliveryMethod=4'
 		},
 		{
 			key: 5,// 临时
 			type: 'tools',
-			icon: '/static/images/tabbar/扫一扫.svg',
-			name: '扫码查单',
-			event: 'startScan'
+			icon: '/static/images/ticket/search.svg',
+			name: '查看订单',
+			event: '/pages/orderLookup/index'
 		}
 	]);
 	// 用户菜单
@@ -143,203 +142,136 @@
 	);
 
 	const handleToolEvent = (e) => {
-		if (e.event) {
-			if (e.event == 'startScan') {
-				startScan()
-			} else {
-				uni.navigateTo({
-					url: e.event
-				})
-			}
-		}
-	}
-
-	// 开始扫码
-	const startScan = () => {
-		// 申请相机权限（H5和App需要）
-		uni.authorize({
-			scope: 'scope.camera',
-			success: () => {
-				// 权限通过，开始扫码
-				doScan()
-			},
-			fail: (err) => {
-				console.log('权限申请失败:', err)
-				// 引导用户手动开启权限
-				uni.showModal({
-					title: '提示',
-					content: '需要相机权限才能扫码，请在设置中开启权限',
-					showCancel: true,
-					confirmText: '去设置',
-					success: (res) => {
-						if (res.confirm) {
-							uni.openSetting() // 打开设置页面
-						}
-					}
-				})
-			}
+		if (!e.event) return
+		// if (e.event === 'startScan') {
+		// 	uni.navigateTo({
+		// 		url: '/pages/orderLookup/index'
+		// 	})
+		// 	return
+		// }
+		uni.navigateTo({
+			url: e.event
 		})
-	}
-
-	// 执行扫码
-	const doScan = () => {
-		uni.scanCode({
-			onlyFromCamera: true, // 只允许从相机扫码
-			scanType: ['qrCode', 'barCode', 'datamatrix'], // 支持的码类型
-			success: (res) => {
-				handleScanResult(res)
-			},
-			fail: (err) => {
-				if (err.errMsg !== 'scanCode:fail cancel') {
-					uni.showToast({
-						title: '扫码失败，请重试',
-						icon: 'none'
-					})
-				}
-			},
-			complete: () => {
-				console.log('扫码完成')
-			}
-		})
-	}
-
-	// 处理扫码结果
-	const handleScanResult = async (res) => {
-		try {
-			uni.showLoading({
-				title: '加载中'
-			});
-
-			const scanResult = await ScanRedirect({
-				code: res.result
-			})
-
-			if (!scanResult.success) {
-				return uni.$uv.toast(scanResult.message)
-			}
-
-			if (scanResult.linkUrl) {
-				uni.navigateTo({
-					url: `/pages/webview/webview?url=${encodeURIComponent(scanResult.linkUrl)}`
-				})
-			} else {
-				uni.$uv.toast('无效链接无法访问')
-			}
-		} catch (e) {
-			console.error("扫码异常 ",e)
-		} finally {
-			uni.hideLoading()
-		}
 	}
 </script>
 
 <style lang="scss" scoped>
 	.page-container {
 		position: relative;
-		z-index: 1;
-		padding-top: calc(var(--window-top) + var(--status-bar-height) + 44px);
-		padding-left: 30rpx;
-		padding-right: 30rpx;
-
-		&::before {
-			content: "";
-			position: fixed;
-			z-index: -1;
-			top: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			height: 100%;
-			background-size: cover;
-			background-position: center center;
-			background-repeat: no-repeat;
-			background-image: url($IMG_URL+'/app/home_background.png')
-		}
+		min-height: 100%;
+		padding-top: calc(var(--status-bar-height) + 44px + 16px);
+		padding-left: 32rpx;
+		padding-right: 32rpx;
+		padding-bottom: 24rpx;
+		background: var(--ticket-paper);
+		box-sizing: border-box;
 	}
 
-	.app-title {
-		font-size: 53rpx;
-		font-weight: bold;
-		letter-spacing: 1px;
-		line-height: 80rpx;
+	.masthead {
+		margin-bottom: 28rpx;
 	}
 
-	.app-title-cover {
-		width: 300rpx;
-		height: auto;
+	.menu-ticket {
+		margin-bottom: 28rpx;
+	}
+
+	.app-brand {
+		display: block;
+		font-size: 52rpx;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: var(--ink-black);
+		line-height: 1.2;
 	}
 
 	.app-description {
-		color: #808487;
-		font-size: 31rpx;
-		line-height: 46rpx;
+		display: block;
+		color: var(--ink-muted);
+		font-size: 28rpx;
+		line-height: 44rpx;
+		margin-top: 8rpx;
+	}
+
+	.menu-row {
+		display: flex;
+		flex-direction: row;
+		gap: 16rpx;
 	}
 
 	.menu-item {
-		@include flex;
-		align-items: center;
 		flex: 1;
-	}
-
-	.menu-item+.menu-item {
-		margin-left: 20rpx;
-	}
-
-	.card {
-		background-color: #fff;
-		padding: 20rpx;
-		border-radius: 15rpx;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		position: relative;
+		padding: 16rpx 8rpx;
+		min-height: 88rpx;
 	}
 
 	.image-icon {
-		height: 106rpx;
-		width: 106rpx;
+		height: 88rpx;
+		width: 88rpx;
 	}
 
 	.tool-box {
-		min-height: 668rpx;
+		margin-bottom: 24rpx;
+	}
+
+	.tool-list {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.tool-row {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		min-height: 96rpx;
+		padding: 4rpx 0;
+		border-bottom: 2rpx dashed var(--perf-line);
+	}
+
+	.tool-row:last-child {
+		border-bottom: none;
 	}
 
 	.tool-image-icon {
-		height: 92rpx;
-		width: 92rpx;
+		height: 48rpx;
+		width: 48rpx;
+		margin-right: 20rpx;
+		flex-shrink: 0;
 	}
 
-	.relative {
-		position: relative;
+	.tool-name {
+		flex: 1;
+		font-size: 30rpx;
+		line-height: 1.3;
+		letter-spacing: 0.04em;
+		color: var(--ink-black);
+	}
+
+	.tool-chevron {
+		width: 28rpx;
+		height: 28rpx;
+		flex-shrink: 0;
+		opacity: 0.55;
 	}
 
 	.top-img {
 		position: absolute;
-		z-index: -1;
-		top: -220rpx;
-		right: 100rpx;
-		height: 290rpx;
+		z-index: 0;
+		top: -12rpx;
+		right: 8rpx;
+		height: 48rpx;
 		width: auto;
 	}
 
 	.section-title {
-		position: relative;
-		left: 16rpx;
-		padding-left: 0.7em;
-
-		&::before {
-			content: '';
-			position: absolute;
-			left: 0;
-			height: 1em;
-			width: 0.25em;
-			border-radius: 10px;
-			background-color: #7BC7FC;
-			top: 50%;
-			transform: translateY(-50%);
-		}
+		display: block;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		margin-bottom: 16rpx;
+		color: var(--ink-black);
 	}
 
-	.grid-row-3 {
-		display: grid;
-		grid-template-columns: repeat(3, 1fr);
-		grid-auto-rows: 160rpx;
-		gap: 20rpx;
-	}
 </style>

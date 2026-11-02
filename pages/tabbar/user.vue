@@ -1,22 +1,25 @@
 <template>
-	<view class="page-contain">
-		<uv-navbar title="个人中心" bgColor="#D5E8FF" leftIcon=""></uv-navbar>
-		<view class="user-card">
+	<view>
+		<view class="page-contain">
+			<view class="ticket user-card">
+			<text class="page-brand">个人中心</text>
+			<view class="ticket-perf"></view>
 			<view class="user-info">
-				<image class="user-avatar" :src="head_image || '/static/images/tabbar/avatar.png'"></image>
-				<image src="/static/images/tabbar/edit.svg" class='editAvatar' @click="editAvatar"></image>
+				<image class="user-avatar" :src="head_image || '/static/images/tabbar/avatar.png'" mode="aspectFill"></image>
 				<view class="user-info-box">
 					<text class="text-h2">{{accountNo|| '匿名用户'}}</text>
 					<text class="text-label">{{name || '个性签名'}}</text>
 				</view>
 			</view>
 		</view>
-		<view class="detail-banner">
-			<view class="arrow-contain" @click="goEarning">
-				<text class="text">详情</text>
-				<image class="detail-arrow" src="/static/images/tabbar/detail-arrow.svg"></image>
+		<view class="ticket detail-banner">
+			<view class="earn-head">
+				<view class="total-text">累计收益(元)</view>
+				<view class="arrow-contain" @click="goEarning">
+					<text class="text">详情</text>
+					<image class="detail-arrow" src="/static/images/tabbar/detail-arrow.svg"></image>
+				</view>
 			</view>
-			<view class="total-text">累计收益(元)</view>
 			<view class="total-income">{{totalIncome}}</view>
 			<view class="contain">
 				<view class="flex-column">
@@ -29,24 +32,26 @@
 				</view>
 			</view>
 		</view>
-		<view class="bg-white margin-lr-sm operation-card">
-			<view class="flex-row align-center padding" hover-stay-time="250" hover-class="click-hover"
+		<view class="ticket operation-card">
+			<view class="flex-row align-center op-row" hover-stay-time="250" hover-class="click-hover"
 				@click="goBind">
 				<view class="flex-1 flex-row align-center">
 					<image class="item-icon" src="/static/images/tabbar/bindEquipment.svg"></image>
 					<text class="item-title">默认设备绑定</text>
 				</view>
-				<uv-icon name="arrow-right" size="28rpx" color="#7f8699"></uv-icon>
+				<image class="item-icon" src="/static/images/ticket/chevron.svg"></image>
 			</view>
-			<view class="flex-row align-center padding" hover-stay-time="250" hover-class="click-hover"
+			<view class="flex-row align-center op-row" hover-stay-time="250" hover-class="click-hover"
 				@click="exit">
 				<view class="flex-1 flex-row align-center">
 					<image class="item-icon" src="/static/images/tabbar/exit-icon.svg"></image>
 					<text class="item-title">退出登录</text>
 				</view>
-				<uv-icon name="arrow-right" size="28rpx" color="#7f8699"></uv-icon>
+				<image class="item-icon" src="/static/images/ticket/chevron.svg"></image>
 			</view>
 		</view>
+	</view>
+		<tabbar-nav />
 	</view>
 </template>
 
@@ -102,53 +107,56 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 <style lang="scss">
 	.page-contain {
 		position: relative;
-		z-index: 1;
-		padding-top: calc(var(--window-top) + var(--status-bar-height) + 44px);
-		padding-left: 30rpx;
-		padding-right: 30rpx;
-	
-		&::before {
-			content: "";
-			position: fixed;
-			z-index: -1;
-			top: 0;
-			left: 0;
-			right: 0;
-			width: 100%;
-			height: 100%;
-			background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
-		}
+		min-height: 100%;
+		padding-top: calc(var(--status-bar-height) + 44px + 16px);
+		padding-left: 32rpx;
+		padding-right: 32rpx;
+		padding-bottom: 24rpx;
+		background: var(--ticket-paper);
+		box-sizing: border-box;
 	}
 
 	.user-card {
-		width: 92%;
-		height: 100%;
-		margin: 0 auto;
-		// margin-top: $top;
-		border-radius: 20rpx;
-		position: relative;
+		margin-bottom: 28rpx;
+	}
+
+	.page-brand {
+		display: block;
+		font-size: 44rpx;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: var(--ink-black);
+		line-height: 1.2;
+	}
+
+	.op-row {
+		padding: 20rpx 0;
+		border-bottom: 2rpx dashed var(--perf-line);
+	}
+	.op-row:first-child {
+		padding-top: 0;
+	}
+	.op-row:last-child {
+		border-bottom: none;
+		padding-bottom: 0;
 	}
 
 	.user-info {
 		display: flex;
 		align-items: center;
-		padding: 50rpx 0 22rpx;
+		padding: 24rpx 0 8rpx;
 		position: relative;
 
 		.user-avatar {
-			max-width: 137rpx;
-			max-height: 137rpx;
+			width: 112rpx;
+			height: 112rpx;
+			max-width: 112rpx;
+			max-height: 112rpx;
 			overflow: hidden;
-			border-radius: 190rpx;
-			margin-right: 30rpx;
-		}
-
-		.editAvatar {
-			max-width: 61rpx;
-			max-height: 61rpx;
-			position: absolute;
-			bottom: 10%;
-			left: 12%;
+			border-radius: 50%;
+			border: none;
+			background: #E8DCC0;
+			margin-right: 24rpx;
 		}
 
 		.user-info-box {
@@ -159,84 +167,83 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 	}
 
 	.text-h2 {
-		font-weight: 600;
+		font-weight: 700;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
+		letter-spacing: 0.06em;
 	}
 
 	.text-label {
-		font-weight: 500;
-		font-size: 27rpx;
-		color: #666666;
+		font-size: 26rpx;
+		color: var(--ink-muted);
 		line-height: 42rpx;
 	}
-	
+
 	.detail-banner {
-		background: url("#{$IMG_URL}/app/detail-bg.png");
-		background-repeat: no-repeat;
-		background-size: contain;
-		margin: 0 15rpx;
+		margin-bottom: 28rpx;
 		position: relative;
 
+		.earn-head {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
 		.arrow-contain {
-			position: absolute;
-			right: 3%;
-			top: 3%;
 			display: flex;
 			align-items: center;
 
 			.text {
-				font-weight: 500;
-				font-size: 27rpx;
-				color: #3A5071;
+				font-size: 24rpx;
+				color: var(--stamp-red);
 				line-height: 42rpx;
 			}
 		}
 
 		.detail-arrow {
-			max-width: 30.53rpx;
-			max-height: 30.53rpx;
+			max-width: 30rpx;
+			max-height: 30rpx;
 		}
 
 		.total-text {
-			padding: 55rpx 0 0 34rpx;
-			font-size: 23rpx;
-			color: #657B9D;
+			font-size: 22rpx;
+			color: var(--ink-muted);
 			line-height: 34rpx;
 		}
 
 		.total-income {
-			padding: 0 0 28rpx 30rpx;
-			font-weight: 500;
-			font-size: 61rpx;
-			color: #3A5071;
-			line-height: 69rpx;
+			font-family: ui-monospace, Menlo, Consolas, monospace;
+			font-variant-numeric: tabular-nums;
+			font-size: 56rpx;
+			color: var(--ink-black);
+			line-height: 72rpx;
+			padding-bottom: 16rpx;
 		}
 
 		.contain {
-			padding: 0rpx 143rpx 30rpx 45.8rpx;
 			display: flex;
 			justify-content: space-between;
+			border-top: 2rpx dashed var(--perf-line);
+			padding-top: 16rpx;
 		}
 
 		.income {
-			font-weight: 500;
-			font-size: 46rpx;
-			color: #3A5071;
-			line-height: 69rpx;
+			font-family: ui-monospace, Menlo, Consolas, monospace;
+			font-size: 36rpx;
+			color: var(--ink-black);
+			line-height: 52rpx;
 		}
 
 		.text {
-			font-size: 23rpx;
-			color: #657B9D;
+			font-size: 22rpx;
+			color: var(--ink-muted);
 			line-height: 34rpx;
 		}
 	}
 
 	.operation-card {
-		margin-top: 17rpx;
-		border-radius: 15rpx
+		margin-bottom: 24rpx;
 	}
 
 	.item-icon {
@@ -245,13 +252,12 @@ import { LogOut, MyStatInfo } from "../../apis/member";
 	}
 
 	.item-title {
-		font-weight: 500;
-		font-size: 31rpx;
-		color: #333333;
+		font-size: 30rpx;
+		color: var(--ink-black);
 		line-height: 46rpx;
 		margin-left: 15rpx;
 	}
 	.click-hover {
-		background-color: #f1f1f1;
+		background-color: var(--ticket-paper);
 	}
 </style>

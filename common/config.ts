@@ -6,6 +6,6 @@
 // export const baseURL = "https://appapi.jsky100.com/"
 // export const baseURL = "https://appapi.ancai.net/"
 // export const baseURL = "https://app-api.mgmky.com/"
-export const baseURL = "https://appapi.cloudprintnet.com/"
+export const baseURL = "https://appapi.szysky.com"
 export const imageURL = 'https://subapi.mgmky.com/content/images'
 // export const imageURL = `${baseURL}content/images`;

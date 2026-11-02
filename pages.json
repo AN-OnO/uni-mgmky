@@ -31,66 +31,85 @@
 		{
 			"path": "pages/saomiao/saomiao",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "扫码",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/check/check",
 			"style": {
 				"navigationBarTitleText": "考勤打卡",
-				"navigationBarBackgroundColor": "#e2efff"
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/check/apply/apply",
 			"style": {
-				"navigationBarTitleText": "申请补卡"
+				"navigationBarTitleText": "申请补卡",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/check/apply/index",
 			"style": {
-				"navigationBarTitleText": ""
+				"navigationBarTitleText": "补卡",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/check/apply/records",
 			"style": {
-				"navigationBarTitleText": "补卡记录"
+				"navigationBarTitleText": "补卡记录",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/check/attendance",
 			"style": {
-				"navigationBarTitleText": "考勤记录"
+				"navigationBarTitleText": "考勤记录",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/tabbar/earning",
 			"style": {
 				"navigationBarTitleText": "我的收益",
-				"navigationBarBackgroundColor": "#D5E8FF"
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/tabbar/bind",
 			"style": {
 				"navigationBarTitleText": "默认设备绑定",
-				"navigationBarBackgroundColor": "#FFFFFF"
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/performanceGain/index",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#E6F1FF"
+				"navigationBarTitleText": "绩效收益",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		},
 		{
 			"path": "pages/performanceGain/detail",
 			"style": {
-				"navigationBarTitleText": "",
-				"navigationBarBackgroundColor": "#D5E8FF"
+				"navigationBarTitleText": "绩效详情",
+				"navigationBarBackgroundColor": "#F3E6C8"
+			}
+		},
+		{
+			"path": "pages/orderLookup/index",
+			"style": {
+				"navigationBarTitleText": "查看订单",
+				"navigationBarBackgroundColor": "#F3E6C8"
+			}
+		},
+		{
+			"path": "pages/orderLookup/detail",
+			"style": {
+				"navigationBarTitleText": "订单详情",
+				"navigationBarBackgroundColor": "#F3E6C8"
 			}
 		}
 	],
@@ -99,50 +118,53 @@
 			"pages": [{
 					"path": "list",
 					"style": {
-						"navigationBarTitleText": "",
-						"navigationBarBackgroundColor": "#D5E8FF"
+						"navigationBarTitleText": "选择工艺",
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "info",
 					"style": {
-						"navigationBarTitleText": "",
-						"navigationBarBackgroundColor": "#D5E8FF"
+						"navigationBarTitleText": "订单列表",
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "confirm",
 					"style": {
 						"navigationBarTitleText": "订单详情",
-						"backgroundColor": "#F0F1F5"
+						"navigationBarBackgroundColor": "#F3E6C8",
+						"backgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "search",
 					"style": {
 						"navigationBarTitleText": "搜索",
-						"navigationBarBackgroundColor": "#D5E8FF"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "index",
 					"style": {
 						"navigationBarTitleText": "报工",
-						"navigationBarBackgroundColor": "#D5E8FF"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "batch",
 					"style": {
 						"navigationBarTitleText": "选择报工工艺",
-						"backgroundColor": "#F0F1F5"
+						"navigationBarBackgroundColor": "#F3E6C8",
+						"backgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "return_order",
 					"style": {
 						"navigationBarTitleText": "返单",
-						"backgroundColor": "#F0F1F5"
+						"navigationBarBackgroundColor": "#F3E6C8",
+						"backgroundColor": "#F3E6C8"
 					}
 				}
 			]
@@ -153,21 +175,22 @@
 				"path": "index",
 				"style": {
 					"navigationBarTitleText": "返单",
-					"backgroundColor": "#F0F1F5"
+					"navigationBarBackgroundColor": "#F3E6C8",
+					"backgroundColor": "#F3E6C8"
 				}
 			}, {
 				"path": "search",
 				"style": {
 					"navigationBarTitleText": "添加返工订单",
-					"navigationBarBackgroundColor": "#fff",
-					"backgroundColor": "#F0F1F5"
+					"navigationBarBackgroundColor": "#F3E6C8",
+					"backgroundColor": "#F3E6C8"
 				}
 			}, {
 				"path": "detail",
 				"style": {
 					"navigationBarTitleText": "添加返工订单",
-					"navigationBarBackgroundColor": "#fff",
-					"backgroundColor": "#F0F1F5"
+					"navigationBarBackgroundColor": "#F3E6C8",
+					"backgroundColor": "#F3E6C8"
 				}
 			}]
 		}, {
@@ -175,13 +198,14 @@
 			"pages": [{
 				"path": "index",
 				"style": {
-					"navigationBarTitleText": "",
-					"navigationBarBackgroundColor": "#DBEBFF"
+					"navigationBarTitleText": "统计报表",
+					"navigationBarBackgroundColor": "#F3E6C8"
 				}
 			}, {
 				"path": "components/rankTable",
 				"style": {
-					"navigationBarTitleText": ""
+					"navigationBarTitleText": "排行",
+					"navigationBarBackgroundColor": "#F3E6C8"
 				}
 			}]
 		},
@@ -190,15 +214,16 @@
 			"pages": [{
 					"path": "list",
 					"style": {
-						"navigationStyle": "custom",
-						"enablePullDownRefresh": true
+						"navigationBarTitleText": "物流",
+						"enablePullDownRefresh": true,
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "info",
 					"style": {
 						"navigationBarTitleText": "详情",
-						"navigationBarBackgroundColor": "#F0F0F0"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
@@ -212,7 +237,7 @@
 					"path": "search",
 					"style": {
 						"navigationBarTitleText": "搜索",
-						"navigationBarBackgroundColor": "#D5E8FF"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
@@ -220,21 +245,21 @@
 					"style": {
 						"navigationBarTitleText": "配送列表",
 						"enablePullDownRefresh": true,
-						"navigationBarBackgroundColor": "#FFFFFF"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "newSearch",
 					"style": {
 						"navigationBarTitleText": "搜索",
-						"navigationBarBackgroundColor": "#FFFFFF"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
 					"path": "newInfo",
 					"style": {
 						"navigationBarTitleText": "订单详情",
-						"navigationBarBackgroundColor": "#F2F3F5"
+						"navigationBarBackgroundColor": "#F3E6C8"
 					}
 				},
 				{
@@ -251,7 +276,7 @@
 				"path": "dailyReport",
 				"style": {
 					"navigationBarTitleText": "生产日报表",
-					"navigationBarBackgroundColor": "#ffffff"
+					"navigationBarBackgroundColor": "#F3E6C8"
 				}
 			}]
 		}, {
@@ -260,6 +285,7 @@
 				"path": "webview",
 				"style": {
 					"navigationBarTitleText": "浏览",
+					"navigationBarBackgroundColor": "#F3E6C8",
 					"app-plus": {
 						"titleNView": {
 							"autoBackButton": true,
@@ -277,15 +303,15 @@
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F0F1F5"
+		"navigationBarBackgroundColor": "#F3E6C8",
+		"backgroundColor": "#F3E6C8"
 	},
 	"tabBar": {
 		"custom": true,
-		"color": "#C7D2DC",
+		"color": "#6B6258",
 		"fontSize": "12px",
-		"selectedColor": "#333",
-		"backgroundColor": "white",
+		"selectedColor": "#B42318",
+		"backgroundColor": "#FFF8E7",
 		"iconWidth": "32px",
 		"height": "88px",
 		"list": [{

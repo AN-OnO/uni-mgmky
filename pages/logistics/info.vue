@@ -51,7 +51,7 @@
 						</view>
 					</view>
 					<view class="info-divider"></view>
-					<uv-form labelStyle="font-size: 27rpx;color: #808080;line-height: 38rpx;">
+					<uv-form labelStyle="font-size: 27rpx;color: #6B6258;line-height: 38rpx;">
 						<uv-form-item class="align-right " label="订单编号:" labelWidth='250rpx'>
 							<template v-slot:right>
 								<text class="form-text">{{data.orderNo}}</text>
@@ -103,11 +103,11 @@
 			<button v-if="deliveryMethod == 3" class="button-operation normal-button"
 				@click.stop="callPhone(data.contactMobile)">
 				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
-					class="text-operation" style="color: #333333;">电话</text>
+					class="text-operation" style="color: var(--ink-black);">电话</text>
 			</button>
 			<button v-if="deliveryMethod == 3" class="button-operation normal-button" @click.stop="goNavigation">
 				<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
-					class="text-operation" style="color: #333333;">导航</text>
+					class="text-operation" style="color: var(--ink-black);">导航</text>
 			</button>
 			<button class="button-operation" @click.stop="confirm(data.orderItemNo)">
 				<image
@@ -229,7 +229,7 @@
 
 <style lang="scss">
 	.container-background {
-		background: #F0F0F0;
+		background: var(--ticket-paper);
 		height: 100%;
 		overflow: scroll;
 		display: flex;
@@ -248,12 +248,13 @@
 
 	.info-divider {
 		margin: 15rpx 0;
-		border: 2rpx solid #F2F3F5;
+		border: 2rpx dashed var(--perf-line);
 	}
 
 	.card {
-		background: #FFFFFF;
-		border-radius: 15rpx;
+		background: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
 		margin-bottom: 15.27rpx;
 		padding: 30rpx 15rpx;
 
@@ -270,7 +271,7 @@
 			.order-status {
 				font-weight: 600;
 				font-size: 46rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 69rpx;
 			}
 
@@ -282,7 +283,7 @@
 			.text {
 				font-weight: 600;
 				font-size: 34rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 53rpx;
 			}
 		}
@@ -290,7 +291,7 @@
 
 	.address {
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 	}
 
@@ -303,25 +304,26 @@
 	.info-productName {
 		width: 418rpx;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 	}
 
 	.remark-text {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 42rpx;
 	}
 
 	.form-text {
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 	}
 
 	.bottom-container {
-		background: #FFFFFF;
+		background: var(--ticket-face);
+		border-top: 2rpx solid var(--ink-black);
 		padding: 30rpx;
 		display: flex;
 		justify-content: flex-end;
@@ -330,8 +332,8 @@
 
 	.button-operation {
 		height: 95rpx;
-		background: #2FB7DF;
-		border-radius: 15rpx;
+		background: #B42318;
+		border-radius: 0;
 		margin-right: 0;
 		margin-left: 5rpx;
 		padding: 25rpx 38rpx;
@@ -341,7 +343,7 @@
 	}
 
 	.normal-button {
-		background: #F0F0F0;
+		background: var(--ticket-paper);
 	}
 
 	.button-image {
@@ -360,7 +362,7 @@
 	.orderCount {
 		font-weight: 600;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 	}
 </style>

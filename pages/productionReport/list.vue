@@ -5,7 +5,7 @@
 		</view>
 		<view class="data-list padding">
 			<view v-for="(item,index) in technologies" :key="index" class="data-contain">
-				<view class="list-item " @click="handleSelect(item)">
+				<view class="ticket list-item " @click="handleSelect(item)">
 					<view class="item-image">
 						<image class="image-icon" :src="item.photo" mode="aspectFit" />
 						<text v-if="item.waitOrderItemNum > 0" class="badge-tag">{{ item.waitOrderItemNum }}</text>
@@ -15,7 +15,7 @@
 			</view>
 		</view>
 		<uv-loading-page :loading="loading"></uv-loading-page>
-		<uv-action-sheet ref="actionSheet" :actions="list" description="请选择报工设备" :safeAreaInsetBottom="true" round="16" @select="selectEquipment" >
+		<uv-action-sheet ref="actionSheet" :actions="list" description="请选择报工设备" :safeAreaInsetBottom="true" round="0" @select="selectEquipment" >
 		</uv-action-sheet>
 	</view>
 </template>
@@ -148,7 +148,7 @@ import {
 
 <style lang="scss" scoped>
 	.page-container {
-		background: linear-gradient(180deg, #D5E8FF 0%, #FFFFFF 100%), #F2F2F2;
+		background: var(--ticket-paper);
 		min-height: 100%;
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
@@ -157,7 +157,7 @@ import {
 	.list-title {
 		font-weight: 600;
 		font-size: 42rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 		text-align: center;
 	}
@@ -176,10 +176,7 @@ import {
 	}
 
 	.list-item {
-		background-color: #fff;
-		padding: 38rpx;
-		border-radius: 23rpx;
-		border: 6rpx solid #F2F2F2;
+		padding: 28rpx;
 	}
 
 	.item-image {
@@ -207,7 +204,7 @@ import {
 	.item-name {
 		text-align: center;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 		margin-top: 7rpx;
 	}

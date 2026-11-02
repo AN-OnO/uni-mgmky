@@ -1,24 +1,24 @@
 <template>
-	<view>
-		<uv-sticky bgColor='#FFFFFF'>
-			<image v-if="showBanner" :src="$IMG_URL + '/app/绩效收益banner.png'" mode="" class="banner-img"></image>
-			<view class="flex-row align-center justify-between padding-lr"
-				:style="{'margin-top': showBanner ? '200rpx' : '0'}">
+	<view class="gain-page">
+		<uv-sticky bgColor='#F3E6C8'>
+			<view class="ticket stats-mast">
+			<view class="flex-row align-center justify-between">
 				<view @click="open" class="mode-title">
 					{{modeTitle}}
-					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+					<image src="/static/images/ticket/chevron.svg" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
 				<term-picker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
-				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
+				<view class="sub-section"><uv-subsection style="border-radius: 0;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
+			</view>
 			</view>
 		</uv-sticky>
 		<view>
 			<view class="flex-row align-center justify-between padding">
 				<text class="section-title">员工绩效排名</text>
-				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['前台', '后道']"
+				<view class="sub-section"><uv-subsection style="border-radius: 0;" :list="['前台', '后道']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
 			<view class="padding-lr">
@@ -112,7 +112,7 @@
 				this.showBanner = false
 				uni.setNavigationBarColor({
 					frontColor: '#000000',
-					backgroundColor: '#ffffff'
+					backgroundColor: '#FFF8E7'
 				});
 			}
 		},
@@ -220,6 +220,15 @@
 </script>
 
 <style lang="scss">
+	.gain-page {
+		min-height: 100%;
+		background: var(--ticket-paper);
+	}
+
+	.stats-mast {
+		margin: 16rpx 24rpx 8rpx;
+	}
+
 	.banner-img {
 		position: absolute;
 		top: -150rpx;
@@ -232,7 +241,7 @@
 		display: flex;
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 46rpx;
 	}
 
@@ -251,7 +260,7 @@
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 	}
 
@@ -261,14 +270,14 @@
 		left: 0;
 		height: 1em;
 		width: 0.25em;
-		border-radius: 10px;
-		background-color: #7BC7FC;
+		border-radius: 0;
+		background-color: #B42318;
 		top: 50%;
 		transform: translateY(-50%);
 	}
 
 	::v-deep .uni-table-tr:first-child {
-		background: #F5F6F8;
+		background: var(--ticket-paper);
 	}
 
 	::v-deep .uni-table-tr:nth-child(2) {
@@ -281,10 +290,10 @@
 
 
 	.self-table ::v-deep .uni-table-tr:first-child {
-		background: linear-gradient(100deg, #D2E6FF 0%, #F8FBFF 100%);
+		background: var(--ticket-paper);
 
 		.uni-table-td:first-child {
-			border-radius: 15rpx 0 0 15rpx;
+			border-radius: 0;
 		}
 
 		.uni-table-td:last-child {
@@ -293,13 +302,13 @@
 	}
 
 	.self-table ::v-deep .uni-table-tr:nth-child(3) {
-		background: #F5F6F8;
+		background: var(--ticket-paper);
 	}
 
 	.table-head {
 		font-weight: bold;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 34rpx;
 	}
 
@@ -311,7 +320,7 @@
 	.index-text {
 		font-weight: bold;
 		font-size: 23rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 34rpx;
 	}
 </style>

@@ -36,5 +36,7 @@
 </script>
 
 <style>
-
+page {
+	background-color: var(--ticket-paper);
+}
 </style>

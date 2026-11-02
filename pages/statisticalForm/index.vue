@@ -1,18 +1,19 @@
 <template>
-	<view>
-		<uv-sticky bgColor='#FFFFFF'>
-			<image v-if="showBanner" :src="$IMG_URL+'/statisticalForm/banner.svg'" mode="" class="banner-img"></image>
-			<view class="flex-between padding-lr" :style="{'margin-top': showBanner ? '200rpx' : '0'}">
+	<view class="stats-page">
+		<uv-sticky bgColor='#F3E6C8'>
+			<view class="ticket stats-mast">
+				<view class="flex-between" :style="{'margin-top': showBanner ? '8rpx' : '0'}">
 				<view @click="open" class="mode-title">
 					<text style="max-width: 190rpx;">{{modeTitle}}</text>
-					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+					<image src="/static/images/ticket/chevron.svg" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" :mode="mode"
 					@confirm="confirm"></uv-datetime-picker>
 				<TermPicker :defaultDate='defaultDate' v-model:visable="pickerVisable" @confirm="confirmRange" />
-				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['日', '月', '年']"
+				<view class="sub-section"><uv-subsection style="border-radius: 0;" :list="['日', '月', '年']"
 						:current="current" @change="change"></uv-subsection></view>
 
+			</view>
 			</view>
 		</uv-sticky>
 		<!-- 代理商下拉选择框 -->
@@ -21,7 +22,7 @@
 				@confirm="confirmAgent" />
 			<view @click="openAgentPicker" class="picker-btn">
 				<text>代理商：{{ mercantileAgent[currentTab]?.name || '选择代理商' }}</text>
-				<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+				<image src="/static/images/ticket/chevron.svg" class="arrow-img"></image>
 			</view>
 		</view>
 		<view v-for="(ele, indx) in dataList" :key="indx">
@@ -29,7 +30,7 @@
 				<view class="flex-between padding-30">
 					<text class="section-title flex-1">{{ele.name}}</text>
 					<text v-if="ele.lastestUpdateTime"
-						style="font-size: 14px;color: gray;">最近更新{{ele.lastestUpdateTime}}</text>
+						style="font-size: 28rpx;color: var(--ink-muted);">最近更新{{ele.lastestUpdateTime}}</text>
 				</view>
 				<view class="section-content">
 					<view v-for="(item, index) in ele.content" :key="index" class="ele-content">
@@ -47,7 +48,7 @@
 		<view>
 			<view class="flex-between padding-30">
 				<text class="section-title">营业收入占比</text>
-				<view class="sub-section"><uv-subsection style="border-radius: 15rpx;" :list="['支付方式', '产品品类']"
+				<view class="sub-section"><uv-subsection style="border-radius: 0;" :list="['支付方式', '产品品类']"
 						:current="currentSource" @change="changeSource"></uv-subsection></view>
 			</view>
 			<view style="height:343rpx;">
@@ -77,7 +78,7 @@
 			<view class="padding-30">
 				<text class="section-title">订单收款、应收款</text>
 			</view>
-			<view style="padding: 0rpx 30rpx 30rpx"> <uv-subsection style="border-radius: 15rpx;"
+			<view style="padding: 0rpx 30rpx 30rpx"> <uv-subsection style="border-radius: 0;"
 					:list="['下单人', '归属人', '设计人']" :current="currentPerson" @change="changePerson"></uv-subsection>
 			</view>
 			<view style="padding: 0rpx 30rpx; margin-bottom: 61rpx;">
@@ -182,7 +183,7 @@
 			textShadowBlur: 10, // 关键！必须 >0 
 			textShadowColor: 'transparent' // 透明覆盖阴影
 		},
-		backgroundColor: '#ffffff', // 非透明背景
+		backgroundColor: '#FFF8E7', // 非透明背景
 		borderColor: '#000000',
 		shadowColor: 'transparent', // 容器阴影透明
 		shadowBlur: 0 // 阴影模糊度归零
@@ -345,7 +346,7 @@
 				this.showBanner = false
 				uni.setNavigationBarColor({
 					frontColor: '#000000',
-					backgroundColor: '#ffffff'
+					backgroundColor: '#FFF8E7'
 				});
 			} else {
 				this.showBanner = true
@@ -941,6 +942,15 @@
 </script>
 
 <style lang="scss">
+	.stats-page {
+		min-height: 100%;
+		background: var(--ticket-paper);
+	}
+
+	.stats-mast {
+		margin: 16rpx 24rpx 8rpx;
+	}
+
 	.banner-img {
 		position: absolute;
 		top: -150rpx;
@@ -960,7 +970,7 @@
 		margin-left: 28rpx;
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 46rpx;
 	}
 
@@ -973,7 +983,7 @@
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 	}
 
@@ -983,8 +993,8 @@
 		left: 0;
 		height: 1em;
 		width: 0.25em;
-		border-radius: 10px;
-		background-color: #7BC7FC;
+		border-radius: 0;
+		background-color: #B42318;
 		top: 50%;
 		transform: translateY(-50%);
 	}
@@ -1000,13 +1010,14 @@
 		width: 300rpx;
 		margin: 8rpx;
 		padding: 15rpx;
-		background: #FAFAFA;
-		border-radius: 15rpx
+		background: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0
 	}
 
 	.ele-title {
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 42rpx;
 	}
 
@@ -1033,13 +1044,13 @@
 	.ele-value {
 		font-weight: bold;
 		font-size: 42rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 61rpx;
 	}
 
 	.bottom-line {
 		width: 100%;
-		background: #F0F0F0;
+		background: var(--perf-line);
 		height: 15rpx;
 	}
 
@@ -1060,14 +1071,14 @@
 	.total-text {
 		font-weight: bold;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 34rpx;
 	}
 
 	.index-text {
 		font-weight: bold;
 		font-size: 23rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 34rpx;
 	}
 
@@ -1077,7 +1088,7 @@
 	}
 
 	.printedStat-line {
-		border: 2rpx solid #F0F0F0;
+		border: 2rpx dashed var(--perf-line);
 		margin: 30rpx 0;
 	}
 
@@ -1087,21 +1098,22 @@
 
 	.capacity-line:not(:last-child) {
 		margin: 0 30rpx 30rpx;
-		border: 2rpx solid #EDEEF0;
+		border: 2rpx dashed var(--perf-line);
 	}
 
 	.printedStat-total {
 		font-weight: bold;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 42rpx;
 	}
 
 	.printedStat-content {
 		margin: 0 30rpx 61rpx;
 		padding: 20rpx;
-		background: #FAFAFA;
-		border-radius: 15rpx
+		background: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
 	}
 
 	.printed-content {
@@ -1137,8 +1149,8 @@
 		& ::-webkit-scrollbar {
 			width: 4rpx !important;
 			height: 8rpx !important;
-			background-color: #f5f5f5 !important;
-			border-top: 2rpx solid #fff;
+			background-color: var(--ticket-paper) !important;
+			border-top: 2rpx solid var(--perf-line);
 			display: block;
 		}
 
@@ -1160,10 +1172,11 @@
 		display: flex;
 		align-items: center;
 		padding: 12rpx 24rpx;
-		background-color: #f5f5f5;
-		border-radius: 20rpx;
+		background-color: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
 		font-size: 28rpx;
-		color: #666666;
+		color: var(--ink-black);
 		cursor: pointer;
 		transition: all 0.3s ease;
 	}

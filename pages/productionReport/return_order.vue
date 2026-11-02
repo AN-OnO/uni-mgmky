@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<uv-sticky bg-color="#fff">
+		<uv-sticky bg-color="#F3E6C8">
 			<view class="padding">
 				<text class="section-title">添加返工订单</text>
 				<!-- <view>
@@ -133,7 +133,7 @@
 
 <style>
 	page {
-		background-color: #f5f5f5;
+		background-color: var(--ticket-paper);
 	}
 </style>
 <style lang="scss" scoped>
@@ -145,13 +145,14 @@
 		.list-item {
 			@include flex;
 			align-items: center;
-			background-color: #f3f3f3;
+			background-color: var(--ticket-face);
 			padding: 10rpx;
-			border-radius: 8px;
+			border-radius: 0;
+			border: 2rpx solid var(--ticket-edge);
 		}
 
 		.text-label {
-			color: #777;
+			color: var(--ink-muted);
 		}
 	}
 
@@ -165,7 +166,7 @@
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 
 		&::before {
@@ -174,23 +175,24 @@
 			left: 0;
 			height: 1em;
 			width: 0.25em;
-			border-radius: 10px;
-			background-color: #7BC7FC;
+			border-radius: 0;
+			background-color: #B42318;
 			top: 50%;
 			transform: translateY(-50%);
 		}
 	}
 
 	.order-card {
-		background-color: #fff;
-		border-radius: 8px;
+		background-color: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
 
 		&-head {
 			padding: 20rpx 40rpx;
 			@include flex;
 			align-items: center;
 			justify-content: space-between;
-			border-bottom: 1rpx solid #eee;
+			border-bottom: 2rpx dashed var(--perf-line);
 		}
 
 		&-body {
@@ -201,7 +203,7 @@
 
 
 	.status-tag {
-		background-color: #f3f3f3;
+		background-color: var(--ticket-paper);
 		// padding: ;
 
 		&.success {}

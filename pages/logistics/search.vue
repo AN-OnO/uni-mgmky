@@ -1,6 +1,6 @@
 <template>
 	<view class="search-contain">
-		<uv-search bgColor="#ffffff" margin="0 30rpx 45rpx" v-model="keywords" placeholder="单号/产品名/客户号"
+		<uv-search bgColor="#FFF8E7" margin="0 30rpx 45rpx" v-model="keywords" placeholder="单号/产品名/客户号"
 			:showAction='false' @search='search'></uv-search>
 		<uni-swipe-action>
 			<uni-swipe-action-item v-for="(item, index) in listData" :key="index" :right-options="options"
@@ -24,11 +24,11 @@
 						<button v-if="deliveryMethod == 3" class="list-button white-button"
 							@click.stop="callPhone(item.mobile)">
 							<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
-							<text class="button-text" style="color: #333333;">电话</text>
+							<text class="button-text" style="color: var(--ink-black);">电话</text>
 						</button>
 						<button v-if="deliveryMethod == 3" class="list-button white-button" @click.stop="goNavigation">
 							<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-							<text class="button-text" style="color: #333333;">导航</text>
+							<text class="button-text" style="color: var(--ink-black);">导航</text>
 						</button>
 						<button class="list-button" @click.stop="openModal(item.delivryStatus, item.orderItemNo)">
 							<image
@@ -210,7 +210,7 @@
 
 <style>
 	.search-contain {
-		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		background: var(--ticket-paper);
 		height: 100%;
 	}
 
@@ -236,7 +236,7 @@
 		height: 50rpx;
 		margin-right: 8rpx;
 		border-radius: 50%;
-		background-color: #009945;
+		background-color: var(--ink-green);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -250,22 +250,23 @@
 	}
 	
 	.sc-bg {
-		background-color: #1576ED
+		background-color: var(--stamp-red);
 	}
 
 	.time {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 		text-wrap: nowrap;
 	}
 
 	.data-contain {
 		margin: 15rpx 30rpx;
-		border-radius: 15rpx;
-		box-shadow: 0rpx 8rpx 31rpx 0rpx #D0D6EC;
-		background: #ffffff;
+		border-radius: 0;
+		border: 2rpx solid rgba(28, 25, 23, 0.38);
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
+		background: var(--ticket-face);
 		align-content: flex-start;
 		padding: 20rpx;
 	}
@@ -299,10 +300,10 @@
 	.productName {
 		margin-bottom: 15rpx;
 		-webkit-line-clamp: 2;
-		color: #808080;
+		color: var(--ink-muted);
 		font-weight: 400;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 	}
 
@@ -310,7 +311,7 @@
 		height: 69rpx;
 		margin-right: 0;
 		margin-left: 15rpx;
-		background: #2FB7DF;
+		background: #B42318;
 		border-radius: 191rpx;
 		display: flex;
 		align-items: center;
@@ -318,7 +319,7 @@
 	}
 
 	.white-button {
-		background: #FFFFFF;
+		background: var(--ticket-face);
 		border: 2rpx solid #D9D9D9;
 	}
 
@@ -337,7 +338,7 @@
 	.finish-text {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 42rpx;
 		text-align: right;
 	}

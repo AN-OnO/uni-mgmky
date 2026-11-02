@@ -15,6 +15,7 @@
 <style lang="scss">
 	@import "@/static/css/common.scss";
 	@import "@/uni_modules/uv-ui-tools/index.scss";
+	@import "@/static/css/ticket-tokens.scss";
 	page {
 		height: 100%;
 	}

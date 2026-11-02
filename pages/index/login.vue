@@ -1,28 +1,29 @@
 <template>
 	<view class="content">
 		<uv-status-bar></uv-status-bar>
-		<!-- <image class="logo" src="/static/logo.png"></image> -->
-		<image class="app_logo" src="/static/liqiuyuan-logo.png" mode="widthFix"></image>
-		<text class="title">{{appName}}</text>
-
-		<view class="login-form">
-			<uv-form ref="form" labelWidth="30rpx" :model="loginForm" :rules="loginFormRules">
-				<uv-form-item prop="userName" :custom-style="formItemStyle">
-					<uv-input v-model="loginForm.userName" placeholder="请输入账号" fontSize="16" border="none">
-					</uv-input>
-				</uv-form-item>
-				<uv-form-item prop="password" :custom-style="formItemStyle">
-					<uv-input v-model="loginForm.password" placeholder="请输入密码" fontSize="16"
-						border="none" :password="!showPassword">
-						<template v-slot:suffix>
-							<image :src="showPassword ? '/static/images/tabbar/unlocked.svg' : '/static/images/tabbar/locked.svg'"
-								style="max-width: 45.8rpx;max-height: 45.8rpx;" @click="handlePassword"></image>
-						</template>
-					</uv-input>
-				</uv-form-item>
-			</uv-form>
-			<uv-button type="default" text="登录" size="large" :custom-style="loginBtnStyle"
-				:custom-text-style="{fontSize:'18px'}" @click="handleLogin"></uv-button>
+		<view class="ticket">
+			<image class="app_logo" src="/static/liqiuyuan-logo.png" mode="widthFix"></image>
+			<text class="title">{{appName}}</text>
+			<view class="ticket-perf"></view>
+			<view class="login-form">
+				<uv-form ref="form" labelWidth="30rpx" :model="loginForm" :rules="loginFormRules">
+					<uv-form-item prop="userName" :custom-style="formItemStyle">
+						<uv-input v-model="loginForm.userName" placeholder="请输入账号" fontSize="32rpx" border="none">
+						</uv-input>
+					</uv-form-item>
+					<uv-form-item prop="password" :custom-style="formItemStyle">
+						<uv-input v-model="loginForm.password" placeholder="请输入密码" fontSize="32rpx"
+							border="none" :password="!showPassword">
+							<template v-slot:suffix>
+								<image :src="showPassword ? '/static/images/tabbar/unlocked.svg' : '/static/images/tabbar/locked.svg'"
+									style="max-width: 45.8rpx;max-height: 45.8rpx;" @click="handlePassword"></image>
+							</template>
+						</uv-input>
+					</uv-form-item>
+				</uv-form>
+				<uv-button type="default" text="登录" size="large" :custom-style="loginBtnStyle"
+					:custom-text-style="{fontSize:'36rpx'}" @click="handleLogin"></uv-button>
+			</view>
 		</view>
 	</view>
 </template>
@@ -81,19 +82,19 @@
 	// 表单子项自定义样式
 	const formItemStyle = computed(() => {
 		return {
-			padding: '30rpx',
-			background: '#EFF1F3',
-			borderRadius: '30rpx',
-			margin: '30rpx 0 10rpx 0'
+			padding: '24rpx',
+			background: '#FFF8E7',
+			borderRadius: '0',
+			margin: '16rpx 0',
+			border: '2rpx solid rgba(28, 25, 23, 0.38)'
 		}
 	})
-	// 登录按钮自定义样式
 	const loginBtnStyle = computed(() => {
 		return {
-			background: '#2FB7DF',
+			background: '#B42318',
 			color: '#fff',
-			marginTop: '160rpx',
-			borderRadius: '100rpx'
+			marginTop: '48rpx',
+			borderRadius: '0'
 		}
 	})
 	// 登录方法
@@ -126,35 +127,32 @@
 
 <style lang="scss" scoped>
 	.content {
+		min-height: 100%;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		justify-content: center;
+		align-items: stretch;
+		padding: 48rpx 40rpx 80rpx;
+		box-sizing: border-box;
+		background: var(--ticket-paper);
 	}
 
-	.logo {
-		height: 88rpx;
-		width: 254rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 20rpx;
+	.ticket {
+		margin-top: 48rpx;
 	}
-	.app_logo{
-		width: 254rpx;
-		margin-top: 200rpx;
-		margin-left: auto;
-		margin-right: auto;
-		margin-bottom: 20rpx;
+
+	.app_logo {
+		width: 220rpx;
+		margin: 32rpx 0 8rpx;
 	}
 
 	.title {
-		font-size: 30rpx;
-		color: #808080;
+		font-size: 32rpx;
+		font-weight: 700;
+		letter-spacing: 0.08em;
+		color: var(--ink-black);
 	}
 
 	.login-form {
-		// margin-top: 200rpx;
-		width: calc(100vw - 100rpx);
+		width: 100%;
 	}
 </style>

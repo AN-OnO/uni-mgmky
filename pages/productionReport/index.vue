@@ -1,6 +1,6 @@
 <template>
-	<view style="background: linear-gradient( 180deg, #D5E8FF 0%, #F3F6FA 100%), #F0F1F5;height: 100%;">
-		<view class="reprot-card">
+	<view class="page-wrap">
+		<view class="ticket reprot-card">
 			<view class="report-title">
 				<image class="report-img" src="/static/images/productionReport/clockIn.svg"></image>
 				<text class="title-text">绩效收益</text>
@@ -16,7 +16,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="reprot-card">
+		<view class="ticket reprot-card">
 			<view class="flex-row align-center menu-item" hover-stay-time="250" hover-class="click-hover"
 				v-for="(item, index) in cellGroup" :key="index" @click="onClick(item)">
 				<view class="flex-1 flex-row align-center">
@@ -89,11 +89,15 @@
 </script>
 
 <style lang="scss">
+	.page-wrap {
+		background: var(--ticket-paper);
+		min-height: 100%;
+		padding: 24rpx 32rpx 40rpx;
+		box-sizing: border-box;
+	}
+
 	.reprot-card {
-		margin: 0 15rpx 15rpx;
-		padding: 30rpx;
-		background: #FFFFFF;
-		border-radius: 15rpx
+		margin-bottom: 28rpx;
 	}
 
 	.report-title {
@@ -104,8 +108,9 @@
 	.title-text {
 		font-weight: 600;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
+		letter-spacing: 0.08em;
 	}
 
 	.report-img {
@@ -115,14 +120,15 @@
 
 	.report-nav {
 		margin-top: 30rpx;
-		margin-bottom: 45rpx;
+		margin-bottom: 16rpx;
 		display: flex;
 		justify-content: space-between;
 
 		.nav-item {
 			width: 43%;
-			background: #F5F6F8;
-			border-radius: 15rpx;
+			background: var(--ticket-paper);
+			border: 2rpx solid var(--ticket-edge);
+			border-radius: 0;
 			padding: 15rpx;
 			display: flex;
 			flex-direction: column;
@@ -130,14 +136,15 @@
 			.nav-title {
 				font-weight: bold;
 				font-size: 46rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 61rpx;
+				font-family: ui-monospace, Menlo, Consolas, monospace;
 			}
 
 			.nav-label {
 				font-weight: 400;
 				font-size: 27rpx;
-				color: #808080;
+				color: var(--ink-muted);
 				line-height: 38rpx;
 			}
 		}
@@ -147,18 +154,18 @@
 		padding: 45.8rpx 0;
 
 		&:not(:last-child) {
-			border-bottom: 1rpx solid #E7E7E7;
+			border-bottom: 2rpx dashed var(--perf-line);
 		}
 
 		.item-title {
 			font-size: 31rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 46rpx;
 			margin-left: 22.9rpx;
 		}
 	}
 
 	.click-hover {
-		background: #F5F6F8;
+		background: var(--ticket-paper);
 	}
 </style>

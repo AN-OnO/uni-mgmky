@@ -22,3 +22,9 @@ const handleMessage = (e) => {
   console.log('收到网页消息:', e.detail.data)
 }
 </script>
+
+<style>
+page {
+  background-color: var(--ticket-paper);
+}
+</style>

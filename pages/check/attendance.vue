@@ -1,14 +1,14 @@
 <template>
 	<view class="container">
 		<!-- 顶部标签栏 -->
-		<view class="tab-bar">
+		<view class="ticket tab-bar">
 			<view class="tag">
 				<view class="tab" :class="{ active: filterType === 'all' }" @click="filterRecords('all')">全部</view>
 				<view class="tab" :class="{ active: filterType === 'missed' }" @click="filterRecords('missed')">未打卡</view>
 				<view class="tab" :class="{ active: filterType === 'supplement' }" @click="filterRecords('supplement')">补卡</view>
 			</view>
 			<view class="search">
-				<image class="search-icon" src="/static/images/check/搜索.png" @click="onSearch"></image>
+				<image class="search-icon" src="/static/images/ticket/search.svg" @click="onSearch"></image>
 			</view>
 		</view>
 
@@ -31,7 +31,7 @@
 			<view class="record-item" v-for="(record, index) in filteredRecords" :key="index">
 				<view class="record-date">
 				{{ record.date }}
-				<image class="date-icon" src="/static/images/check/时间.png"></image>
+				<image class="date-icon" src="/static/images/ticket/clock.svg"></image>
 			</view>
 			<view class="record-times" v-if="record.times.length > 0">
 				<view class="record-time" v-for="(time, timeIndex) in record.times" :key="timeIndex">
@@ -124,12 +124,19 @@
 </script>
 
 <style scoped>
+	.container {
+		min-height: 100%;
+		background: var(--ticket-paper);
+		padding: 24rpx 32rpx 40rpx;
+		box-sizing: border-box;
+	}
+
 	.tab-bar {
 		display: flex;
 		justify-content: space-between;
-		margin-bottom: 16px;
-		background-color: #eef4fb;
-		font-size: 17px;
+		margin-bottom: 32rpx;
+		align-items: center;
+		font-size: 34rpx;
 	}
 
 	.tag {
@@ -139,39 +146,39 @@
 
 	.tab {
 		position: relative;
-		padding: 8px 10px;
-		cursor: pointer;
-		color: gray; 
-		text-decoration: none; 
+		padding: 16rpx 20rpx;
+		color: var(--ink-muted);
+		text-decoration: none;
 	}
 
 	.tab.active {
-		color: black; 
+		color: var(--ink-black);
+		font-weight: 700;
 	}
 
 	.tab.active::after {
 		content: '';
 		position: absolute;
-		left: 50%; 
+		left: 50%;
 		transform: translateX(-50%);
-		bottom: 1px; 
-		width: 40%; 
-		height: 4px; 
-		background-color: black; 
-		border-radius: 6px;
+		bottom: 2rpx;
+		width: 40%;
+		height: 8rpx;
+		background-color: var(--stamp-red);
+		border-radius: 0;
 	}
 
 	.search-icon {
-		margin: 9px 9px 0 0;
-		width: 24px;
-		height: 24px;
+		margin: 18rpx 18rpx 0 0;
+		width: 48rpx;
+		height: 48rpx;
 		cursor: pointer;
 	}
 
 	.stats-bar {
 		display: flex;
 		justify-content: space-between;
-		margin:-5px 10px 16px -30px;
+		margin: 0 0 28rpx;
 		align-items: center;
 	}
 
@@ -182,19 +189,19 @@
 	}
 
 	.picker-view {
-		min-width: 120px;
+		min-width: 240rpx;
 		text-align: center;
 	}
 
 	.triangle-down {
 		width: 0;
 		height: 0;
-		border-left: 6px solid transparent;
-		border-right: 6px solid transparent;
-		border-top: 8px solid #545454; 
-		margin-top: 2px;
-		margin-left: -36px; 
-		border-radius: 6px;
+		border-left: 12rpx solid transparent;
+		border-right: 12rpx solid transparent;
+		border-top: 16rpx solid #545454; 
+		margin-top: 4rpx;
+		margin-left: -72rpx; 
+		border-radius: 0;
 	}
 
 	.count{
@@ -203,16 +210,18 @@
 	}
 
 	.num {
-		color: #6fd1e1;
+		color: #B42318;
+		font-family: ui-monospace, Menlo, Consolas, monospace;
 	}
 
 	.record-list {
-		margin: 6px;
+		margin: 12rpx;
 	}
 
 	.record-item {
-		padding: 8px;
-		border-bottom: 1px solid #eee;
+		padding: 16rpx 8rpx;
+		border-bottom: 2rpx dashed #C4B8A1;
+		background: #FFF8E7;
 	}
 
 	.record-date {
@@ -220,20 +229,20 @@
 	}
 
 	.date-icon {
-		height: 15px;
-		width: 15px;
+		height: 30rpx;
+		width: 30rpx;
 	}
 
 	.record-color {
-		color: #808080;
+		color: var(--ink-muted);
 	}
 
 	.record-time {
-		margin-bottom: 5px; 
+		margin-bottom: 10rpx; 
 	}
 
 	.record-no-times {
-		color: #6fd1e1;
+		color: #B42318;
 	}
 
 	.supplement-label{

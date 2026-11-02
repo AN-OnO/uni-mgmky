@@ -1,8 +1,9 @@
 <template>
 	<view class="apply-container">
+		<view class="ticket apply-ticket">
 		<view class="input-group">
 			<view class="apply-time">
-				<image class="time-icon" src="/static/images/check/时间.png" />
+				<image class="time-icon" src="/static/images/ticket/clock.svg" />
 				<label>补卡时间</label>
 			</view>
 			<view class="datetime-picker">
@@ -16,11 +17,12 @@
 		</view>
 		<view class="input-reason">
 			<view class="apply-reason">
-				<image class="reason-icon" src="/static/images/check/理由.png" />
+				<image class="reason-icon" src="/static/images/ticket/reason.svg" />
 				<label>补卡理由(选填)</label>
 			</view>
 			<textarea v-model="reason" placeholder="请输入" maxlength="140" show-count class="textarea" />
 			<view class="char-limit">{{ reason.length }}/140</view>
+		</view>
 		</view>
 		<button type="primary" @click="submitApplication">提交</button>
 	</view>
@@ -96,32 +98,39 @@
 
 <style scoped>
 	.apply-container {
-		background-color: #fff;
+		min-height: 100%;
+		background-color: var(--ticket-paper);
+		padding: 24rpx 32rpx 40rpx;
+		box-sizing: border-box;
+	}
+
+	.apply-ticket {
+		margin-bottom: 28rpx;
 	}
 
 	.input-group {
-		margin-bottom: 20px;
+		margin-bottom: 40rpx;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		border-bottom: 3px solid #ccc;
+		border-bottom: 2rpx dashed var(--perf-line);
 	}
 
 	.apply-time,
 	.apply-reason {
 		display: flex;
 		align-items: center;
-		margin-bottom: 5px;
+		margin-bottom: 10rpx;
 	}
 
 	.time-icon,
 	.reason-icon {
-		width: 15px;
-		height: 15px;
+		width: 30rpx;
+		height: 30rpx;
 	}
 
 	.label {
-		font-size: 16px;
+		font-size: 32rpx;
 	}
 
 	.datetime-picker {
@@ -132,7 +141,7 @@
 
 	.picker-item {
 		flex: 1;
-		margin-right: 10px;
+		margin-right: 20rpx;
 	}
 
 	.picker-item:last-child {
@@ -140,37 +149,41 @@
 	}
 
 	.picker-view {
-		padding: 10px;
+		padding: 20rpx;
 		text-align: center;
 	}
 
 	.datetime-picker {
-		border-radius: 5px;
+		border-radius: 0;
 		overflow: hidden;
 		/* 确保子元素不会溢出 */
 	}
 
-	.textarea {
+		.textarea {
 		width: 100%;
-		height: 200px;
-		padding: 10px;
+		height: 400rpx;
+		padding: 20rpx;
 		box-sizing: border-box;
-		margin-top: 5px;
+		margin-top: 10rpx;
+		background: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		color: var(--ink-black);
 	}
 	
 	.char-limit {
 		text-align: right;
-		font-size: 14px;
-		color: #a8a8a8;
+		font-size: 28rpx;
+		color: var(--ink-muted);
 	}
 
 	button {
-		margin-top: 150px;
-		height: 48px;
-		background-color: #58c3de;
-		color: #fff;
-		border: none;
-		border-radius: 5px;
-		font-size: 16px;
+		margin-top: 160rpx;
+		height: 96rpx;
+		background-color: #B42318;
+		color: #FFF8E7;
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
+		font-size: 32rpx;
 	}
 </style>

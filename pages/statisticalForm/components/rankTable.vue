@@ -7,9 +7,9 @@
 			<uni-table>
 				<!-- 表头行 -->
 				<uni-tr style="background: #FAFAFA;">
-					<uni-th width="50" align="left">排名</uni-th>
-					<uni-th width="100" align="left">{{name}}</uni-th>
-					<uni-th width="70" align="right"><text class="quantity">数量</text></uni-th>
+					<uni-th width="100rpx" align="left">排名</uni-th>
+					<uni-th width="200rpx" align="left">{{name}}</uni-th>
+					<uni-th width="140rpx" align="right"><text class="quantity">数量</text></uni-th>
 					<uni-th align="right"><text class="amount">金额</text></uni-th>
 				</uni-tr>
 				<!-- 表格数据行 -->
@@ -81,7 +81,7 @@
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 	}
 
@@ -91,8 +91,8 @@
 		left: 0;
 		height: 1em;
 		width: 0.25em;
-		border-radius: 10px;
-		background-color: #7BC7FC;
+		border-radius: 0;
+		background-color: #B42318;
 		top: 50%;
 		transform: translateY(-50%);
 	}
@@ -119,20 +119,20 @@
 	.total-text {
 		font-weight: bold;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 34rpx;
 	}
 
 	.index-text {
 		font-weight: bold;
 		font-size: 23rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 34rpx;
 	}
 
 	.bottom-line {
 		width: 100%;
-		background: #F0F0F0;
+		background: var(--perf-line);
 		height: 15rpx;
 	}
 </style>

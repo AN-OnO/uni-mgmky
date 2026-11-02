@@ -34,8 +34,8 @@
 							<uv-icon
 								:name="spreadArr.includes(`${index}-${detail.orderItemNo}`)?'arrow-up':'arrow-down'"
 								:label="spreadArr.includes(`${index}-${detail.orderItemNo}`)?'收起':'更多'"
-								label-size="24rpx" size="32rpx" label-pos="left" color="#808080"
-								label-color="#808080"></uv-icon>
+								label-size="24rpx" size="32rpx" label-pos="left" color="#6B6258"
+								label-color="#6B6258"></uv-icon>
 						</view>
 					</view>
 				</view>
@@ -70,7 +70,7 @@
 						{{data.group.saleOrderDeliverInfo?.remark}}</view>
 				</template>
 				<uv-icon @click="this.showMore = !this.showMore" :name="showMore ? 'arrow-up' : 'arrow-down'"
-					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#469DCD" labelColor="#469DCD"
+					:label="showMore ? '收起' : '更多详情'" labelPos="left" color="#B42318" labelColor="#B42318"
 					labelSize="12"></uv-icon>
 			</view>
 		</view>
@@ -78,11 +78,11 @@
 			<button v-if="deliveryMethod == 3" class="button-operation"
 				@click.stop="callPhone(data.details[0].contactMobile)">
 				<image src="/static/images/logistics/电话.svg" class="button-image" mode=""></image><text
-					class="text-operation" style="color: #333333;">电话</text>
+					class="text-operation" style="color: var(--ink-black);">电话</text>
 			</button>
 			<button v-if="deliveryMethod == 3" class="button-operation" @click.stop="goNavigation">
 				<image src="/static/images/logistics/导航.svg" class="button-image" mode=""></image><text
-					class="text-operation" style="color: #333333;">导航</text>
+					class="text-operation" style="color: var(--ink-black);">导航</text>
 			</button>
 			<button class="button-operation confirm" @click.stop="confirm(data.group.orderNo)">
 				<image class="button-image"
@@ -256,7 +256,7 @@
 
 <style lang="scss">
 	.container-background {
-		background: #F2F3F5;
+		background: var(--ticket-paper);
 		height: 100%;
 		overflow: scroll;
 		display: flex;
@@ -273,8 +273,9 @@
 	}
 
 	.card {
-		background: #FFFFFF;
-		border-radius: 15rpx;
+		background: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		border-radius: 0;
 		margin-bottom: 15.27rpx;
 		padding: 30rpx 15rpx;
 
@@ -291,7 +292,7 @@
 			.order-status {
 				font-weight: 600;
 				font-size: 46rpx;
-				color: #333333;
+				color: var(--ink-black);
 				line-height: 69rpx;
 			}
 
@@ -312,8 +313,8 @@
 				left: 0;
 				height: 1em;
 				width: 0.25em;
-				border-radius: 10px;
-				background-color: #469DCD;
+				border-radius: 0;
+				background-color: #B42318;
 				top: 50%;
 				transform: translateY(-50%);
 			}
@@ -322,7 +323,7 @@
 		.tag-wrap {
 			width: 120rpx;
 			height: 50rpx;
-			background: #F5F6F8;
+			background: var(--ticket-paper);
 			border-radius: 191rpx;
 			display: flex;
 			align-items: center;
@@ -332,7 +333,7 @@
 
 		.remark {
 			font-size: 27rpx;
-			color: #1D2129;
+			color: var(--ink-black);
 			line-height: 38rpx;
 			margin-bottom: 25rpx;
 		}
@@ -343,13 +344,13 @@
 		color: #86909C;
 		line-height: 46rpx;
 		padding-left: 15rpx;
-		border-left: 2rpx solid #F2F3F5;
+		border-left: 2rpx dashed var(--perf-line);
 	}
 
 	.text {
 		font-weight: 600;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 46rpx;
 	}
 
@@ -377,16 +378,18 @@
 	}
 
 	.bottom-container {
-		background: #FFFFFF;
+		background: var(--ticket-face);
+		border-top: 2rpx solid var(--ink-black);
 		padding: 30rpx;
 		display: flex;
 		justify-content: flex-end;
 		padding-bottom: env(safe-area-inset-bottom);
 
 		.button-operation {
-			color: #333333;
-			background: #F2F3F5;
-			border-radius: 15rpx;
+			color: var(--ink-black);
+			background: var(--ticket-paper);
+			border: 2rpx solid var(--ticket-edge);
+			border-radius: 0;
 			margin-left: 0;
 			margin-right: 8rpx;
 			padding: 29rpx 38rpx;
@@ -397,7 +400,7 @@
 
 		.confirm {
 			color: #FFFFFF;
-			background: #469DCD;
+			background: #B42318;
 			margin-right: 0;
 		}
 

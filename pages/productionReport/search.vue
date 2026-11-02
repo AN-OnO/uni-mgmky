@@ -1,6 +1,6 @@
 <template>
 	<view class="search-contain">
-		<uv-search bgColor="#ffffff" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='search'
+		<uv-search bgColor="#FFF8E7" margin="0 30rpx 25rpx" v-model="keyWords" :showAction='false' @search='search'
 			placeholder="搜索单号/名称/客户名"></uv-search>
 		<view class="data-list padding-sm">
 			<view class="list-item" v-for="(item,index) in listData" :key="index"
@@ -103,7 +103,7 @@
 
 <style lang="scss">
 	.search-contain {
-		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		background: var(--ticket-paper);
 		height: 100%;
 	}
 
@@ -113,20 +113,21 @@
 	}
 
 	.list-item {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 20rpx;
-		border-radius: 15rpx;
-		box-shadow: 0rpx 8rpx 31rpx 0rpx #D0D6EC;
+		border-radius: 0;
+		border: 2rpx solid rgba(28, 25, 23, 0.38);
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 
 		.order-no {
 			font-weight: bold;
 			font-size: 42rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 61rpx;
 		}
 
 		.checktime {
-			color: #808080;
+			color: var(--ink-muted);
 			font-size: 27rpx;
 			line-height: 38rpx;
 		}
@@ -134,13 +135,13 @@
 		.order-company {
 			font-weight: 500;
 			font-size: 27rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 38rpx;
 		}
 
 		.order-info {
 			font-size: 27rpx;
-			color: #808080;
+			color: var(--ink-muted);
 			line-height: 38rpx;
 
 		}

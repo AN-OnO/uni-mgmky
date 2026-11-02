@@ -1,7 +1,7 @@
 <template>
 	<view class="page-container">
 		<template v-if="orderInfo">
-			<uv-sticky bg-color="#F0F1F5">
+			<uv-sticky bg-color="#F3E6C8">
 				<view class="status-wrap">
 					<view class="status-item" v-for="s in statusList" :key="s.status">
 						<text class="status-icon" :style="{'backgroundColor':s.color}"></text>
@@ -33,7 +33,7 @@
 						<view class="tag-wrap">
 							<uv-icon @click="readMore = !readMore" :name="readMore?'arrow-up':'arrow-down'"
 								:label="readMore?'收起':'更多'" label-size="23rpx" size="28rpx" label-pos="left"
-								color="#808080" label-color="#808080"></uv-icon>
+								color="#6B6258" label-color="#6B6258"></uv-icon>
 						</view>
 					</view>
 				</view>
@@ -49,7 +49,7 @@
 			<uv-empty mode="order" margin-top="50"></uv-empty>
 		</template>
 
-		<uv-popup ref="popup" mode="bottom" round="31rpx" closeable>
+		<uv-popup ref="popup" mode="bottom" round="0" closeable>
 			<view>
 				<view class="popup-title text-center"><text class="text-xl text-bold">您将完成以下工艺</text></view>
 				<view class="data-list padding">
@@ -228,7 +228,7 @@
 	@import "@/static/font/iconfont.css";
 
 	.page-container {
-		background: linear-gradient(180deg, #D5E8FF 0%, #FFFFFF 100%), #F2F2F2;
+		background: var(--ticket-paper);
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
@@ -287,7 +287,7 @@
 	}
 
 	.list-item {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 30rpx;
 		border-radius: 23rpx;
 		border: 6rpx solid #F2F2F2;
@@ -317,13 +317,13 @@
 	.item-name {
 		text-align: center;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 		margin-top: 7rpx;
 	}
 
 	.order-modal {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 30rpx;
 		border-radius: 31rpx 31rpx 0 0;
 		box-shadow: 0rpx -6rpx 12rpx 0rpx #e6e6e6;
@@ -331,12 +331,12 @@
 		.order-no {
 			font-weight: bold;
 			font-size: 42rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 61rpx;
 		}
 
 		.checktime {
-			color: #808080;
+			color: var(--ink-muted);
 			font-size: 27rpx;
 			line-height: 38rpx;
 		}
@@ -344,19 +344,19 @@
 		.order-company {
 			font-weight: 500;
 			font-size: 27rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 38rpx;
 		}
 
 		.order-info {
 			font-size: 27rpx;
-			color: #808080;
+			color: var(--ink-muted);
 			line-height: 38rpx;
 
 			.tag-wrap {
 				width: 111rpx;
 				height: 46rpx;
-				background: #F5F6F8;
+				background: var(--ticket-paper);
 				border-radius: 191rpx 191rpx 191rpx 191rpx;
 				display: flex;
 				align-items: center;
@@ -373,14 +373,14 @@
 	.list-button {
 		flex: 1;
 		height: 90rpx;
-		background-color: #2FB7DF;
-		border-radius: 15rpx;
+		background-color: #B42318;
+		border-radius: 0;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 
 		&.default {
-			background-color: #F0F0F0;
+			background-color: var(--ticket-paper);
 		}
 	}
 
@@ -393,7 +393,7 @@
 
 	.iconfont {
 		font-size: 76.34rpx;
-		color: #808080;
+		color: var(--ink-muted);
 
 		&.active-0 {
 			color: #838d99;

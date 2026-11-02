@@ -6,7 +6,7 @@
 				leftIcon='/static/images/logistics/1.svg'>
 				<uv-input placeholder="请输入快递单号" v-model="formValue.number" style="margin-top: 15rpx;">
 					<template v-slot:suffix>
-						<uv-icon name="/static/images/logistics/scan.svg" size="32" @click="onScanTap"></uv-icon>
+						<uv-icon name="/static/images/logistics/scan.svg" size="64rpx" @click="onScanTap"></uv-icon>
 					</template>
 				</uv-input>
 			</uv-form-item>
@@ -142,7 +142,7 @@
 	.upload-title {
 		font-weight: 500;
 		font-size: 46rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 69rpx;
 		text-align: center;
 	}
@@ -154,8 +154,8 @@
 
 	.upload-button {
 		height: 92rpx;
-		background: #2FB7DF;
-		border-radius: 31rpx;
+		background: #B42318;
+		border-radius: 0;
 		margin-top: 61rpx;
 	}
 
@@ -169,7 +169,7 @@
 	.text-cancel {
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #999999;
+		color: var(--ink-muted);
 		line-height: 53rpx;
 	}
 </style>

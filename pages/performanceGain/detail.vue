@@ -1,6 +1,6 @@
 <template>
 	<view class="earning-contain">
-		<uv-sticky bgColor='#D5E8FF'>
+		<uv-sticky bgColor='#F3E6C8'>
 			<view class="subsection-contain">
 				<view @click="openTitle" class="mode-title">
 					{{modeTitle}}
@@ -16,7 +16,7 @@
 				完成{{completedOrderItemCount}}次报工，收益{{statPerformanceAmount}}元
 			</view>
 		</uv-sticky>
-		<view v-for="(item, index) in dataList" :key="index" class="earning-card">
+		<view v-for="(item, index) in dataList" :key="index" class="ticket earning-card">
 			<view style="display: flex;">
 				<view class="tag-contain">
 					<text class="card-number">{{item.saleOrderNo}}</text>
@@ -174,7 +174,7 @@
 
 <style lang="scss">
 	.earning-contain {
-		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		background: var(--ticket-paper);
 		min-height: 100%;
 		padding: 0 30rpx;
 	}
@@ -191,7 +191,7 @@
 		align-items: center;
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 46rpx;
 
 		.arrow-img {
@@ -202,23 +202,22 @@
 
 	.sub-section {
 		width: 282rpx;
-		background: #D8E4F3;
-		border-radius: 15rpx
+		background: transparent;
+		border: none;
+		border-radius: 0;
 	}
 
 	.total-earning {
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 46rpx;
 		margin-bottom: 30rpx;
 	}
 
 	.earning-card {
-		padding: 30rpx;
-		background: #FFFFFF;
-		border-radius: 15rpx;
-		margin-bottom: 15.27rpx;
+		padding: 24rpx 24rpx 24rpx 8rpx;
+		margin-bottom: 24rpx;
 	}
 
 	.tag-contain {
@@ -229,7 +228,7 @@
 	.card-number {
 		font-weight: bold;
 		font-size: 42rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 50rpx;
 		margin-right: 22.9rpx;
 	}
@@ -237,7 +236,7 @@
 	.tag {
 		width: 76rpx;
 		height: 46rpx;
-		background: #2FB7DF;
+		background: #B42318;
 		border-radius: 8rpx;
 		text-align: center;
 	}
@@ -252,21 +251,21 @@
 	.earning-value {
 		font-weight: 500;
 		font-size: 34rpx;
-		color: #2FB7DF;
+		color: #B42318;
 		line-height: 46rpx;
 	}
 
 	.companyName {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 	}
 
 	.earning-time {
 		font-weight: 400;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 	}
 </style>

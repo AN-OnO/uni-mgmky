@@ -1,10 +1,9 @@
 <template>
-	<view>
-		<!-- 切换动画 -->
-		<view v-if="current==0">
+	<view class="tab-shell">
+		<view v-if="current==0" class="tab-page">
 			<home></home>
 		</view>
-		<view v-if="current==1">
+		<view v-if="current==1" class="tab-page">
 			<user></user>
 		</view>
 		<tabbar-nav :list="list" @change="handleChange"></tabbar-nav>
@@ -48,6 +47,14 @@
 	}
 </script>
 
-<style>
+<style lang="scss" scoped>
+	.tab-shell {
+		min-height: 100%;
+	}
 
+	.tab-page {
+		:deep(.tabbar-nav-root) {
+			display: none;
+		}
+	}
 </style>

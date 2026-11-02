@@ -1,45 +1,5 @@
-<svg width="49" height="48" viewBox="0 0 49 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-<g id="&#232;&#191;&#148;&#229;&#141;&#149;" clip-path="url(#clip0_13834_51427)">
-<rect width="48" height="48" transform="translate(0.5)" fill="white"/>
-<g id="Group 427321056">
-<g id="Group 427321055">
-<g id="Rectangle 812">
-<rect x="4.5" y="10.0811" width="34.92" height="30.8117" rx="3.08117" fill="url(#paint0_linear_13834_51427)"/>
-<rect x="4.5" y="10.0811" width="34.92" height="30.8117" rx="3.08117" fill="url(#paint1_linear_13834_51427)"/>
-</g>
-<g id="Vector">
-<path d="M39 18C39.9985 18 40.9589 18.1724 41.8516 18.4902C43.1621 18.9569 43.2612 20.5274 42.4482 21.3408L39.1641 24.625L40.875 26.3359L44.1592 23.0518L44.3193 22.9102C45.1358 22.2772 46.4792 22.4093 46.9629 23.5293L47.0098 23.6484L47.1221 23.9863C47.368 24.7818 47.5 25.6263 47.5 26.5C47.5 31.1944 43.6944 35 39 35C37.8326 35 36.7183 34.7626 35.7031 34.335L25.8975 44.1416C25.1946 44.8442 24.0554 44.8442 23.3525 44.1416L21.3584 42.1475C20.6558 41.4446 20.6558 40.3054 21.3584 39.6025L31.1641 29.7959C30.7367 28.781 30.5 27.667 30.5 26.5C30.5 21.8056 34.3056 18 39 18Z" fill="url(#paint2_linear_13834_51427)"/>
-<path d="M39 18C39.9985 18 40.9589 18.1724 41.8516 18.4902C43.1621 18.9569 43.2612 20.5274 42.4482 21.3408L39.1641 24.625L40.875 26.3359L44.1592 23.0518L44.3193 22.9102C45.1358 22.2772 46.4792 22.4093 46.9629 23.5293L47.0098 23.6484L47.1221 23.9863C47.368 24.7818 47.5 25.6263 47.5 26.5C47.5 31.1944 43.6944 35 39 35C37.8326 35 36.7183 34.7626 35.7031 34.335L25.8975 44.1416C25.1946 44.8442 24.0554 44.8442 23.3525 44.1416L21.3584 42.1475C20.6558 41.4446 20.6558 40.3054 21.3584 39.6025L31.1641 29.7959C30.7367 28.781 30.5 27.667 30.5 26.5C30.5 21.8056 34.3056 18 39 18Z" fill="url(#paint3_linear_13834_51427)"/>
-<path d="M39 18C39.9985 18 40.9589 18.1724 41.8516 18.4902C43.1621 18.9569 43.2612 20.5274 42.4482 21.3408L39.1641 24.625L40.875 26.3359L44.1592 23.0518L44.3193 22.9102C45.1358 22.2772 46.4792 22.4093 46.9629 23.5293L47.0098 23.6484L47.1221 23.9863C47.368 24.7818 47.5 25.6263 47.5 26.5C47.5 31.1944 43.6944 35 39 35C37.8326 35 36.7183 34.7626 35.7031 34.335L25.8975 44.1416C25.1946 44.8442 24.0554 44.8442 23.3525 44.1416L21.3584 42.1475C20.6558 41.4446 20.6558 40.3054 21.3584 39.6025L31.1641 29.7959C30.7367 28.781 30.5 27.667 30.5 26.5C30.5 21.8056 34.3056 18 39 18Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</g>
-<g id="Frame 427320881">
-<rect id="Rectangle 813" x="12.5624" y="14.3435" width="8.52458" height="4.41635" rx="2.20817" transform="rotate(-90 12.5624 14.3435)" fill="#FF9D8A" stroke="white" stroke-width="2.36223"/>
-<rect id="Rectangle 814" x="26.9412" y="14.3435" width="8.52458" height="4.41635" rx="2.20817" transform="rotate(-90 26.9412 14.3435)" fill="#FF9D8A" stroke="white" stroke-width="2.36223"/>
-</g>
-</g>
-</g>
-<rect id="Rectangle 815" x="9.5" y="20" width="8" height="3" rx="1.5" fill="white"/>
-<rect id="Rectangle 816" x="9.5" y="27" width="14" height="3" rx="1.5" fill="white"/>
-</g>
-<defs>
-<linearGradient id="paint0_linear_13834_51427" x1="21.96" y1="10.0811" x2="21.96" y2="40.8928" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FF7979"/>
-<stop offset="1" stop-color="#FF3B46"/>
-</linearGradient>
-<linearGradient id="paint1_linear_13834_51427" x1="21.96" y1="10.0811" x2="21.96" y2="40.8928" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FFA493"/>
-<stop offset="1" stop-color="#FF6D4C"/>
-</linearGradient>
-<linearGradient id="paint2_linear_13834_51427" x1="34" y1="19" x2="34" y2="44" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FF8E76"/>
-<stop offset="1" stop-color="#FF6E4E"/>
-</linearGradient>
-<linearGradient id="paint3_linear_13834_51427" x1="34" y1="19" x2="34" y2="44" gradientUnits="userSpaceOnUse">
-<stop stop-color="#FFD65A"/>
-<stop offset="1" stop-color="#FF9A00"/>
-</linearGradient>
-<clipPath id="clip0_13834_51427">
-<rect width="48" height="48" fill="white" transform="translate(0.5)"/>
-</clipPath>
-</defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <rect x="6" y="8" width="20" height="18" rx="1.5" stroke="#1C1917" stroke-width="2"/>
+     <path d="M6 13 H26 M11 8 V5 M21 8 V5" stroke="#1C1917" stroke-width="2"/>
+     <path d="M11 18 H13.5 M16 18 H18.5 M21 18 H23.5" stroke="#1C1917" stroke-width="2"/>
 </svg>

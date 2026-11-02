@@ -1,16 +1,16 @@
 <template>
 	<view class="daily-container">
-		<uv-sticky bgColor='#FFFFFF'>
+		<uv-sticky bgColor='#F3E6C8'>
 			<view class="flex-row align-center justify-between padding-lr margin-top-sm">
 				<view @click="openDate" class="title">
 					{{modeTitle}}
-					<image :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img"></image>
+					<image src="/static/images/ticket/chevron.svg" class="arrow-img"></image>
 				</view>
 				<uv-datetime-picker ref="datetimePicker" v-model="value" mode="year-month"
 					@confirm="confirm"></uv-datetime-picker>
-				<view class="title" style="color: #1D2129;" @click="openWorker">
+				<view class="title" style="color: var(--ink-black);" @click="openWorker">
 					{{employeeName}}
-					<image v-if="isAdmin" :src="$IMG_URL+'/statisticalForm/arrow.svg'" class="arrow-img" ></image>
+					<image v-if="isAdmin" src="/static/images/ticket/chevron.svg" class="arrow-img" ></image>
 				</view>
 				<uv-picker ref="picker" :columns="workerList" keyName="name" @confirm="confirmWorker"></uv-picker>
 			</view>
@@ -21,18 +21,18 @@
 					</view>
 					<view class="detail" @click="toggle">
 						<text class="margin-right-xs">详情</text>
-						<uv-icon :name="isSpread ? 'arrow-up'  : 'arrow-down'" color="#469DCD" size="16px"></uv-icon>
+						<uv-icon :name="isSpread ? 'arrow-up'  : 'arrow-down'" color="#B42318" size="32rpx"></uv-icon>
 					</view>
 				</view>
 				<view v-if="isSpread" class="margin-top summary-table">
 					<uni-table>
 						<!-- 表头行 -->
 						<uni-tr>
-							<uni-th width="50"></uni-th>
-							<uni-th width="70"></uni-th>
-							<uni-th width="85" align="center">小计</uni-th>
-							<uni-th width="50" align="center">天数</uni-th>
-							<uni-th width="85" align="center">平均数</uni-th>
+							<uni-th width="100rpx"></uni-th>
+							<uni-th width="140rpx"></uni-th>
+							<uni-th width="170rpx" align="center">小计</uni-th>
+							<uni-th width="100rpx" align="center">天数</uni-th>
+							<uni-th width="170rpx" align="center">平均数</uni-th>
 						</uni-tr>
 						<!-- 表格数据行 -->
 						<template v-for="(statDetail, index) in reportData.statInfo?.statDetails" :key="index">
@@ -170,14 +170,14 @@
 
 <style lang="scss">
 	.daily-container {
-		background: #F2F3F5;
+		background: var(--ticket-paper);
 		min-height: 100%;
 
 		.title {
 			display: flex;
 			font-weight: 500;
 			font-size: 31rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 46rpx;
 		}
 
@@ -192,30 +192,33 @@
 			flex-direction: column;
 			font-weight: 500;
 			font-size: 31rpx;
-			color: #1D2129;
+			color: var(--ink-black);
 			line-height: 46rpx;
 			margin: 19rpx;
 			padding: 31rpx;
-			background: linear-gradient(127deg, #E9F1FF 0%, #F8FCFD 100%);
-			border-radius: 11rpx;
+			background: var(--ticket-face);
+			border: 2rpx solid rgba(28, 25, 23, 0.38);
+			box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
+			border-radius: 0;
 
 			.detail {
 				display: flex;
 				font-weight: 500;
 				font-size: 27rpx;
-				color: #469DCD;
+				color: #B42318;
 				line-height: 42rpx;
-				background: #FFFFFF;
-				border-radius: 191rpx;
+				background: var(--ticket-face);
+				border-radius: 0;
+				border: 2rpx solid var(--ticket-edge);
 				padding: 2rpx 15rpx;
 			}
 
 			.summary-table ::v-deep .uni-table-tr:first-child {
-				background: #F2F3F5;
+				background: var(--ticket-paper);
 			}
 
 			.summary-table ::v-deep .uni-table-td:first-child {
-				border-right: 1px #EBEEF5 solid;
+				border-right: 2rpx #EBEEF5 solid;
 			}
 
 			.summary-table ::v-deep .uni-table-tr:not(:nth-child(3n + 1)) .uni-table-td:first-child {
@@ -226,15 +229,16 @@
 		.card {
 			margin: 15rpx;
 			padding: 31rpx;
-			background: #ffffff;
-			border-radius: 15rpx;
+			background: var(--ticket-face);
+			border: 2rpx solid var(--ticket-edge);
+			border-radius: 0;
 
 			.content {
 				padding: 0 30rpx 15rpx;
 				margin-bottom: 15rpx;
 
 				&:not(:last-child) {
-					border-bottom: 2rpx solid #F2F3F5;
+					border-bottom: 2rpx dashed var(--perf-line);
 				}
 
 				.technology-tag {
@@ -245,24 +249,24 @@
 					font-size: 27rpx;
 					color: rgba(255, 255, 255, 0.9);
 					line-height: 46rpx;
-					background: #469DCD;
+					background: #B42318;
 					border-radius: 6rpx;
 					margin-bottom: 15rpx;
 				}
 
 				.sub-content {
 					font-size: 27rpx;
-					color: #333333;
+					color: var(--ink-black);
 					line-height: 38rpx;
 				}
 				
 				.workRemark {
 					font-size: 27rpx;
-					color: #1D2129;
+					color: var(--ink-black);
 					line-height: 42rpx;
-					background: #F7F8FA;
-					border-radius: 8rpx;
-					border: 2rpx solid #E5E6EB;
+					background: var(--ticket-paper);
+					border-radius: 0;
+					border: 2rpx solid var(--perf-line);
 					padding: 23rpx;
 				}
 			}

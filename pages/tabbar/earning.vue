@@ -1,6 +1,6 @@
 <template>
 	<view class="earning-contain">
-		<uv-sticky bgColor='#D5E8FF'>
+		<uv-sticky bgColor='#F3E6C8'>
 			<view class="renderBtn-contain">
 				<view class="content-wrap" :style="{maxHeight: wrapHeight}">
 					<view class="btn-contain">
@@ -31,10 +31,10 @@
 				完成{{completedOrderItemCount}}次报工，收益{{statPerformanceAmount}}元
 			</view>
 		</uv-sticky>
-		<view v-for="(item, index) in dataList" :key="index" class="earning-card">
+		<view v-for="(item, index) in dataList" :key="index" class="ticket earning-card">
 			<view style="display: flex;">
 				<view class="tag-contain">
-					<text class="card-number">{{item.saleOrderNo}}</text>
+					<text class="ticket-no card-number">{{item.saleOrderNo}}</text>
 					<view class="tag"><text class="tag-text">{{item.technologyName}}</text></view>
 				</view>
 				<text class="earning-value">{{item.rewardValue > 0 ? `+${item.rewardValue}` : item.rewardValue}}</text>
@@ -224,9 +224,9 @@
 
 <style lang="scss">
 	.earning-contain {
-		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		background: var(--ticket-paper);
 		min-height: 100%;
-		padding: 30rpx;
+		padding: 24rpx 32rpx 40rpx;
 	}
 
 	.renderBtn-contain {
@@ -241,8 +241,9 @@
 				flex-wrap: wrap;
 
 				.selected-btn {
-					background: #2FB7DF;
-					border-radius: 8rpx;
+					background: var(--stamp-red);
+					border-radius: 0;
+					border: 2rpx solid var(--ticket-edge);
 					height: 65rpx;
 					margin: 0 11.45rpx 15rpx 0;
 					display: flex;
@@ -259,15 +260,16 @@
 				.other-btn {
 					height: 65rpx;
 					margin: 0 11.45rpx 15rpx 0;
-					background: #FFFFFF;
-					border-radius: 8rpx;
+					background: var(--ticket-face);
+					border-radius: 0;
+					border: 2rpx solid var(--perf-line);
 					display: flex;
 					align-items: center;
 
 					.text {
 						font-weight: 500;
 						font-size: 27rpx;
-						color: #808080;
+						color: var(--ink-muted);
 						line-height: 42rpx;
 					}
 				}
@@ -297,7 +299,7 @@
 		align-items: center;
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 46rpx;
 
 		.arrow-img {
@@ -308,23 +310,22 @@
 
 	.sub-section {
 		width: 282rpx;
-		background: #D8E4F3;
-		border-radius: 15rpx
+		background: transparent;
+		border: none;
+		border-radius: 0;
 	}
 
 	.total-earning {
 		font-weight: 500;
 		font-size: 31rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 46rpx;
 		margin-bottom: 30rpx;
 	}
 
 	.earning-card {
-		padding: 30rpx;
-		background: #FFFFFF;
-		border-radius: 15rpx;
-		margin-bottom: 15.27rpx;
+		padding: 24rpx 24rpx 24rpx 8rpx;
+		margin-bottom: 24rpx;
 	}
 
 	.tag-contain {
@@ -334,8 +335,8 @@
 
 	.card-number {
 		font-weight: bold;
-		font-size: 42rpx;
-		color: #333333;
+		font-size: 32rpx;
+		color: var(--ink-black);
 		line-height: 50rpx;
 		margin-right: 22.9rpx;
 	}
@@ -343,8 +344,8 @@
 	.tag {
 		width: 76rpx;
 		height: 46rpx;
-		background: #2FB7DF;
-		border-radius: 8rpx;
+		background: var(--stamp-red);
+		border-radius: 0;
 		text-align: center;
 	}
 
@@ -358,21 +359,21 @@
 	.earning-value {
 		font-weight: 500;
 		font-size: 34rpx;
-		color: #2FB7DF;
+		color: var(--ink-green);
 		line-height: 46rpx;
 	}
 
 	.companyName {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 38rpx;
 	}
 
 	.earning-time {
 		font-weight: 400;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 	}
 </style>

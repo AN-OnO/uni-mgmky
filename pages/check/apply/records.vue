@@ -6,23 +6,23 @@
 			<button @click="filterRecords('all')" class="filter-button">所有</button>
 			<button @click="filterRecords('processed')" class="filter-button">已处理</button>
 			<view class="search" @click="searchRecords">
-				<image src="../../../static/images/check/搜索.png" class="search-img" />
+				<image src="/static/images/ticket/search.svg" class="search-img" />
 			</view>
 		</view>
 
     <!-- 补卡记录列表区域 -->
-		<view v-for="record in filteredRecords" :key="record.id" class="record-item">
+		<view v-for="record in filteredRecords" :key="record.id" class="ticket record-item">
 			<view class="record-status">
 				<image v-if="record.status === '已通过'" src="/static/images/check/已通过 .png" class="status-icon" />
 				<image v-else-if="record.status === '未通过'" src="/static/images/check/未通过.png" class="status-icon" />
 				<text v-else class="await">{{ record.status }}</text>
 			</view>
 			<view class="record-date">
-				<image class="time-icon" src="/static/images/check/时间.png" />
+				<image class="time-icon" src="/static/images/ticket/clock.svg" />
 				<text>补卡时间：{{ record.date }} {{ record.time }}</text>
 			</view>
 			<view class="record-reason">
-				<image class="reason-icon" src="/static/images/check/理由.png" />
+				<image class="reason-icon" src="/static/images/ticket/reason.svg" />
 				<text>补卡理由：{{ record.reason }}</text>
 			</view>
 			<view class="record-pass">
@@ -83,47 +83,56 @@ export default {
 </script>
 
 <style scoped>
+	.container {
+		padding: 24rpx 32rpx 40rpx;
+		box-sizing: border-box;
+		min-height: 100%;
+		background: var(--ticket-paper);
+	}
+
 	.filter-bar {
 		display: flex;
 		align-items: center;
-		justify-content: flex-start;
-		margin: 0 10px 10px 0;
+		gap: 16rpx;
+		margin: 0 0 20rpx 0;
 	}
 
 	.filter-button {
-		height: 40px;
-		line-height: 40px;
-		font-size: 13px;
-		padding: 0px 16px;
-		background-color: #fff;
-		color: #808080;
-		border-radius: 4px;
-		border: none;
+		height: 80rpx;
+		line-height: 80rpx;
+		font-size: 26rpx;
+		padding: 0 32rpx;
+		margin: 0;
+		background-color: var(--ticket-face);
+		border: 2rpx solid var(--ticket-edge);
+		color: var(--ink-muted);
+		border-radius: 0;
 	}
 
 	.filter-button:hover {
-		background-color: #58c3de;
-		color: #fff;
+		background-color: #B42318;
+		color: #FFF8E7;
 	}
 	
 	.search {
-		margin-left: 90px;
+		margin-left: auto;
 		display: flex;
 		align-items: center;
+		justify-content: center;
+		min-width: 88rpx;
+		min-height: 88rpx;
 	}
 	
 	.search-img {
-		width: 24px;
-		height: 24px;
+		width: 48rpx;
+		height: 48rpx;
 	}
 
 	.record-item {
-		margin-top:3px;
-		margin-bottom: 6px;
-		padding: 8px;
-		background-color: #fff;
-		border-radius: 6px 6px 6px 6px;
-		font-size: 14px;
+		margin-top: 24rpx;
+		margin-bottom: 24rpx;
+		padding: 16rpx 24rpx;
+		font-size: 28rpx;
 	}
 	
 	.record-status {
@@ -132,7 +141,7 @@ export default {
 	
 	.record-pass {
 		text-align: right;
-		color: #808080;
+		color: var(--ink-muted);
 	}
 	
 	.await {
@@ -140,15 +149,15 @@ export default {
 	}
 	
 	.status-icon {
-		height: 20px;
-		width: 20px;
+		height: 40rpx;
+		width: 40rpx;
 	}
 	
 	.time-icon,
 	.reason-icon{
-		height: 15px;
-		width: 15px;
-		margin-right: 2px;
+		height: 30rpx;
+		width: 30rpx;
+		margin-right: 4rpx;
 	}
 	
 	.record-date,
@@ -156,7 +165,7 @@ export default {
 		display: flex;
 		align-items: center;
 		text-align: left;
-		margin-left: 8px; 
+		margin-left: 16rpx; 
 	}
 </style>
 

@@ -1,17 +1,7 @@
 <template>
 	<view class="page-container">
-		<uv-sticky customNavHeight="0" bgColor="#F0F1F5">
-			<view class="navbar-wrap">
-				<uv-status-bar></uv-status-bar>
-				<view class="navbar-wrap-title">
-					<view class="left-icon">
-						<uv-icon name="arrow-left" color="#fff" @click="navigateBack"></uv-icon>
-					</view>
-					<view class="flex-1 text-center">
-						<text class="text-white">{{pageTitle}}</text>
-					</view>
-				</view>
-
+		<uv-sticky bgColor="#F3E6C8">
+			<view class="ticket header-stats">
 				<view class="flex-row justify-around">
 					<view>
 						<view class="amount">{{amount}}</view>
@@ -25,8 +15,8 @@
 				</view>
 			</view>
 			<view class="padding-lr flex-between">
-				<uv-tabs :list="list" lineColor='#2FB7DF' @click="changeTab" :current="current"></uv-tabs>
-				<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
+				<uv-tabs :list="list" lineColor='#B42318' @click="changeTab" :current="current"></uv-tabs>
+				<uv-icon name="search" size="64rpx" @click="goSearch"></uv-icon>
 			</view>
 		</uv-sticky>
 
@@ -35,7 +25,7 @@
 				<view v-for="(item, index) in listData" :key="index" style="margin-top: 15rpx;">
 					<uni-swipe-action-item :right-options="options" :disabled="deliveryMethod != 3 || searchType != 2"
 						@click="cancelDelivery(item.orderItemNo)">
-						<view @click="jumpToInfo(item)" class="list-contain">
+						<view @click="jumpToInfo(item)" class="ticket list-contain">
 							<view class="flex-between">
 								<view class="list-companyName">
 									<view v-if="item.mercantileAgentShortName"
@@ -57,12 +47,12 @@
 								<button v-if="deliveryMethod == 3" class="list-button white-button"
 									@click.stop="callPhone(item.mobile)">
 									<image src="/static/images/logistics/电话.svg" class="list-image" mode=""></image>
-									<text class="button-text" style="color: #333333;">电话</text>
+									<text class="button-text" style="color: var(--ink-black);">电话</text>
 								</button>
 								<button v-if="deliveryMethod == 3" class="list-button white-button"
 									@click.stop="goNavigation">
 									<image src="/static/images/logistics/导航.svg" class="list-image" mode=""></image>
-									<text class="button-text" style="color: #333333;">导航</text>
+									<text class="button-text" style="color: var(--ink-black);">导航</text>
 								</button>
 								<button class="list-button" @click.stop="confirm(item.orderItemNo)">
 									<image
@@ -136,6 +126,9 @@
 			this.deliveryMethod = parseInt(options.deliveryMethod);
 			this.buttonText = options.deliveryMethod == 3 ? '开始配送' : '开始取送';
 			this.pageTitle = this.deliveryMethod == 3 ? '配送' : '物流'
+			uni.setNavigationBarTitle({
+				title: this.pageTitle
+			})
 		},
 		onShow() {
 			const flag = uni.$Utils.getStorage('backbutton')
@@ -321,57 +314,45 @@
 
 <style lang="scss" scoped>
 	.page-container {
-		background-color: #F0F1F5;
+		background-color: var(--ticket-paper);
 		min-height: 100%;
+		padding: 24rpx 0 40rpx;
+		box-sizing: border-box;
 	}
 
-	.navbar-wrap {
-		background-image: linear-gradient(to bottom, #a7ecff, #2FB7DF);
-		padding-bottom: 30rpx;
-
-		&-title {
-			position: relative;
-			height: 44px;
-			line-height: 44px;
-		}
-
-		.left-icon {
-			position: absolute;
-			top: 50%;
-			left: 20rpx;
-			padding: 10rpx;
-			transform: translateY(-50%);
-		}
+	.header-stats {
+		margin: 0 32rpx 16rpx;
 	}
 
 	.amount {
 		font-weight: 500;
 		font-size: 46rpx;
-		color: rgba(255, 255, 255, 0.9);
+		color: var(--ink-black);
 		line-height: 69rpx;
 		text-align: center;
+		font-family: ui-monospace, Menlo, Consolas, monospace;
 	}
 
 	.list-divider {
 		height: 76rpx;
 		width: 2rpx;
-		background: rgba(255, 255, 255, 0.1);
+		background: var(--perf-line);
 		border-radius: 0rpx
 	}
 
 	.today-info {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: rgba(255, 255, 255, 0.6);
+		color: var(--ink-muted);
 		line-height: 38rpx;
 		text-align: center;
 	}
 
 	.list-contain {
-		border-radius: 15rpx;
-		background: #ffffff;
+		border-radius: 0;
 		align-content: flex-start;
 		padding: 20rpx;
+		margin-bottom: 8rpx;
 	}
 
 	.logistics-method {
@@ -395,7 +376,7 @@
 		height: 50rpx;
 		margin-right: 8rpx;
 		border-radius: 50%;
-		background-color: #009945;
+		background-color: var(--ink-green);
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -409,13 +390,13 @@
 	}
 
 	.sc-bg {
-		background-color: #1576ED
+		background-color: var(--stamp-red);
 	}
 
 	.time {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 	}
 
@@ -448,10 +429,10 @@
 	.productName {
 		margin-bottom: 15rpx;
 		-webkit-line-clamp: 2;
-		color: #808080;
+		color: var(--ink-muted);
 		font-weight: 400;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 38rpx;
 	}
 
@@ -459,7 +440,7 @@
 		height: 69rpx;
 		margin-right: 0;
 		margin-left: 15rpx;
-		background: #2FB7DF;
+		background: #B42318;
 		border-radius: 191rpx;
 		display: flex;
 		align-items: center;
@@ -467,7 +448,7 @@
 	}
 
 	.white-button {
-		background: #FFFFFF;
+		background: var(--ticket-face);
 		border: 2rpx solid #D9D9D9;
 	}
 
@@ -486,7 +467,7 @@
 	.finish-text {
 		font-weight: 500;
 		font-size: 27rpx;
-		color: #808080;
+		color: var(--ink-muted);
 		line-height: 42rpx;
 		text-align: right;
 	}
@@ -494,8 +475,8 @@
 	.scan-wrap {
 		width: 122rpx;
 		height: 122rpx;
-		background: #2FB7DF;
-		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
+		background: #B42318;
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 		border-radius: 31rpx;
 		display: flex;
 		justify-content: center;

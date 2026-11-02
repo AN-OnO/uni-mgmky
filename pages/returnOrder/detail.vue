@@ -1,6 +1,6 @@
 <template>
 	<view class="page-container">
-		<uv-gap bg-color="#F0F1F5" height="8px"></uv-gap>
+		<uv-gap bg-color="#F3E6C8" height="16rpx"></uv-gap>
 		<uv-form ref="form" :model="model" :rules="rules" :label-style="labelStyle" :border-bottom="false"
 			label-width="220rpx">
 			<view class="card-wrap">
@@ -23,7 +23,7 @@
 					</uv-form-item>
 				</view>
 			</view>
-			<uv-gap bg-color="#F0F1F5" height="8px"></uv-gap>
+			<uv-gap bg-color="#F3E6C8" height="16rpx"></uv-gap>
 			<view class="card-wrap">
 				<text class="section-title">相关人员</text>
 				<view class="padding-lr">
@@ -72,10 +72,10 @@
 
 					</uv-form-item>
 					<uv-textarea v-model="model.remark" placeholder="请填写备注" border="none" count maxlength="500"
-						:custom-style="textAreaStyle" :countStyle="{background: '#F7F8FA'}"></uv-textarea>
+						:custom-style="textAreaStyle" :countStyle="{background: '#FFF8E7'}"></uv-textarea>
 				</view>
 			</view>
-			<uv-gap bg-color="#F0F1F5" height="8px"></uv-gap>
+			<uv-gap bg-color="#F3E6C8" height="16rpx"></uv-gap>
 			<view class="card-wrap">
 				<text class="section-title">附件</text>
 				<view class="padding-lr">
@@ -162,15 +162,16 @@
 
 	const labelStyle = computed(() => {
 		return {
-			color: '#888'
+			color: '#6B6258'
 		}
 	})
 
 	const textAreaStyle = computed(() => {
 		return {
-			background: '#F7F8FA',
-			borderRadius: '8px',
-			padding: '16px'
+			background: '#FFF8E7',
+			borderRadius: '0',
+			padding: '32rpx',
+			border: '2rpx solid rgba(28, 25, 23, 0.38)'
 		}
 	})
 
@@ -179,8 +180,8 @@
 			height: '76rpx',
 			width: '156rpx',
 			color: '#fff',
-			background: '#469DCD',
-			borderRadius: '15rpx'
+			background: '#B42318',
+			borderRadius: '0'
 		}
 	})
 
@@ -302,46 +303,49 @@
 
 <style>
 	page {
-		background-color: #f5f5f5;
+		background-color: var(--ticket-paper);
 	}
 </style>
 <style lang="scss" scoped>
 	.page-container {
-		padding-bottom: 64px;
+		padding-bottom: calc(128rpx + constant(safe-area-inset-bottom));
+		padding-bottom: calc(128rpx + env(safe-area-inset-bottom));
 	}
 
 	.card-wrap {
 		@include flex(column);
 		line-height: 80rpx;
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 30rpx 0;
+		border: 2rpx solid var(--ticket-edge);
 
 		.text-area {
-			background-color: #F7F8FA;
-			padding: 16px;
-			// margin-bottom: 16px;
-			border-radius: 8px;
+			background-color: var(--ticket-paper);
+			padding: 32rpx;
+			border-radius: 0;
 			font-size: 28rpx;
 		}
 	}
 
 	.text-btn {
-		background: #F2F3F5;
-		border-radius: 8px;
-		height: 40px;
-		font-size: 14px;
+		background: var(--ticket-paper);
+		border-radius: 0;
+		height: 80rpx;
+		font-size: 28rpx;
 		font-weight: bold;
 		text-align: center;
 		padding: 17rpx 55rpx;
+		border: 2rpx solid var(--ticket-edge);
 
 		&.active {
-			color: #3862CF;
-			background-color: #E6F1FF;
+			color: var(--stamp-red);
+			background-color: var(--ticket-face);
+			border-color: var(--stamp-red);
 		}
 	}
 
 	.text-btn+.text-btn {
-		margin-left: 12px;
+		margin-left: 24rpx;
 	}
 
 	.section-title {
@@ -349,7 +353,7 @@
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 36rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 
 		&::before {
@@ -358,8 +362,8 @@
 			left: 0;
 			height: 1em;
 			width: 0.25em;
-			border-radius: 10px;
-			background-color: #7BC7FC;
+			border-radius: 0;
+			background-color: #B42318;
 			top: 50%;
 			transform: translateY(-50%);
 		}
@@ -376,18 +380,19 @@
 		left: 0;
 		right: 0;
 		z-index: 900;
-		padding: 8px 30rpx;
+		padding: 16rpx 30rpx;
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
-		background-color: #fff;
+		background-color: var(--ticket-face);
+		border-top: 2rpx solid var(--ink-black);
 	}
 
 	.btn-submit {
-		height: 48px;
-		line-height: 48px;
+		height: 96rpx;
+		line-height: 96rpx;
 		text-align: center;
-		background: #469DCD;
+		background: #B42318;
 		color: #fff;
-		border-radius: 8px;
+		border-radius: 0;
 	}
 </style>

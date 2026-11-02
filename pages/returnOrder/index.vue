@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<uv-sticky>
+		<uv-sticky bgColor="#F3E6C8">
 			<view class="padding">
 				<text class="section-title">添加返工订单</text>
 				<view class="list-grid margin-top-sm">
@@ -119,7 +119,7 @@ import { GetReWorkBillList } from '../../apis/member';
 
 <style>
 	page {
-		background-color: #f5f5f5;
+		background-color: var(--ticket-paper);
 	}
 </style>
 <style lang="scss" scoped>
@@ -131,15 +131,16 @@ import { GetReWorkBillList } from '../../apis/member';
 		.list-item {
 			@include flex;
 			align-items: center;
-			background-color: #ffffff;
+			background-color: var(--ticket-face);
 			padding: 10rpx;
-			border-radius: 8px;
+			border: 2rpx solid var(--ticket-edge);
+			border-radius: 0;
 		}
 
 		.text-label {
 			font-weight: 500;
 			font-size: 31rpx;
-			color: #4E5969;
+			color: var(--ink-black);
 			line-height: 46rpx;
 		}
 	}
@@ -154,7 +155,7 @@ import { GetReWorkBillList } from '../../apis/member';
 		padding-left: 0.7em;
 		font-weight: bold;
 		font-size: 34rpx;
-		color: #333333;
+		color: var(--ink-black);
 		line-height: 53rpx;
 
 		&::before {
@@ -163,23 +164,25 @@ import { GetReWorkBillList } from '../../apis/member';
 			left: 0;
 			height: 1em;
 			width: 0.25em;
-			border-radius: 10px;
-			background-color: #7BC7FC;
+			border-radius: 0;
+			background-color: #B42318;
 			top: 50%;
 			transform: translateY(-50%);
 		}
 	}
 
 	.order-card {
-		background-color: #fff;
-		border-radius: 8px;
+		background-color: var(--ticket-face);
+		border: 2rpx solid rgba(28, 25, 23, 0.38);
+		border-radius: 0;
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 
 		&-head {
 			padding: 20rpx 40rpx;
 			@include flex;
 			align-items: center;
 			justify-content: space-between;
-			border-bottom: 1rpx solid #eee;
+			border-bottom: 2rpx dashed var(--perf-line);
 		}
 
 		&-body {
@@ -190,7 +193,7 @@ import { GetReWorkBillList } from '../../apis/member';
 
 
 	.status-tag {
-		background-color: #f3f3f3;
+		background-color: var(--ticket-paper);
 
 		&.success {}
 

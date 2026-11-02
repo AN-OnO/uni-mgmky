@@ -2,9 +2,9 @@
 	<view class="page-container">
 		<uv-sticky>
 			<view class="tabs-wrap">
-				<uv-tabs ref="tabs" :list="tabList" :current="tabIndex" lineColor='#2FB7DF'
+				<uv-tabs ref="tabs" :list="tabList" :current="tabIndex" lineColor='#B42318'
 					@click="changeTab"></uv-tabs>
-				<uv-icon name="search" size="32" @click="goSearch"></uv-icon>
+				<uv-icon name="search" size="64rpx" @click="goSearch"></uv-icon>
 			</view>
 		</uv-sticky>
 		<view class="data-list padding-sm">
@@ -15,7 +15,7 @@
 					<view class="tag" @click.stop="spread(item.orderItemNo)">
 						<text class="tag-text">{{item.curProductionTechnologyName}}</text>
 						<uv-icon :name="spreadArr.includes(item.orderItemNo) ? 'arrow-up' : 'arrow-down'"
-							color="#ffffff" size="12"></uv-icon>
+							color="#ffffff" size="24rpx"></uv-icon>
 					</view>
 				</view>
 				<view class="order-company">
@@ -227,14 +227,14 @@
 
 <style lang="scss" scoped>
 	.page-container {
-		background: linear-gradient(180deg, #D5E8FF 0%, #F3F6FA 100%), #F5F6F8;
+		background: var(--ticket-paper);
 		min-height: 100%;
 		padding-bottom: env(safe-area-inset-bottom);
 		padding-bottom: constant(safe-area-inset-bottom);
 	}
 
 	.tabs-wrap {
-		background: #D5E8FF;
+		background: #F3E6C8;
 		padding-right: 30rpx;
 		display: flex;
 		justify-content: space-between;
@@ -247,16 +247,17 @@
 	}
 
 	.list-item {
-		background-color: #fff;
+		background-color: var(--ticket-face);
 		padding: 20rpx;
-		border-radius: 15rpx;
-		box-shadow: 0rpx 8rpx 31rpx 0rpx #D0D6EC;
+		border-radius: 0;
+		border: 2rpx solid rgba(28, 25, 23, 0.38);
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 		overflow: scroll;
 
 		.order-no {
 			font-weight: bold;
 			font-size: 42rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 61rpx;
 		}
 
@@ -266,7 +267,7 @@
 			justify-content: center;
 			padding: 0 15rpx;
 			height: 46rpx;
-			background: #2FB7DF;
+			background: #B42318;
 			border-radius: 8rpx
 		}
 
@@ -281,13 +282,13 @@
 		.order-company {
 			font-weight: 500;
 			font-size: 27rpx;
-			color: #333333;
+			color: var(--ink-black);
 			line-height: 38rpx;
 		}
 
 		.order-info {
 			font-size: 27rpx;
-			color: #808080;
+			color: var(--ink-muted);
 			line-height: 38rpx;
 		}
 		
@@ -304,7 +305,7 @@
 		.steps-title {
 			font-weight: 400;
 			font-size: 23rpx;
-			color: #808080;
+			color: var(--ink-muted);
 			line-height: 34rpx;
 		}
 
@@ -347,8 +348,8 @@
 	.scan-wrap {
 		width: 122rpx;
 		height: 122rpx;
-		background: #2FB7DF;
-		box-shadow: 8rpx 8rpx 46rpx 0rpx rgba(160, 164, 180, 0.8);
+		background: #B42318;
+		box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
 		border-radius: 31rpx;
 		display: flex;
 		justify-content: center;

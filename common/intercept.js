@@ -1,6 +1,8 @@
+export const ROUTE_GUARD_ENABLED = true
+
 // 设置白名单，白名单中的路径不进行拦截
 const whitePage = ['/',
-	'/pages/index/login', '/pages/tabbar/index',
+	'/pages/index/login', '/pages/tabbar/index','/pages/orderLookup/index',
 ]
 
 // 检查白名单
@@ -23,6 +25,7 @@ let arr = ["navigateTo", "switchTab", "redirectTo", "reLaunch"];
 arr.forEach(value => {
 	uni.addInterceptor(value, {
 		invoke(e) {
+			if (!ROUTE_GUARD_ENABLED) return true
 			const isLogin = uni.$Utils.getStorage('token')
 			if (checkWhite(e.url) || isLogin) {
 				return true

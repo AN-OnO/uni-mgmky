@@ -31,7 +31,7 @@ export default {
 			this.currentTab = index;
 		},
 		getBackgroundColor() {
-			return this.currentTab === 0 ? '#fff' : '#f0f0f0';
+			return '#F3E6C8';
 		}
 	}
 };
@@ -40,22 +40,25 @@ export default {
 <style>
 .container {
 	padding-top: 0; 
-	background-color: #f0f0f0; 
+	background-color: var(--ticket-paper) !important; 
 }
 
 .tab-bar {
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
-	background-color: #fff; 
-	padding: 10px 0; 
+	background-color: var(--ticket-face); 
+	padding: 20rpx 0;
+	border-bottom: 2rpx solid var(--ticket-edge);
 }
 
 .tab-item {
 	flex: 1;
 	text-align: center;
-	font-size: 17px;
-	color: #333;
+	font-size: 34rpx;
+	min-height: 88rpx;
+	line-height: 88rpx;
+	color: var(--ink-black);
 	cursor: pointer;
 	position: relative; /* 为伪元素定位 */
 }
@@ -65,15 +68,15 @@ export default {
 	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	bottom: -6px; /* 根据需要调整下划线与文字的距离 */
-	width: 8%; /* 调整这个宽度来缩短下划线 */
-	height: 3px; /* 下划线的高度 */
-	background-color: #000000; 
-	border-radius: 6px;
+	bottom: 8rpx;
+	width: 8%;
+	height: 6rpx;
+	background-color: #B42318; 
+	border-radius: 0;
 }
 
 .page-content {
-	padding: 16px; 
+	padding: 24rpx 32rpx 40rpx; 
 }
 </style>
 

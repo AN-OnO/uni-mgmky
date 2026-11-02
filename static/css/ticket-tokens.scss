@@ -1,0 +1,49 @@
+page {
+  --ticket-paper: #F3E6C8;
+  --ticket-face: #FFF8E7;
+  --ink-black: #1C1917;
+  --stamp-red: #B42318;
+  --ink-green: #1F6B4A;
+  --perf-line: #C4B8A1;
+  --ink-muted: #6B6258;
+  --ticket-edge: rgba(28, 25, 23, 0.38);
+  --rail-width: 8rpx;
+  background-color: var(--ticket-paper);
+  color: var(--ink-black);
+}
+
+.ticket {
+  background: var(--ticket-face);
+  border: 2rpx solid var(--ticket-edge);
+  box-shadow: 4rpx 4rpx 0 rgba(28, 25, 23, 0.1), 0 10rpx 24rpx rgba(92, 64, 32, 0.08);
+  position: relative;
+  padding: 32rpx 28rpx 32rpx 40rpx;
+}
+
+.ticket::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: var(--rail-width);
+  background: var(--stamp-red);
+}
+
+.ticket--tools::before {
+  background: var(--ink-green);
+}
+
+.ticket-no {
+  font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  font-size: 22rpx;
+  color: var(--ink-muted);
+  display: block;
+}
+
+.ticket-perf {
+  border-top: 2rpx dashed var(--perf-line);
+  margin: 24rpx 0;
+}
